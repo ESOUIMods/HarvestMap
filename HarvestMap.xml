@@ -1,0 +1,9 @@
+<GuiXml>
+	<Controls>
+		<TopLevelControl name="HarvestMap">
+			<OnUpdate>
+				Harvest.OnUpdate(time)
+			</OnUpdate>
+		</TopLevelControl>
+	</Controls>
+</GuiXml>

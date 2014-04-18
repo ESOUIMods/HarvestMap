@@ -1,0 +1,23 @@
+## Title: HarvestMap
+## Author: Shinni
+## APIVersion: 100003
+## OptionalDependsOn: LibAddonMenu-1.0
+## SavedVariables: Harvest_SavedVars
+
+Libs/LibAddonMenu-1.0/LibStub/LibStub.lua
+Libs/LibAddonMenu-1.0/LibAddonMenu-1.0/LibAddonMenu-1.0.lua
+
+Libs/CustomCompassPins/CustomCompassPins.lua
+
+HarvestMap.lua
+
+Localization/HarvestMapLoc.lua
+Localization/HarvestMapNodesLoc.lua
+Localization/HarvestMapMapNames.lua
+
+HarvestMapData.lua
+HarvestMapMarkers.lua
+HarvestMapCompass.lua
+HarvestMapOptions.lua
+HarvestMapImport.lua
+HarvestMap.xml
