@@ -1,14 +1,14 @@
 local maxDistance = 0.02
 
 function Harvest.additionalLayout( pin )
-	local color = COMPASS_PINS.pinLayouts[ pin.pinType ].color
-	local tex = pin:GetNamedChild( "Background" )
-	tex:SetColor(color[1] , color[2] , color[3], 1)
+    local color = COMPASS_PINS.pinLayouts[ pin.pinType ].color
+    local tex = pin:GetNamedChild( "Background" )
+    tex:SetColor(color[1] , color[2] , color[3], 1)
 end
 
 function Harvest.additionalLayoutReset( pin )
-	local tex = pin:GetNamedChild( "Background" )
-	tex:SetColor( 1, 1, 1, 1 )
+    local tex = pin:GetNamedChild( "Background" )
+    tex:SetColor( 1, 1, 1, 1 )
 end
 
 -- Originally 6 changed to 9 adding (7)solvents, (8)containers, (9)fish, (10)book
@@ -26,48 +26,48 @@ Harvest.defaultCompassLayouts = {
 }
 
 function Harvest.addCompassCallback( profession, g_mapPinManager )
-	if not Harvest.settings.filters[ profession ] or not Harvest.settings.compass then
-		return
-	end
-	local zone = Harvest.GetMap()
-	local nodes = Harvest.nodes.data[ zone ]
-	local pinType = Harvest.GetPinType( profession )
+    if not Harvest.settings.filters[ profession ] or not Harvest.settings.compass then
+        return
+    end
+    local zone = Harvest.GetMap()
+    local nodes = Harvest.nodes.data[ zone ]
+    local pinType = Harvest.GetPinType( profession )
 
-	if not nodes then
-		return
-	end
+    if not nodes then
+        return
+    end
 
-	nodes = nodes[ profession ]
-	if not nodes then
-		return
-	end
-	for _, node in pairs( nodes ) do
-		g_mapPinManager:CreatePin( pinType, node, node[1], node[2] )
-	end
+    nodes = nodes[ profession ]
+    if not nodes then
+        return
+    end
+    for _, node in pairs( nodes ) do
+        g_mapPinManager:CreatePin( pinType, node, node[1], node[2] )
+    end
 end
 
 function Harvest.CreateCompassPin(profession)
-	if not Harvest.settings.filters[ profession ] then
-		return
-	end
-	local pinType = Harvest.GetPinType( profession )
+    if not Harvest.settings.filters[ profession ] then
+        return
+    end
+    local pinType = Harvest.GetPinType( profession )
 
-	COMPASS_PINS:AddCustomPin(
-		pinType,
-		function( g_mapPinManager )
-			Harvest.addCompassCallback( profession, g_mapPinManager )
-		end,
-		Harvest.settings.compassLayouts[ profession ]
-	)
+    COMPASS_PINS:AddCustomPin(
+        pinType,
+        function( g_mapPinManager )
+            Harvest.addCompassCallback( profession, g_mapPinManager )
+        end,
+        Harvest.settings.compassLayouts[ profession ]
+    )
 end
 
 function Harvest.InitializeCompassMarkers()
-	for _, layout in pairs(Harvest.settings.compassLayouts) do
-		layout.additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset}
-	end
-	-- for profession = 1,6 do
-	for profession = 1,10 do
-		Harvest.CreateCompassPin( profession )
-	end
-	COMPASS_PINS:RefreshPins()
+    for _, layout in pairs(Harvest.settings.compassLayouts) do
+        layout.additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset}
+    end
+    -- for profession = 1,6 do
+    for profession = 1,10 do
+        Harvest.CreateCompassPin( profession )
+    end
+    COMPASS_PINS:RefreshPins()
 end

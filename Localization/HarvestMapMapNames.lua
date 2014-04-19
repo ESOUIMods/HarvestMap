@@ -556,55 +556,55 @@ Harvest.mapSystem = {
 }
 
 function Harvest.GetNewMapName(mapName)
-	local result = nil
-	for newMapName, translations in pairs(Harvest.mapSystem) do
-		if Harvest.contains(translations, mapName) then
-			if result then
-				return nil --there are more than one possible maps, skip to prevent wrong data
-			else
-				result = newMapName
-			end
-		end
-	end
-	return result
+    local result = nil
+    for newMapName, translations in pairs(Harvest.mapSystem) do
+        if Harvest.contains(translations, mapName) then
+            if result then
+                return nil --there are more than one possible maps, skip to prevent wrong data
+            else
+                result = newMapName
+            end
+        end
+    end
+    return result
 end
 
 function Harvest.updateNodes(oldVersion)
-	if oldVersion ~= 0 then
-		return
-	end
-	
-	local oldData = Harvest.nodes.data
-	Harvest.nodes.data = {}
-	if not Harvest.nodes.oldData then
-		Harvest.nodes.oldData = {}
-	end
-	local newMapName
-	
-	for map, data in pairs(oldData) do
-		newMapName = Harvest.GetNewMapName(map)
-		if newMapName then
-			for profession, nodes in pairs(data) do
-				for _, node in pairs(nodes) do
-					for _, nodeName in ipairs(node[3]) do
-						Harvest.saveData( newMapName, node[1], node[2], profession, nodeName, node[4] )
-					end
-				end
-			end
-			
-		else
-			if not Harvest.nodes.oldData[map] then
-				Harvest.nodes.oldData[map] = {}
-			end
-			
-			for profession, nodes in pairs(data) do
-				if not Harvest.nodes.oldData[map][profession] then
-					Harvest.nodes.oldData[map][profession] = {}
-				end
-				for _, node in pairs(nodes) do
-					table.insert(Harvest.nodes.oldData[map][profession], node)
-				end
-			end
-		end
-	end
+    if oldVersion ~= 0 then
+        return
+    end
+
+    local oldData = Harvest.nodes.data
+    Harvest.nodes.data = {}
+    if not Harvest.nodes.oldData then
+        Harvest.nodes.oldData = {}
+    end
+    local newMapName
+
+    for map, data in pairs(oldData) do
+        newMapName = Harvest.GetNewMapName(map)
+        if newMapName then
+            for profession, nodes in pairs(data) do
+                for _, node in pairs(nodes) do
+                    for _, nodeName in ipairs(node[3]) do
+                        Harvest.saveData( newMapName, node[1], node[2], profession, nodeName, node[4] )
+                    end
+                end
+            end
+
+        else
+            if not Harvest.nodes.oldData[map] then
+                Harvest.nodes.oldData[map] = {}
+            end
+
+            for profession, nodes in pairs(data) do
+                if not Harvest.nodes.oldData[map][profession] then
+                    Harvest.nodes.oldData[map][profession] = {}
+                end
+                for _, node in pairs(nodes) do
+                    table.insert(Harvest.nodes.oldData[map][profession], node)
+                end
+            end
+        end
+    end
 end
