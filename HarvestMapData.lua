@@ -155,8 +155,8 @@ Harvest.professions = {
     [7] = {
     },
     -- Added : Container
-	-- These values are from Esohead in section [5]
-	-- I believe they are provisioning ItemID numbers
+    -- These values are from Esohead in section [5]
+    -- I believe they are provisioning ItemID numbers
     [8] = {
         26802,
         26954,
@@ -288,71 +288,189 @@ Harvest.professions = {
 -- 7 = Solvent: These need verification to see
 -- if all of them have Solvents in then
 Harvest.solvent = {
-    "Bottle",
-    "Bottles",
-    "Cup",
-    "Cups",
-    "Drink",
-    "Goblet",
-    "Jar",
-    "Jug",
-    "Mug",
-    "Water Skin",
-    "Wine Rack",
-    "Pure Water",
+    ["en"] = {
+        "Bottle",
+        "Bottles",
+        "Cup",
+        "Cups",
+        "Drink",
+        "Goblet",
+        "Jar",
+        "Jug",
+        "Mug",
+        "Pure Water",
+        "Water Skin",
+        "Wine Rack",
+    },
+    ["de"] = {
+        "Flasche",
+        "Flaschen",
+        "Tasse",
+        "Tassen",
+        "Getränk",
+        "Becher",
+        "Gefäß",
+        "Krug",
+        "Becher",
+        "Pure Water",
+        "Wasserhaut",
+        "Weinregal",
+    },
+    ["fr"] = {
+        "Bouteille",
+        "Bouteilles",
+        "Cup",
+        "Cups",
+        "Boisson",
+        "Chope",
+        "Jar",
+        "Pichet",
+        "Mug",
+        "Pure Water",
+        "Outre d'Eau",
+        "Casier ŕ bouteilles",
+    },
 }
 
 -- 8 = Container
 Harvest.container = {
-    "Backpack",
-    "Barrel",
-    "Barrel (Burnt)",
-    "Barrels",
-    "Barrels (Burnt)",
-    "Basket",
-    "Cabinet",
-    "Crate",
-    "Crate (Burnt)",
-    "Crates",
-    "Crates (Burnt)",
-    "Cupboard",
-    "Desk",
-    "Dresser",
-    "Drink",
-    "Nightstand",
-    "Pot",
-    "Sack",
-    "Tomb Urn",
-    "Trunk",
-    "Urn",
-    "Vase",
-    "Wardrobe",
+    ["en"] = {
+        "Backpack",
+        "Barrel",
+        "Barrel (Burnt)",
+        "Barrels",
+        "Barrels (Burnt)",
+        "Basket",
+        "Cabinet",
+        "Crate",
+        "Crate (Burnt)",
+        "Crates",
+        "Crates (Burnt)",
+        "Cupboard",
+        "Desk",
+        "Dresser",
+        "Heavy Sack",
+        "Nightstand",
+        "Pot",
+        "Sack",
+        "Tomb Urn",
+        "Trunk",
+        "Urn",
+        "Vase",
+        "Wardrobe",
+    },
+    ["de"] = {
+        "Rucksack",
+        "Fass",
+        "Fass (versengt)",
+        "Fässer",
+        "Fässer (versengt)",
+        "Korb",
+        "Schrank",
+        "Kiste",
+        "Kiste (versengt)",
+        "Kisten",
+        "Kisten (versengt)",
+        "Schrank",
+        "Schreibtisch",
+        "Kommode",
+        "Heavy Sack",
+        "Nachttisch",
+        "Topf",
+        "Sack",
+        "Urnengrab",
+        "Truhe",
+        "Urne",
+        "Vase",
+        "Kleiderschrank",
+    },
+    ["fr"] = {
+        "Sac ŕ dos",
+        "Tonneau",
+        "Tonneau (brûlé)",
+        "Tonneaux",
+        "Tonneaux (brûlés)",
+        "Panier",
+        "Cabinet",
+        "Caisse",
+        "Caisse (brûlée)",
+        "Caisses",
+        "Caisses (brûlées)",
+        "Commode",
+        "Bureau",
+        "Table de chevet",
+        "Heavy Sack",
+        "Table de chevet",
+        "Pot",
+        "Sac",
+        "Tomb Urn",
+        "Coffre",
+        "Urne",
+        "Vase",
+        "Garde-robe",
+    },
 }
 
 -- 10 = Books
 Harvest.books = {
-    "Book",
-    "Book Stack",
-    "Books",
-    "Bookshelf",
+    ["en"] = {
+        "Book",
+        "Book Stack",
+        "Books",
+        "Bookshelf",
+    },
+    ["de"] = {
+        "Buch",
+        "Buchstapel",
+        "Bücher",
+        "Bücherregal",
+    },
+    ["fr"] = {
+        "Livre",
+        "Pile de livres",
+        "Livres",
+        "Étagère",
+    },
 }
 
 -- Added for future implementation
 -- ?? = Enchanting
 Harvest.enchanting = {
-    "Aspect Rune",
-    "Essence Rune",
-    "Potency Rune",
+    ["en"] = {
+        "Aspect Rune",
+        "Essence Rune",
+        "Potency Rune",
+    },
+    ["de"] = {
+        "Aspektrune",
+        "Essenzrune",
+        "Machtrune",
+    },
+    ["fr"] = {
+        "Rune d'Aspect",
+        "Rune D'essence",
+        "Rune de Puissance",
+    },
 }
 
 -- 2 = Clothing
 Harvest.clothing = {
-    "Silver Weed",
-    "Kresh Weed",
+    ["en"] = {
+        "Silver Weed",
+        "Kresh Weed",
+    },
+    ["de"] = {
+        "Silver Weed",
+        "Kresh Weed",
+    },
+    ["fr"] = {
+        "Silver Weed",
+        "Kresh Weed",
+    },
 }
 
 function Harvest.IsValidSolvent(name)
-    for k, v in pairs(Harvest.solvent) do
+    for k, v in pairs(Harvest.solvent[Harvest.language]) do
         if v == name then
             return true
         end
@@ -362,7 +480,7 @@ function Harvest.IsValidSolvent(name)
 end
 
 function Harvest.IsValidContainer(name)
-    for k, v in pairs(Harvest.container) do
+    for k, v in pairs(Harvest.container[Harvest.language]) do
         if v == name then
             return true
         end
@@ -372,7 +490,7 @@ function Harvest.IsValidContainer(name)
 end
 
 function Harvest.IsValidBook(name)
-    for k, v in pairs(Harvest.books) do
+    for k, v in pairs(Harvest.books[Harvest.language]) do
         if v == name then
             return true
         end
@@ -382,7 +500,7 @@ function Harvest.IsValidBook(name)
 end
 
 function Harvest.IsValidClothing(name)
-    for k, v in pairs(Harvest.clothing) do
+    for k, v in pairs(Harvest.clothing[Harvest.language]) do
         if v == name then
             return true
         end
@@ -392,7 +510,7 @@ function Harvest.IsValidClothing(name)
 end
 
 function Harvest.IsValidEnchant(name)
-    for k, v in pairs(Harvest.enchanting) do
+    for k, v in pairs(Harvest.enchanting[Harvest.language]) do
         if v == name then
             return true
         end
@@ -401,19 +519,12 @@ function Harvest.IsValidEnchant(name)
     return false
 end
 
--- Arguments Required ItenID, NodeName
+-- Arguments Required ItemID, NodeName
 -- Returns -1 when Object interacted with is invalid
 -- Valid types: (1)Mining, (2)Clothing, (3)Enchanting
 -- (4)Alchemy, (5)Wood, (6)Chests, (7)Solvents
 -- (8)Containers, (9)Fish, (10)Books
 -- Books Not fully implemented
---
--- Function uses routines to set some Types by name
--- Changes Solvents to HarvestMap (7)Solvent
--- (5)Wood ItemIDs are already assigned as [5]
--- (8)Container ItemIDs are already assigned as [8]
--- Changes Books to HarvestMap (8)Container
--- Books need updated to be (10)Books
 function Harvest.GetProfessionType(id, name)
     local tsId
     id = tonumber(id)
