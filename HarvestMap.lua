@@ -124,7 +124,7 @@ end
 -- 2: Boolean: Is it Quest Loot
 -- 3: Boolean: Looted By Player
 -- Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, true )
-function Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, LootedBySelf )
+function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, soundCategory, lootType, lootedBySelf, LootIsQuest )
 
     if Harvest.settings.verbose then
         d("OnLootReceived")
@@ -154,7 +154,7 @@ function Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, LootedBySelf )
     -- option 2: Keep
     local CurentInteractionType = GetInteractionType()
     -- option 3: Keep
-    local ItemName, itemColor, itemType, itemID = ZO_LinkHandler_ParseLink( GetLootItemLink(NumItemsLooted) )
+    local ItemName, itemColor, itemType, itemID = ZO_LinkHandler_ParseLink( objectName )
     -- [PREFERED] option 4
     -- string TargetNodeName, TargetInteractionType targetType, string TargetActionName
     local TargetNodeName, TargetInteractionType, TargetActionName = GetLootTargetInfo()
@@ -224,8 +224,9 @@ function Harvest.OnLootUpdate()
         return
     end
 
+    local id
     for lootIndex = 1,items do
-        local NumItemsLooted, ItemName, ItemtextureName, Itemcount, Itemquality, Itemvalue, LootIsQuest = GetLootItemInfo(lootIndex)
+        local id, ItemName, _, _, _, _, LootIsQuest = GetLootItemInfo(lootIndex)
 
         if (ItemName ~= "") or (ItemName ~= nil) then
             Harvest.ItemName = ItemName
@@ -237,7 +238,7 @@ function Harvest.OnLootUpdate()
         -- previously it was GetLootItemLink(id)
         -- Passes lootIndex to OnLootRecived, not the link
         -- Passes QuestLoot Boolean, and PlayerLooted
-        Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, true )
+        Harvest.OnLootReceived( nil, nil, GetLootItemLink(id), nil, nil, nil, true, LootIsQuest )
     end
 
     if Harvest.settings.verbose then
@@ -304,7 +305,7 @@ end
 function Harvest.contains(table, value)
     for key, v in pairs(table) do
         if v == value then
-            return v
+            return key
         end
     end
     return nil
@@ -460,10 +461,6 @@ function Harvest.OnLoad(eventCode, addOnName)
     if addOnName ~= "HarvestMap" then
         return
     end
-
-    -- Set Localization
-    Harvest.language = (GetCVar("language.2") or "en")
-    Harvest.localization = Harvest.allLocalizations[Harvest.language]
 
     -- NEW keep these they init some flags
     Harvest.PlayerReadBook = false
