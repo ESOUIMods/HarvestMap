@@ -637,7 +637,7 @@ Harvest.books = {
 }
 
 function Harvest.IsValidMining(name)
-    for k, v in pairs(Harvest.mining[Harvest.PlayerLanguage]) do
+    for k, v in pairs(Harvest.mining[Harvest.language]) do
         if v == name then
             return true
         end
@@ -647,7 +647,7 @@ function Harvest.IsValidMining(name)
 end
 
 function Harvest.IsValidClothing(name)
-    for k, v in pairs(Harvest.clothing[Harvest.PlayerLanguage]) do
+    for k, v in pairs(Harvest.clothing[Harvest.language]) do
         if v == name then
             return true
         end
@@ -657,7 +657,7 @@ function Harvest.IsValidClothing(name)
 end
 
 function Harvest.IsValidEnchanting(name)
-    for k, v in pairs(Harvest.enchanting[Harvest.PlayerLanguage]) do
+    for k, v in pairs(Harvest.enchanting[Harvest.language]) do
         if v == name then
             return true
         end
@@ -667,7 +667,7 @@ function Harvest.IsValidEnchanting(name)
 end
 
 function Harvest.IsValidAlchemy(name)
-    for k, v in pairs(Harvest.alchemy[Harvest.PlayerLanguage]) do
+    for k, v in pairs(Harvest.alchemy[Harvest.language]) do
         if v == name then
             return true
         end
@@ -677,7 +677,7 @@ function Harvest.IsValidAlchemy(name)
 end
 
 function Harvest.IsValidWoodworking(name)
-    for k, v in pairs(Harvest.woodworking[Harvest.PlayerLanguage]) do
+    for k, v in pairs(Harvest.woodworking[Harvest.language]) do
         if v == name then
             return true
         end
@@ -687,7 +687,7 @@ function Harvest.IsValidWoodworking(name)
 end
 
 function Harvest.IsValidSolvent(name)
-    for k, v in pairs(Harvest.solvent[Harvest.PlayerLanguage]) do
+    for k, v in pairs(Harvest.solvent[Harvest.language]) do
         if v == name then
             return true
         end
@@ -697,7 +697,7 @@ function Harvest.IsValidSolvent(name)
 end
 
 function Harvest.IsValidContainer(name)
-    for k, v in pairs(Harvest.container[Harvest.PlayerLanguage]) do
+    for k, v in pairs(Harvest.container[Harvest.language]) do
         if v == name then
             return true
         end
@@ -707,7 +707,7 @@ function Harvest.IsValidContainer(name)
 end
 
 function Harvest.IsValidBook(name)
-    for k, v in pairs(Harvest.books[Harvest.PlayerLanguage]) do
+    for k, v in pairs(Harvest.books[Harvest.language]) do
         if v == name then
             return true
         end
@@ -821,6 +821,3 @@ function Harvest.GetProfessionType(id, name)
 
     return -1
 end
-
--- Set Localization
-    Harvest.PlayerLanguage = (GetCVar("language.2") or "en")

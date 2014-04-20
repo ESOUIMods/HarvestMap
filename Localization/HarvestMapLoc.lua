@@ -213,7 +213,3 @@ Harvest.allLocalizations = {
         ["compasstooltip"] = "Activer l'affichage des spots a proximité sur la boussole.",
     }
 }
-
--- Set Localization
-    Harvest.language = (GetCVar("language.2") or "en")
-    Harvest.localization = Harvest.allLocalizations[Harvest.language]
