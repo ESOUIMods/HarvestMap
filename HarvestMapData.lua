@@ -488,6 +488,8 @@ Harvest.woodworking = {
 
 -- 7 = Solvent: These need verification to see
 -- if all of them have Solvents in then
+-- 1187 Clear Water, Pure Water, Deshaan
+-- 23265 Cleansed Water, Pure Water, TheRift
 Harvest.solvent = {
     ["en"] = {
         "Bottle",
@@ -733,7 +735,7 @@ function Harvest.GetProfessionType(id, name)
     if Harvest.IsValidMining(name) then
         tsId = 1
         if Harvest.settings.verbose then
-            d("Solvent id assigned : " .. tsId)
+            d("Mining id assigned : " .. tsId)
         end
         return tsId
     end
@@ -749,7 +751,7 @@ function Harvest.GetProfessionType(id, name)
     if Harvest.IsValidEnchanting(name) then
         tsId = 3
         if Harvest.settings.verbose then
-            d("Solvent id assigned : " .. tsId)
+            d("Enchanting id assigned : " .. tsId)
         end
         return tsId
     end
@@ -757,7 +759,7 @@ function Harvest.GetProfessionType(id, name)
     if Harvest.IsValidAlchemy(name) then
         tsId = 4
         if Harvest.settings.verbose then
-            d("Solvent id assigned : " .. tsId)
+            d("Alchemy id assigned : " .. tsId)
         end
         return tsId
     end
@@ -765,7 +767,7 @@ function Harvest.GetProfessionType(id, name)
     if Harvest.IsValidWoodworking(name) then
         tsId = 5
         if Harvest.settings.verbose then
-            d("Solvent id assigned : " .. tsId)
+            d("Woodworking id assigned : " .. tsId)
         end
         return tsId
     end
@@ -784,7 +786,7 @@ function Harvest.GetProfessionType(id, name)
     if Harvest.IsValidContainer(name) then
         tsId = 8
         if Harvest.settings.debug then
-            d("Profession id assigned:" .. tsId)
+            d("Container id assigned:" .. tsId)
         end
         return tsId
     end

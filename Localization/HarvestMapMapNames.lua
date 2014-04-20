@@ -587,7 +587,7 @@ function Harvest.updateNodes(oldVersion)
             for profession, nodes in pairs(data) do
                 for _, node in pairs(nodes) do
                     for _, nodeName in ipairs(node[3]) do
-                        Harvest.saveData( newMapName, node[1], node[2], profession, nodeName, node[4] )
+                        Harvest.saveData( newMapName, node[1], node[2], Harvest.GetProfessionType(node[4], nodeName), nodeName, node[4] )
                     end
                 end
             end
