@@ -85,7 +85,7 @@ function Harvest.importFromEsohead()
                     -- Esohead "provisioning" is indexed by itemid
                     -- The 8 before location[4] refers to it's Profession ID
                     if Harvest.IsValidContainer(location[4]) then
-                        Harvest.saveData( newMapName, location[1], location[2], 8, location[4], itemId )
+                        Harvest.saveData( newMapName, location[1], location[2], Harvest.GetProfessionType(itemId, location[4]), location[4], itemId )
                     end
                 end
             end

@@ -130,6 +130,7 @@ Harvest.professions = {
         30164,
         30165,
         30166,
+        42871,
     },
     -- : Wood ; In Esohead Wood is (6)
     [5] = {
@@ -285,6 +286,203 @@ Harvest.professions = {
 -- Therefore the name of the item collected will dictate it's category
 -- rather than the Item's ID number.
 --
+-- (1) Mining
+Harvest.mining = {
+    ["en"] = {
+        "Iron Ore",
+        "High Iron Ore",
+        "Orichalcum Ore",
+        "Dwarven Ore",
+        "Ebony Ore",
+        "Calcinium Ore",
+        "Galatite Ore",
+        "Quicksilver Ore",
+        "Voidstone Ore",
+    },
+    ["de"] = {
+        "Eisenerz",
+        "Feineisenerz",
+        "Oreichalkoserz",
+        "Dwemererz",
+        "Ebenerz",
+        "Kalciniumerz",
+        "Galatiterz",
+        "Quicksilver Ore",
+        "Leerensteinerz",
+    },
+    ["fr"] = {
+        "Minerai de Fer",
+        "Minerai de Fer Noble",
+        "Minerai D'orichalque",
+        "Dwarven Ore",
+        "Ebony Ore",
+        "Calcinium Ore",
+        "Galatite Ore",
+        "Quicksilver Ore",
+        "Voidstone Ore",
+    },
+}
+
+-- (2) Clothing
+Harvest.clothing = {
+    ["en"] = {
+        "Cotton",
+        "Ebonthread",
+        "Flax",
+        "Ironweed",
+        "Jute",
+        "Kreshweed",
+        "Silverweed",
+        "Spidersilk",
+        "Void Bloom",
+        "Silver Weed",
+        "Kresh Weed",
+    },
+    ["de"] = {
+        "Baumwolle",
+        "Ebenseide",
+        "Flachs",
+        "Eisenkraut",
+        "Jute",
+        "Kreshweed",
+        "Silverweed",
+        "Spinnenseide",
+        "Leere Blüte",
+        "Silver Weed",
+        "Kresh Weed",
+    },
+    ["fr"] = {
+        "Cotton",
+        "Ebonthread",
+        "Lin",
+        "Ironweed",
+        "Jute",
+        "Kreshweed",
+        "Silverweed",
+        "Spidersilk",
+        "Void Bloom",
+        "Silver Weed",
+        "Kresh Weed",
+    },
+}
+-- (3) Enchanting
+Harvest.enchanting = {
+    ["en"] = {
+        "Aspect Rune",
+        "Essence Rune",
+        "Potency Rune",
+    },
+    ["de"] = {
+        "Aspektrune",
+        "Essenzrune",
+        "Machtrune",
+    },
+    ["fr"] = {
+        "Rune d'Aspect",
+        "Rune D'essence",
+        "Rune de Puissance",
+    },
+}
+-- (4) Alchemy
+Harvest.alchemy = {
+    ["en"] = {
+        "Blessed Thistle",
+        "Entoloma",
+        "Bugloss",
+        "Columbine",
+        "Corn Flower",
+        "Dragonthorn",
+        "Emetic Russula",
+        "Imp Stool",
+        "Lady's Smock",
+        "Luminous Russula",
+        "Mountain Flower",
+        "Namira's Rot",
+        "Nirnroot",
+        "Stinkhorn",
+        "Violet Copninus",
+        "Water Hyacinth",
+        "White Cap",
+        "Wormwood",
+    },
+    ["de"] = {
+        "Blessed Thistle",
+        "Entoloma",
+        "Bugloss",
+        "Columbine",
+        "Corn Flower",
+        "Dragonthorn",
+        "Emetic Russula",
+        "Imp Stool",
+        "Lady's Smock",
+        "Luminous Russula",
+        "Mountain Flower",
+        "Namira's Rot",
+        "Nirnroot",
+        "Stinkhorn",
+        "Violet Copninus",
+        "Water Hyacinth",
+        "White Cap",
+        "Wormwood",
+    },
+    ["fr"] = {
+        "Blessed Thistle",
+        "Entoloma",
+        "Bugloss",
+        "Columbine",
+        "Corn Flower",
+        "Dragonthorn",
+        "Emetic Russula",
+        "Imp Stool",
+        "Lady's Smock",
+        "Luminous Russula",
+        "Mountain Flower",
+        "Namira's Rot",
+        "Nirnroot",
+        "Stinkhorn",
+        "Violet Copninus",
+        "Water Hyacinth",
+        "White Cap",
+        "Wormwood",
+    },
+}
+-- (5) Woodworking ; In Esohead Woodworking is (6)
+Harvest.woodworking = {
+    ["en"] = {
+        "Ashtree",
+        "Beech",
+        "Birch",
+        "Hickory",
+        "Mahogany",
+        "Maple",
+        "Nightwood",
+        "Oak",
+        "Yew",
+    },
+    ["de"] = {
+        "Eschenholz",
+        "Buchenholz",
+        "Birkenholz",
+        "Hickoryholz",
+        "Mahagoniholz",
+        "Ahornholz",
+        "Nachtholz",
+        "Eiche",
+        "Eibenholz",
+    },
+    ["fr"] = {
+        "Frêne",
+        "Hêtre",
+        "Bouleau",
+        "Hickory",
+        "Mahogany",
+        "Érable",
+        "Nightwood",
+        "Chêne",
+        "If",
+    },
+}
+
 -- 7 = Solvent: These need verification to see
 -- if all of them have Solvents in then
 Harvest.solvent = {
@@ -433,41 +631,55 @@ Harvest.books = {
     },
 }
 
--- Added for future implementation
--- ?? = Enchanting
-Harvest.enchanting = {
-    ["en"] = {
-        "Aspect Rune",
-        "Essence Rune",
-        "Potency Rune",
-    },
-    ["de"] = {
-        "Aspektrune",
-        "Essenzrune",
-        "Machtrune",
-    },
-    ["fr"] = {
-        "Rune d'Aspect",
-        "Rune D'essence",
-        "Rune de Puissance",
-    },
-}
+function Harvest.IsValidMining(name)
+    for k, v in pairs(Harvest.mining[Harvest.language]) do
+        if v == name then
+            return true
+        end
+    end
 
--- 2 = Clothing
-Harvest.clothing = {
-    ["en"] = {
-        "Silver Weed",
-        "Kresh Weed",
-    },
-    ["de"] = {
-        "Silver Weed",
-        "Kresh Weed",
-    },
-    ["fr"] = {
-        "Silver Weed",
-        "Kresh Weed",
-    },
-}
+    return false
+end
+
+function Harvest.IsValidClothing(name)
+    for k, v in pairs(Harvest.clothing[Harvest.language]) do
+        if v == name then
+            return true
+        end
+    end
+
+    return false
+end
+
+function Harvest.IsValidEnchanting(name)
+    for k, v in pairs(Harvest.enchanting[Harvest.language]) do
+        if v == name then
+            return true
+        end
+    end
+
+    return false
+end
+
+function Harvest.IsValidAlchemy(name)
+    for k, v in pairs(Harvest.alchemy[Harvest.language]) do
+        if v == name then
+            return true
+        end
+    end
+
+    return false
+end
+
+function Harvest.IsValidWoodworking(name)
+    for k, v in pairs(Harvest.woodworking[Harvest.language]) do
+        if v == name then
+            return true
+        end
+    end
+
+    return false
+end
 
 function Harvest.IsValidSolvent(name)
     for k, v in pairs(Harvest.solvent[Harvest.language]) do
@@ -499,26 +711,6 @@ function Harvest.IsValidBook(name)
     return false
 end
 
-function Harvest.IsValidClothing(name)
-    for k, v in pairs(Harvest.clothing[Harvest.language]) do
-        if v == name then
-            return true
-        end
-    end
-
-    return false
-end
-
-function Harvest.IsValidEnchant(name)
-    for k, v in pairs(Harvest.enchanting[Harvest.language]) do
-        if v == name then
-            return true
-        end
-    end
-
-    return false
-end
-
 -- Arguments Required ItemID, NodeName
 -- Returns -1 when Object interacted with is invalid
 -- Valid types: (1)Mining, (2)Clothing, (3)Enchanting
@@ -534,6 +726,46 @@ function Harvest.GetProfessionType(id, name)
         d("and item name : " .. name)
     end
 
+    -- Set (1)Mining
+    if Harvest.IsValidMining(name) then
+        tsId = 1
+        if Harvest.settings.verbose then
+            d("Solvent id assigned : " .. tsId)
+        end
+        return tsId
+    end
+    -- Set (2)Clothing
+    if Harvest.IsValidClothing(name) then
+        tsId = 2
+        if Harvest.settings.verbose then
+            d("Clothing id assigned : " .. tsId)
+        end
+        return tsId
+    end
+    -- Set (3)Enchanting
+    if Harvest.IsValidEnchanting(name) then
+        tsId = 3
+        if Harvest.settings.verbose then
+            d("Solvent id assigned : " .. tsId)
+        end
+        return tsId
+    end
+    -- Set (4)Alchemy
+    if Harvest.IsValidAlchemy(name) then
+        tsId = 4
+        if Harvest.settings.verbose then
+            d("Solvent id assigned : " .. tsId)
+        end
+        return tsId
+    end
+    -- Set (5)Woodworking
+    if Harvest.IsValidWoodworking(name) then
+        tsId = 5
+        if Harvest.settings.verbose then
+            d("Solvent id assigned : " .. tsId)
+        end
+        return tsId
+    end
     -- Set (7)Solvent
     if Harvest.IsValidSolvent(name) then
         tsId = 7
@@ -560,15 +792,6 @@ function Harvest.GetProfessionType(id, name)
         tsId = 10
         if Harvest.settings.verbose then
             d("Book id assigned : " .. tsId)
-        end
-        return tsId
-    end
-
-    -- Add two Clothing items to (2)Clothing
-    if Harvest.IsValidClothing(name) then
-        tsId = 2
-        if Harvest.settings.verbose then
-            d("Clothing id assigned : " .. tsId)
         end
         return tsId
     end

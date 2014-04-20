@@ -159,22 +159,6 @@ function Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, LootedBySelf )
     -- string TargetNodeName, TargetInteractionType targetType, string TargetActionName
     local TargetNodeName, TargetInteractionType, TargetActionName = GetLootTargetInfo()
 
-    -- If Player is NOT opening a fixture
-    if not TargetInteractionType == INTERACT_TARGET_TYPE_FIXTURE then
-        -- Player is NOT Harvesting, and a dead Npc is detected.
-        if not Harvest.isHarvesting and GetUnitReaction(UNIT_REACTION_DEAD) then
-            if Harvest.settings.debug then
-                if not Harvest.isHarvesting then
-                    d("Player is NOT Harvesting, and a dead Npc is detected.")
-                end
-            end
-            if Harvest.settings.verbose then
-                d("OnLootReceived exited")
-            end
-            return
-        end
-    end
-
     itemID = tonumber(itemID)
     -- if itemID is nil Harvest.GetProfessionType will fail
     if itemID == nil then
@@ -414,21 +398,21 @@ function Harvest.OnUpdate(time)
         if newAction ~= Harvest.action then
             Harvest.action = newAction
 
-            if Harvest.settings.debug and Harvest.action ~= nil then
+            if Harvest.settings.verbose and Harvest.action ~= nil then
                 d("Action : " .. Harvest.action)
             end
-            if Harvest.settings.debug and nodeName ~= nil then
+            if Harvest.settings.verbose and nodeName ~= nil then
                 d("Node Name : " .. nodeName)
             end
-            if Harvest.settings.debug and blockedNode ~= nil then
+            if Harvest.settings.verbose and blockedNode ~= nil then
                 if blockedNode then
                     d("blockedNode : Is True")
                 end
             end
-            if Harvest.settings.debug and additionalInfo ~= nil then
+            if Harvest.settings.verbose and additionalInfo ~= nil then
                 d("Additional Info : " .. additionalInfo)
             end
-            if Harvest.settings.debug and contextlInfo ~= nil then
+            if Harvest.settings.verbose and contextlInfo ~= nil then
                 d("Contextual Info : " .. contextlInfo)
             end
 
@@ -480,7 +464,6 @@ function Harvest.OnLoad(eventCode, addOnName)
     -- Set Localization
     Harvest.language = (GetCVar("language.2") or "en")
     Harvest.localization = Harvest.allLocalizations[Harvest.language]
-
 
     -- NEW keep these they init some flags
     Harvest.PlayerReadBook = false
