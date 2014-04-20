@@ -291,6 +291,7 @@ Harvest.mining = {
     ["en"] = {
         "Iron Ore",
         "High Iron Ore",
+        "Orichalc Ore",
         "Orichalcum Ore",
         "Dwarven Ore",
         "Ebony Ore",
@@ -302,6 +303,7 @@ Harvest.mining = {
     ["de"] = {
         "Eisenerz",
         "Feineisenerz",
+        "Orichalc Ore",
         "Oreichalkoserz",
         "Dwemererz",
         "Ebenerz",
@@ -313,6 +315,7 @@ Harvest.mining = {
     ["fr"] = {
         "Minerai de Fer",
         "Minerai de Fer Noble",
+        "Orichalc Ore",
         "Minerai D'orichalque",
         "Dwarven Ore",
         "Ebony Ore",
