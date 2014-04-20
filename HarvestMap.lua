@@ -171,7 +171,7 @@ function Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, LootedBySelf )
     -- Display Results
     if Harvest.settings.verbose then
         -- NumItemsLooted
-        d("Lootindex : " .. NumItemsLooted .. " : Target Action : " .. TargetActionName .. " : Node Name : " .. TargetNodeName )
+        d("Lootindex : " .. NumItemsLooted .. " : Target Action : " .. TargetActionName .. " : Node Name : " .. TargetNodeName .. " : Node Name : " .. ItemName )
         -- InterAction Type
         d("InteractionType : " .. CurentInteractionType .. " : TargetInteractionType : preferred(" .. TargetInteractionType .. ")" )
         -- ItemType
