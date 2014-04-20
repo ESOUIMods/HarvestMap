@@ -304,7 +304,7 @@ end
 function Harvest.contains(table, value)
     for key, v in pairs(table) do
         if v == value then
-            return v
+            return key
         end
     end
     return nil
@@ -460,10 +460,6 @@ function Harvest.OnLoad(eventCode, addOnName)
     if addOnName ~= "HarvestMap" then
         return
     end
-
-    -- Set Localization
-    Harvest.language = (GetCVar("language.2") or "en")
-    Harvest.localization = Harvest.allLocalizations[Harvest.language]
 
     -- NEW keep these they init some flags
     Harvest.PlayerReadBook = false
