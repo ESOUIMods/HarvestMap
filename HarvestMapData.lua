@@ -780,23 +780,12 @@ function Harvest.GetProfessionType(id, name)
         return tsId
     end
 
-    -- Set (8)Container
-    -- Added Container ItemIDs from EsoHead
-    -- However, it seems that names are still needed.
+    -- For this HarvestMap version there are no containers
+    -- Set any container found to 0 so that it is not recorded.
     if Harvest.IsValidContainer(name) then
-        tsId = 8
-        if Harvest.settings.debug then
-            d("Container id assigned:" .. tsId)
-        end
-        return tsId
-    end
-
-    -- Set Books to (10)Books
-    -- This means the Node Name not the Book Title
-    if Harvest.IsValidBook(name) then
-        tsId = 10
+        tsId = 0
         if Harvest.settings.verbose then
-            d("Book id assigned : " .. tsId)
+            d("Container is not used in this version id assigned : " .. tsId)
         end
         return tsId
     end

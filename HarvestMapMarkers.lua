@@ -7,9 +7,7 @@ Harvest.defaultMapLayouts = {
         { level = 20, texture = "HarvestMap/Textures/Map/wood.dds", size = 20, color = {1, 1, 1} },
         { level = 20, texture = "HarvestMap/Textures/Map/chest.dds", size = 20, color = {1, 1, 1} },
         { level = 20, texture = "HarvestMap/Textures/Map/solvent.dds", size = 20, color = {1, 1, 1} },
-        { level = 20, texture = "HarvestMap/Textures/Map/container.dds", size = 20, color = {1, 1, 1} },
         { level = 20, texture = "HarvestMap/Textures/Map/fish.dds", size = 20, color = {1, 1, 1} },
-        { level = 20, texture = "HarvestMap/Textures/Map/lorebook.dds", size = 20, color = {1, 1, 1} },
     }
 
 function Harvest.addCallback( profession, g_mapPinManager )
@@ -73,7 +71,7 @@ ZO_MapPin.SetData = function( self, pinTypeId, pinTag)
     local back = GetControl(self.m_Control, "Background")
     local color
     -- for profession = 1,6 do
-    for profession = 1,10 do
+    for profession = 1,8 do
         if pinTypeId == _G[Harvest.GetPinType( profession )] then
             color = Harvest.settings.mapLayouts[ profession ].color
             back:SetColor( color[1], color[2], color[3], 1)
@@ -90,7 +88,7 @@ end
 
 function Harvest.InitializeMapMarkers()
     -- for profession = 1,6 do
-    for profession = 1,10 do
+    for profession = 1,8 do
         Harvest.CreateMapPin( profession )
     end
 end

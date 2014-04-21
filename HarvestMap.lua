@@ -1,9 +1,17 @@
 Harvest = {}
 Harvest.chestID = 6
-Harvest.fishID = 9
-Harvest.BookshelfID = 10
+Harvest.fishID = 8
 
 local internalVersion = 1
+
+-----------------------------------------
+--          String Formatting          --
+-----------------------------------------
+function Harvest.FormatString(name)
+
+    local StringToBeFormatted = zo_strformat(SI_TOOLTIP_ITEM_NAME, name)
+    return StringToBeFormatted
+end
 
 -- Returns true if the player is Harvesting
 function Harvest.IsPlayerHarvesting()
@@ -85,8 +93,7 @@ function Harvest.IsPlayerBusy()
     if ( IsPlayerInteractingWithObject() and
         ( Harvest.IsPlayerLockpicking() or
         Harvest.IsPlayerReading() or
-        Harvest.IsPlayerFishing() or
-        Harvest.IsPlayerHarvesting() ) ) then
+        Harvest.IsPlayerFishing() ) ) then
 
         return true
     end
@@ -124,9 +131,9 @@ end
 -----------------------------------------
 
 function Harvest.ItemLinkParse(link)
-    
+
     local Field1, Field2, Field3, Field4, Field5 = ZO_LinkHandler_ParseLink( link )
-    
+
     -- name = Field1
     -- unused = Field2
     -- type = Field3
@@ -137,7 +144,7 @@ function Harvest.ItemLinkParse(link)
         type = Field3,
         id = tonumber(Field4),
         quality = tonumber(Field5),
-        name = Field1
+        name = Harvest.FormatString(Field1)
     }
 end
 
@@ -146,55 +153,56 @@ end
 -- 1: lootIndex
 -- 2: Boolean: Is it Quest Loot
 -- 3: Boolean: Looted By Player
--- Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, true )
-function Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, LootedBySelf )
-
+-- May have changed as of 1.0.5 Old Format: ( eventCode, receivedBy, objectName, stackCount, soundCategory, lootType, lootedBySelf )
+-- Needs verification
+-- Harvest.OnLootReceived ( nil, nil, GetLootItemLink(Harvest.NumItemLooted), nil, nil, nil, true )
+function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, soundCategory, lootType, lootedBySelf )
     if Harvest.settings.verbose then
         d("OnLootReceived")
     end
 
-    -- Exit if Quest Loot or not LootedBySelf then
-    if LootIsQuest or (not LootedBySelf) then
-        if Harvest.settings.debug then
-            if  not LootedBySelf then
-                d("Not Looted by self.")
-            end
-            if  not LootIsQuest then
-                d("This is Quest Loot!")
-            end
+    if Harvest.settings.loot then
+        if lootedBySelf then
+            d("1: Looted by self!")
         end
-        if Harvest.settings.verbose then
-            d("OnLootReceived exited")
+        if Harvest.isHarvesting then
+            d("2: Harvesting!")
         end
+	end
+
+    -- Not working as intended for some reason, LootedBySelf is always False
+    -- if (not Harvest.isHarvesting) or (not LootedBySelf) then
+    if not Harvest.isHarvesting or not lootedBySelf then
         return
     end
 
     local zone, x, y = Harvest.GetLocation()
-    local itemID
-    -- name, color, type, id, +19 other attributes
-    -- local unknown1, unknown2, unknown3, unknown4, unknown5, unknown6, unknown7, unknown8, unknown9, unknown10, unknown11, unknown12, unknown13, unknown14, unknown15, unknown16, unknown17, unknown18, unknown19, unknown20, unknown21, unknown22 = ITEM_LINK_TYPE( objeckLink )
+    -- Global Harvest.NumItemLooted
+    local itemLink = GetLootItemLink(Harvest.NumItemLooted)
+    local link = Harvest.ItemLinkParse( itemLink )
 
-    -- option 2: Keep
-    local CurentInteractionType = GetInteractionType()
-    -- option 3: Keep
-    local link = Harvest.ItemLinkParse( GetLootItemLink(NumItemsLooted) )
-    -- [PREFERED] option 4
-    -- string TargetNodeName, TargetInteractionType targetType, string TargetActionName
-    local TargetNodeName, TargetInteractionType, TargetActionName = GetLootTargetInfo()
-
-    itemID = tonumber(itemID)
-    -- if itemID is nil Harvest.GetProfessionType will fail
-    if itemID == nil then
+    -- if link.id is nil Harvest.GetProfessionType will fail
+    if link.id == nil then
         if Harvest.settings.verbose then
             d("OnLootReceived exited because itemID was nil")
         end
         return
     end
 
-    -- Display Results
-    if Harvest.settings.verbose then
-        -- NumItemsLooted
-        d("Lootindex : " .. NumItemsLooted .. " : Target Action : " .. TargetActionName .. " : Node Name : " .. TargetNodeName .. " : Item Name : " .. link.name )
+    -- Global Harvest.lootIndex
+    _, _, _, _, _, _, LootIsQuest = GetLootItemInfo(Harvest.lootIndex)
+    if LootIsQuest then
+        if Harvest.settings.loot then
+            d("This is Quest Loot!")
+            return
+        end
+    end
+
+    local TargetNodeName, TargetInteractionType, TargetActionName = GetLootTargetInfo()
+    if Harvest.settings.loot then
+        local CurentInteractionType = GetInteractionType()
+        -- Display Results
+        d("Lootindex : " .. Harvest.lootIndex .. " : Number of Item Looted  : " .. Harvest.NumItemLooted .. " : " .. TargetActionName .. " : Node Name : " .. TargetNodeName .. " : Item Name : " .. link.name )
         -- InterAction Type
         d("InteractionType : " .. CurentInteractionType .. " : TargetInteractionType : preferred(" .. TargetInteractionType .. ")" )
         -- ItemType
@@ -208,12 +216,7 @@ function Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, LootedBySelf )
     -- 5: INTERACT_TARGET_TYPE_FIXTURE - Trunk, Dresser
     -- 6: INTERACT_TARGET_TYPE_AOE_LOOT
 
-    if TargetInteractionType == INTERACT_TARGET_TYPE_FIXTURE then
-        profession = 8 -- set to Container
-    else
-        -- HarvestMap tracks lootable nodes, not item names. Pass Node Name
-        profession = Harvest.GetProfessionType(itemID, TargetNodeName)
-    end
+    profession = Harvest.GetProfessionType(link.id, TargetNodeName)
 
     -- Don't need to track torchbug loot
     if (profession < 1) then
@@ -223,7 +226,7 @@ function Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, LootedBySelf )
         return
     end
 
-    Harvest.saveData( zone, x, y, profession, Harvest.nodeName, itemID )
+    Harvest.saveData( zone, x, y, profession, Harvest.nodeName, link.id )
     Harvest.RefreshPins( profession )
 
     if Harvest.settings.verbose then
@@ -248,19 +251,12 @@ function Harvest.OnLootUpdate()
     end
 
     for lootIndex = 1,items do
-        local NumItemsLooted, ItemName, ItemtextureName, Itemcount, Itemquality, Itemvalue, LootIsQuest = GetLootItemInfo(lootIndex)
-
-        if (ItemName ~= "") or (ItemName ~= nil) then
-            Harvest.ItemName = ItemName
-        else
-            -- force display if Debug is off to inform player of potential issue
-            d('OnLootUpdate ItemName is empty or nil.')
+        Harvest.lootIndex = lootIndex
+        Harvest.NumItemLooted, itemName = GetLootItemInfo(Harvest.lootIndex)
+        if Harvest.settings.loot then
+            d("Item #".. tostring(Harvest.NumItemLooted) .. " : " .. Harvest.FormatString(itemName))
         end
-
-        -- previously it was GetLootItemLink(id)
-        -- Passes lootIndex to OnLootRecived, not the link
-        -- Passes QuestLoot Boolean, and PlayerLooted
-        Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, true )
+        Harvest.OnLootReceived( nil, nil, GetLootItemLink(Harvest.NumItemLooted), nil, nil, nil, true )
     end
 
     if Harvest.settings.verbose then
@@ -276,7 +272,7 @@ function Harvest.RefreshPins( profession )
         return
     end
     -- if profession >= 1 and profession <= 6 then
-    if profession >= 1 and profession <= 10 then
+    if profession >= 1 and profession <= 8 then
         ZO_WorldMap_RefreshCustomPinsOfType( _G[ Harvest.GetPinType( profession ) ] )
         COMPASS_PINS:RefreshPins( Harvest.GetPinType( profession ) )
     end
@@ -382,21 +378,18 @@ function Harvest.alreadyFound( zone, x, y, profession, nodeName )
 end
 
 function Harvest.OnUpdate(time)
-    -- Returns when you load a new area such as the bank or
-    -- when the Map or Char screen is open
-    -- Prevents a bug causing an exception when zone information
-    -- is briefly unavailable after the loading screen closes
-    if IsGameCameraUIModeActive() then
+    if IsGameCameraUIModeActive() or IsUnitInCombat("player") then
         return
     end
 
-    --  string:nilable action, string:nilable name, bool interactBlocked, integer additionalInfo, integer:nilable contextualInfo
+    if Harvest.IsPlayerBusy() then
+        return
+    end
+
     local newAction, nodeName, blockedNode, additionalInfo, contextlInfo = GetGameCameraInteractableActionInfo()
-
-    local isHarvesting = Harvest.IsPlayerBusy()
+    local isHarvesting = ( IsPlayerInteractingWithObject() and Harvest.IsPlayerHarvesting() ) 
     if not isHarvesting then
-
-        -- Use node name for Pure Water in Deshann
+        -- d("I am NOT busy!")
         if nodeName then
             Harvest.nodeName = nodeName
         end
@@ -405,37 +398,24 @@ function Harvest.OnUpdate(time)
             Harvest.isHarvesting = false
         end
 
-        -- To Do: Make sure HarvestMap does not track Lore Books
-        -- BOOK_LINK_TYPE
-        -- GetItemLink(integer bagId, integer slotIndex, LinkStyle linkStyle)
-        -- Returns: string link
-        -- GetItemLinkInfo(string itemLink)
-        -- Returns: string icon, integer sellPrice, bool meetsUsageRequirement, integer equipType, integer itemStyle
-
-        -- Player read the book, record it
-        if Harvest.PlayerReadBook then
-            Harvest.TrackBook()
-            Harvest.PlayerReadBook = false
-        end
-
         if newAction ~= Harvest.action then
             Harvest.action = newAction
 
-            if Harvest.settings.verbose and Harvest.action ~= nil then
+            if Harvest.settings.loot and Harvest.action ~= nil then
                 d("Action : " .. Harvest.action)
             end
-            if Harvest.settings.verbose and nodeName ~= nil then
+            if Harvest.settings.loot and nodeName ~= nil then
                 d("Node Name : " .. nodeName)
             end
-            if Harvest.settings.verbose and blockedNode ~= nil then
+            if Harvest.settings.loot and blockedNode ~= nil then
                 if blockedNode then
                     d("blockedNode : Is True")
                 end
             end
-            if Harvest.settings.verbose and additionalInfo ~= nil then
+            if Harvest.settings.loot and additionalInfo ~= nil then
                 d("Additional Info : " .. additionalInfo)
             end
-            if Harvest.settings.verbose and contextlInfo ~= nil then
+            if Harvest.settings.loot and contextlInfo ~= nil then
                 d("Contextual Info : " .. contextlInfo)
             end
 
@@ -453,27 +433,11 @@ function Harvest.OnUpdate(time)
                 Harvest.RefreshPins( Harvest.fishID )
             end
 
-            -- Track BookShelf
-            if Harvest.action == GetString(SI_GAMECAMERAACTIONTYPE1) then
-                if Harvest.IsValidBook(Harvest.nodeName) then
-                    local zone, x, y = Harvest.GetLocation()
-                    Harvest.saveData( zone, x, y, Harvest.BookshelfID, Harvest.nodeName, nil )
-                    Harvest.RefreshPins( Harvest.BookshelfID )
-                end
-            end
-
         end
     else
-    -- if IsPlayerInteractingWithObject() then
-    -- Same as a beginning of a new block of code
+        -- d("I am REALLY busy!")
         Harvest.isHarvesting = true
         Harvest.time = time
-
-            -- Player is interacting with an object, what is it?
-            -- Determine if New Action is Reading
-            if Harvest.IsPlayerReading() and not Harvest.PlayerReadBook then
-                Harvest.PlayerReadBook = true
-            end
 
     -- End of Else Block
     end -- End of Else Block
@@ -484,17 +448,18 @@ function Harvest.OnLoad(eventCode, addOnName)
         return
     end
 
-    -- NEW keep these they init some flags
-    Harvest.PlayerReadBook = false
-
+    -- NEW keep these they init things
     Harvest.isHarvesting = false
+    Harvest.NumItemLooted = 0
+    Harvest.lootIndex = 0
+
     Harvest.minDist = 0.000025 -- 0.005^2
     Harvest.nodes = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "nodes", { data = {} } )
     Harvest.settings = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 1, "settings",
         {
             filters = {
                 -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
-                [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true, [9] = true, [10] = true
+                [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
             },
             mapLayouts = Harvest.defaultMapLayouts,
             compassLayouts = Harvest.defaultCompassLayouts

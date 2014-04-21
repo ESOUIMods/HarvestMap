@@ -89,7 +89,7 @@ function Harvest.InitializeOptions()
         end,
         function( value )
             -- for profession = 1,6 do
-            for profession = 1,10 do
+            for profession = 1,8 do
                 Harvest.settings.compassLayouts[ profession ].FOV = 2 * value * math.pi / 100
             end
             COMPASS_PINS:RefreshPins()
@@ -102,7 +102,7 @@ function Harvest.InitializeOptions()
         end,
         function( value )
             -- for profession = 1,6 do
-            for profession = 1,10 do
+            for profession = 1,8 do
                 Harvest.settings.compassLayouts[ profession ].maxDistance  = value / 1000
             end
             COMPASS_PINS:RefreshPins()
@@ -110,7 +110,7 @@ function Harvest.InitializeOptions()
         false, nil)
 
     -- for profession = 1,6 do
-    for profession = 1,10 do
+    for profession = 1,8 do
         LAM:AddHeader(panelID, "HarvestMapPinHeader"..profession, Harvest.localization[ "filter"..profession ] .. " pin Options")
         CreateFilter( profession )
         CreateSizeSlider( profession )
@@ -128,7 +128,7 @@ function Harvest.InitializeOptions()
         end,
     false, nil)
 
-    LAM:AddCheckbox(panelID, "HarvestMapDebugVerbose", "Verbose debug mode", "Enable Verbose debug mode",
+    LAM:AddCheckbox(panelID, "HarvestMapDebugVerbose", "Verbose debug mode", "Enable verbose debug mode",
         function()
             return Harvest.settings.verbose
         end,
@@ -137,4 +137,12 @@ function Harvest.InitializeOptions()
         end,
     false, nil)
 
+    LAM:AddCheckbox(panelID, "HarvestMapDebugAction", "Loot Debug Results", "Enable loot result debug mode",
+        function()
+            return Harvest.settings.loot
+        end,
+        function( value )
+            Harvest.settings.loot = value
+        end,
+    false, nil)
 end

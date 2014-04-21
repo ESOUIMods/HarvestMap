@@ -11,7 +11,7 @@ function Harvest.additionalLayoutReset( pin )
     tex:SetColor( 1, 1, 1, 1 )
 end
 
--- Originally 6 changed to 9 adding (7)solvents, (8)containers, (9)fish, (10)book
+-- Originally 6 changed to 8 adding (7)solvents, (8)fish
 Harvest.defaultCompassLayouts = {
 [1] = {texture = "HarvestMap/Textures/Compass/mining.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
 [2] = {texture = "HarvestMap/Textures/Compass/clothing.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
@@ -20,9 +20,7 @@ Harvest.defaultCompassLayouts = {
 [5] = {texture = "HarvestMap/Textures/Compass/wood.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
 [6] = {texture = "HarvestMap/Textures/Compass/chest.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
 [7] = {texture = "HarvestMap/Textures/Compass/solvent.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-[8] = {texture = "HarvestMap/Textures/Compass/container.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-[9] = {texture = "HarvestMap/Textures/Compass/fish.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-[10] = {texture = "HarvestMap/Textures/Compass/lorebook.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} }
+[8] = {texture = "HarvestMap/Textures/Compass/fish.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
 }
 
 function Harvest.addCompassCallback( profession, g_mapPinManager )
@@ -66,7 +64,7 @@ function Harvest.InitializeCompassMarkers()
         layout.additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset}
     end
     -- for profession = 1,6 do
-    for profession = 1,10 do
+    for profession = 1,8 do
         Harvest.CreateCompassPin( profession )
     end
     COMPASS_PINS:RefreshPins()
