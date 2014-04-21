@@ -119,6 +119,29 @@ function Harvest.GetLocation()
     return zone, x, y
 end
 
+-----------------------------------------
+--        Link Parsing                 --
+-----------------------------------------
+
+function Harvest.ItemLinkParse(link)
+    
+    local Field1, Field2, Field3, Field4, Field5 = ZO_LinkHandler_ParseLink( link )
+    
+    -- name = Field1
+    -- unused = Field2
+    -- type = Field3
+    -- id = Field4
+    -- quality = Field5
+
+    return {
+        type = Field3,
+        id = tonumber(Field4),
+        quality = tonumber(Field5),
+        name = Field1
+    }
+end
+
+
 -- Define Function Better
 -- 1: lootIndex
 -- 2: Boolean: Is it Quest Loot
@@ -154,7 +177,7 @@ function Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, LootedBySelf )
     -- option 2: Keep
     local CurentInteractionType = GetInteractionType()
     -- option 3: Keep
-    local ItemName, itemColor, itemType, itemID = ZO_LinkHandler_ParseLink( GetLootItemLink(NumItemsLooted) )
+    local link = Harvest.ItemLinkParse( GetLootItemLink(NumItemsLooted) )
     -- [PREFERED] option 4
     -- string TargetNodeName, TargetInteractionType targetType, string TargetActionName
     local TargetNodeName, TargetInteractionType, TargetActionName = GetLootTargetInfo()
@@ -171,11 +194,11 @@ function Harvest.OnLootReceived( NumItemsLooted, LootIsQuest, LootedBySelf )
     -- Display Results
     if Harvest.settings.verbose then
         -- NumItemsLooted
-        d("Lootindex : " .. NumItemsLooted .. " : Target Action : " .. TargetActionName .. " : Node Name : " .. TargetNodeName .. " : Item Name : " .. ItemName )
+        d("Lootindex : " .. NumItemsLooted .. " : Target Action : " .. TargetActionName .. " : Node Name : " .. TargetNodeName .. " : Item Name : " .. link.name )
         -- InterAction Type
         d("InteractionType : " .. CurentInteractionType .. " : TargetInteractionType : preferred(" .. TargetInteractionType .. ")" )
         -- ItemType
-        d("itemID : " .. itemID .. " : Item Type : " .. itemType )
+        d("itemID : " .. link.id .. " : Item Type : " .. link.type )
     end
 
     -- 0: INTERACT_TARGET_TYPE_NONE
