@@ -242,7 +242,7 @@ function Harvest.OnLootUpdate()
 
     local NumItemLooted
     for lootIndex = 1, items do
-        NumItemLooted, itemName = GetLootItemInfo(lootIndex)
+        NumItemLooted = GetLootItemInfo(lootIndex)
         if (Harvest.settings.loot) or (Harvest.settings.debug) then
             d("Number of Item seen since login : ".. tostring(NumItemLooted) )
         end
