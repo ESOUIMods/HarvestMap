@@ -159,7 +159,9 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
     end
 
     -- These is only available in OnUpdate
-    -- NumItemLooted = GetNumLootItems()
+    -- GetNumLootItems()
+    -- GetLootItemInfo(lootIndex)
+    -- GetLootItemLink(NumItemLooted)
 
     if not Harvest.isHarvesting or not lootedBySelf then
         if Harvest.settings.verbose then
