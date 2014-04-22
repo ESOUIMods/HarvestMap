@@ -403,14 +403,14 @@ Harvest.solvent = {
     ["fr"] = {
         "Bouteille",
         "Bouteilles",
-        "Cup",
-        "Cups",
+        "Tasse",
+        "Tasses",
         "Boisson",
         "Chope",
         "Jar",
         "Pichet",
-        "Mug",
-        "Pure Water",
+        "Choppe",
+        "Eau Pure",
         "Outre d'Eau",
         "Casier ŕ bouteilles",
     },
@@ -483,11 +483,11 @@ Harvest.container = {
         "Commode",
         "Bureau",
         "Table de chevet",
-        "Heavy Sack",
+        "Sac Lourd",
         "Table de chevet",
         "Pot",
         "Sac",
-        "Tomb Urn",
+        "Urne tombale",
         "Coffre",
         "Urne",
         "Vase",
@@ -686,9 +686,8 @@ end
 -- Returns -1 when Object interacted with is invalid
 -- Valid types: (1)Mining, (2)Clothing, (3)Enchanting
 -- (4)Alchemy, (5)Wood, (6)Chests, (7)Solvents
--- (8)Containers, (9)Fish, (10)Books
--- Books Not fully implemented
-function Harvest.GetProfessionType(id, name)
+-- (8)Fish
+function Harvest.GetProfessionTypeOnImport(id, name)
     local tsId
     id = tonumber(id)
 
@@ -738,6 +737,59 @@ function Harvest.GetProfessionType(id, name)
     --     return tsId
     -- end
     -- Set (7)Solvent
+    if Harvest.IsValidSolvent(name) then
+        tsId = 7
+        if Harvest.settings.verbose then
+            d("Solvent id assigned : " .. tsId)
+        end
+        return tsId
+    end
+
+    -- For this HarvestMap version there are no containers
+    -- Set any container found to 0 so that it is not recorded.
+    if Harvest.IsValidContainer(name) then
+        tsId = 0
+        if Harvest.settings.verbose then
+            d("Container is not used in this version id assigned : " .. tsId)
+        end
+        return tsId
+    end
+
+    -- if no valid Node Name by Name is found use ItemID
+    for key1, tsData in pairs(Harvest.professions) do
+        for key2, value in pairs(tsData) do
+            if value == id then
+                tsId = key1
+                if Harvest.settings.verbose then
+                    d("Esohead id assigned : " .. tsId)
+                end
+                return tsId
+            end
+        end
+    end
+
+    if Harvest.settings.verbose then
+        d("No Profession Type found with id : " .. id)
+        d("In GetProfessionType with name : " .. name)
+    end
+
+    return -1
+end
+
+-- Arguments Required ItemID, NodeName
+-- Returns -1 when Object interacted with is invalid
+-- Valid types: (1)Mining, (2)Clothing, (3)Enchanting
+-- (4)Alchemy, (5)Wood, (6)Chests, (7)Solvents
+-- (8)Fish
+function Harvest.GetProfessionType(id, name)
+    local tsId
+    id = tonumber(id)
+
+    if Harvest.settings.verbose then
+        d("Attempting GetProfessionType with id : " .. id)
+        d("Node Name : " .. name)
+    end
+
     if Harvest.IsValidSolvent(name) then
         tsId = 7
         if Harvest.settings.verbose then

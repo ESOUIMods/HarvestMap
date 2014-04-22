@@ -366,7 +366,6 @@ function Harvest.OnUpdate(time)
     end
 
     if Harvest.IsPlayerBusy() then
-        d("Harvest.IsPlayerBusy!")
         return
     end
 
