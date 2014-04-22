@@ -149,131 +149,13 @@ Harvest.professions = {
 -- compatibility with the data already collected by users.  Chests are already
 -- handled separately.
 --
--- 6 = Chest, 7 = Solvent, 8 = Container, 9 = Fish, 10 = Books
+-- 6 = Chest, 7 = Solvent, 8 = Fish
 -- 45036, -- This is a Chest you unlock
     [6] = {
     },
     [7] = {
     },
-    -- Added : Container
-    -- These values are from Esohead in section [5]
-    -- I believe they are provisioning ItemID numbers
     [8] = {
-        26802,
-        26954,
-        26962,
-        26966,
-        26974,
-        26975,
-        26976,
-        26977,
-        26978,
-        26986,
-        26987,
-        26988,
-        26989,
-        26990,
-        26998,
-        26999,
-        27000,
-        27001,
-        27002,
-        27003,
-        27004,
-        27035,
-        27043,
-        27044,
-        27048,
-        27049,
-        27051,
-        27052,
-        27053,
-        27057,
-        27058,
-        27059,
-        27063,
-        27064,
-        27100,
-        28603,
-        28604,
-        28605,
-        28606,
-        28607,
-        28608,
-        28609,
-        28610,
-        28632,
-        28634,
-        28635,
-        28636,
-        28637,
-        28638,
-        28639,
-        28666,
-        29030,
-        33752,
-        33753,
-        33754,
-        33755,
-        33756,
-        33757,
-        33758,
-        33767,
-        33768,
-        33769,
-        33770,
-        33771,
-        33772,
-        33773,
-        33774,
-        34304,
-        34305,
-        34306,
-        34307,
-        34308,
-        34309,
-        34311,
-        34312,
-        34321,
-        34322,
-        34323,
-        34324,
-        34329,
-        34330,
-        34331,
-        34332,
-        34333,
-        34334,
-        34335,
-        34336,
-        34345,
-        34346,
-        34347,
-        34348,
-        34349,
-        40260,
-        40261,
-        40262,
-        40263,
-        40264,
-        40265,
-        40266,
-        40267,
-        40268,
-        40269,
-        40270,
-        40271,
-        40272,
-        40273,
-        40274,
-        40276,
-        45522,
-        45523,
-        45524,
-    },
-    [9] = {
-    },
-    [10] = {
     },
 }
 -- Books is the exception such that there may be a way to record lore books
@@ -734,7 +616,7 @@ function Harvest.GetProfessionType(id, name)
     -- Set (1)Mining
     if Harvest.IsValidMining(name) then
         tsId = 1
-        if Harvest.settings.verbose then
+        if Harvest.settings.debug then
             d("Mining id assigned : " .. tsId)
         end
         return tsId
@@ -742,7 +624,7 @@ function Harvest.GetProfessionType(id, name)
     -- Set (2)Clothing
     if Harvest.IsValidClothing(name) then
         tsId = 2
-        if Harvest.settings.verbose then
+        if Harvest.settings.debug then
             d("Clothing id assigned : " .. tsId)
         end
         return tsId
@@ -750,7 +632,7 @@ function Harvest.GetProfessionType(id, name)
     -- Set (3)Enchanting
     if Harvest.IsValidEnchanting(name) then
         tsId = 3
-        if Harvest.settings.verbose then
+        if Harvest.settings.debug then
             d("Enchanting id assigned : " .. tsId)
         end
         return tsId
@@ -758,7 +640,7 @@ function Harvest.GetProfessionType(id, name)
     -- Set (4)Alchemy
     if Harvest.IsValidAlchemy(name) then
         tsId = 4
-        if Harvest.settings.verbose then
+        if Harvest.settings.debug then
             d("Alchemy id assigned : " .. tsId)
         end
         return tsId
@@ -766,7 +648,7 @@ function Harvest.GetProfessionType(id, name)
     -- Set (5)Woodworking
     if Harvest.IsValidWoodworking(name) then
         tsId = 5
-        if Harvest.settings.verbose then
+        if Harvest.settings.debug then
             d("Woodworking id assigned : " .. tsId)
         end
         return tsId
@@ -774,7 +656,7 @@ function Harvest.GetProfessionType(id, name)
     -- Set (7)Solvent
     if Harvest.IsValidSolvent(name) then
         tsId = 7
-        if Harvest.settings.verbose then
+        if Harvest.settings.debug then
             d("Solvent id assigned : " .. tsId)
         end
         return tsId
@@ -784,7 +666,7 @@ function Harvest.GetProfessionType(id, name)
     -- Set any container found to 0 so that it is not recorded.
     if Harvest.IsValidContainer(name) then
         tsId = 0
-        if Harvest.settings.verbose then
+        if Harvest.settings.debug then
             d("Container is not used in this version id assigned : " .. tsId)
         end
         return tsId
@@ -796,7 +678,7 @@ function Harvest.GetProfessionType(id, name)
             if value == id then
                 tsId = key1
                 if Harvest.settings.debug then
-                    d("Profession id assigned : " .. tsId)
+                    d("Esohead id assigned : " .. tsId)
                 end
                 return tsId
             end

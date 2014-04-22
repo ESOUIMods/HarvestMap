@@ -153,10 +153,7 @@ end
 -- 1: lootIndex
 -- 2: Boolean: Is it Quest Loot
 -- 3: Boolean: Looted By Player
--- May have changed as of 1.0.5 Old Format: ( eventCode, receivedBy, objectName, stackCount, soundCategory, lootType, lootedBySelf )
--- Needs verification
--- Harvest.OnLootReceived ( nil, nil, GetLootItemLink(Harvest.NumItemLooted), nil, nil, nil, true )
-function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, soundCategory, lootType, lootedBySelf )
+function Harvest.OnLootReceived( receivedBy, objectName, stackCount, soundCategory, lootType, lootedBySelf )
     if Harvest.settings.verbose then
         d("OnLootReceived")
     end
@@ -256,7 +253,8 @@ function Harvest.OnLootUpdate()
         if Harvest.settings.loot then
             d("Item #".. tostring(Harvest.NumItemLooted) .. " : " .. Harvest.FormatString(itemName))
         end
-        Harvest.OnLootReceived( nil, nil, GetLootItemLink(Harvest.NumItemLooted), nil, nil, nil, true )
+        -- ( receivedBy, objectName, stackCount, soundCategory, lootType, lootedBySelf )
+        Harvest.OnLootReceived( nil , GetLootItemLink(Harvest.NumItemLooted), nil , nil , nil , true )
     end
 
     if Harvest.settings.verbose then
