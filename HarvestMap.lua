@@ -158,7 +158,7 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
         d("OnLootReceived")
     end
 
-    -- These is only available in OnUpdate
+    -- These are only available in OnUpdate
     -- GetNumLootItems()
     -- GetLootItemInfo(lootIndex)
     -- GetLootItemLink(NumItemLooted)
