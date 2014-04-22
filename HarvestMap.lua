@@ -85,7 +85,6 @@ end
 -- Returns True when Player is interacting with an Object
 -- or doing one of the following
 -- Lock Picking
--- Harvesting
 -- Reading
 -- Fishing
 function Harvest.IsPlayerBusy()
@@ -99,19 +98,6 @@ function Harvest.IsPlayerBusy()
     end
 
     return false
-end
-
------------------------------------------
---         Lore Book Tracking          --
------------------------------------------
-
-function Harvest.TrackBook()
-    local zone, x, y = Harvest.GetLocation()
-    if Harvest.settings.verbose then
-        d("I Read a Book named, " .. Harvest.nodeName .. " in Zone, " .. zone .. "at xLoc, " .. x .. " and yLoc, " .. y)
-    end
-    Harvest.saveData( zone, x, y, Harvest.BookshelfID, Harvest.nodeName, nil )
-    Harvest.RefreshPins( Harvest.BookshelfID )
 end
 
 -----------------------------------------
@@ -164,7 +150,7 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
     -- GetLootItemLink(NumItemLooted)
 
     if not Harvest.isHarvesting or not lootedBySelf then
-        if Harvest.settings.verbose then
+        if Harvest.settings.debug then
             if not Harvest.isHarvesting then
                 d("Not Harvesting!")
             end
@@ -177,7 +163,7 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
     
     local zone, x, y = Harvest.GetLocation()
     link = Harvest.ItemLinkParse( objectName )
-    if (Harvest.settings.loot) or (Harvest.settings.debug) then
+    if Harvest.settings.debug then
         d("Item Name: " .. Harvest.FormatString(link.name) .. " : ItemID : " .. tostring(link.id) )
     end
 
@@ -197,7 +183,7 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
     -- 6: INTERACT_TARGET_TYPE_AOE_LOOT
 
     if ( link.type == LOOT_TYPE_QUEST_ITEM) then
-        if Harvest.settings.loot then
+        if Harvest.settings.verbose then
             d("This is Quest Loot!")
             return
         end
@@ -205,17 +191,18 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
 
     profession = Harvest.GetProfessionType(link.id, Harvest.nodeName)
 
-    if Harvest.settings.loot then
-        d("Item Type : " .. link.type .. " : Profession Type : " .. tostring(profession) )
-        d("Node Name : " .. Harvest.nodeName )
-    end
-
     -- Don't need to track torchbug loot
     if (profession < 1) then
         if Harvest.settings.debug then
-            d("OnLootReceived: Valid profession information Not found!")
+            d("No valid profession type for : " .. Harvest.FormatString(link.name))
+        d("Node Name : " .. Harvest.nodeName )
         end
         return
+    else
+        if Harvest.settings.debug then
+            d("Item Type : " .. link.type .. " : Profession Type : " .. tostring(profession) )
+            d("Node Name : " .. Harvest.nodeName )
+        end
     end
 
     Harvest.saveData( zone, x, y, profession, Harvest.nodeName, link.id )
@@ -228,7 +215,7 @@ end
 
 function Harvest.OnLootUpdate()
 
-    if Harvest.settings.loot then
+    if Harvest.settings.verbose then
         d("OnLootUpdate")
     end
 
@@ -245,14 +232,18 @@ function Harvest.OnLootUpdate()
     local NumItemLooted
     for lootIndex = 1, items do
         NumItemLooted = GetLootItemInfo(lootIndex)
-        if (Harvest.settings.loot) or (Harvest.settings.debug) then
+        if Harvest.settings.debug then
             d("Number of Item seen since login : ".. tostring(NumItemLooted) )
         end
         Harvest.OnLootReceived( nil, nil, GetLootItemLink(NumItemLooted), nil, nil, nil, true )
     end
 
-    if Harvest.settings.loot then
+    if Harvest.settings.verbose then
         d("OnLootUpdate Exited")
+    end
+    
+    if Harvest.isHarvesting == true then
+        Harvest.isHarvesting = false
     end
 
 end
@@ -375,11 +366,12 @@ function Harvest.OnUpdate(time)
     end
 
     if Harvest.IsPlayerBusy() then
+        d("Harvest.IsPlayerBusy!")
         return
     end
 
     local newAction, nodeName, blockedNode, additionalInfo, contextlInfo = GetGameCameraInteractableActionInfo()
-    local isHarvesting = ( IsPlayerInteractingWithObject() and Harvest.IsPlayerHarvesting() )
+    local isHarvesting = (IsPlayerInteractingWithObject() and Harvest.IsPlayerHarvesting())
     if not isHarvesting then
         -- d("I am NOT busy!")
         if nodeName then

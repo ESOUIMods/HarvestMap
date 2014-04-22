@@ -692,7 +692,7 @@ function Harvest.GetProfessionType(id, name)
     local tsId
     id = tonumber(id)
 
-    if Harvest.settings.debug then
+    if Harvest.settings.verbose then
         d("Attempting GetProfessionType with id : " .. id)
         d("Node Name : " .. name)
     end
@@ -740,7 +740,7 @@ function Harvest.GetProfessionType(id, name)
     -- Set (7)Solvent
     if Harvest.IsValidSolvent(name) then
         tsId = 7
-        if Harvest.settings.debug then
+        if Harvest.settings.verbose then
             d("Solvent id assigned : " .. tsId)
         end
         return tsId
@@ -750,7 +750,7 @@ function Harvest.GetProfessionType(id, name)
     -- Set any container found to 0 so that it is not recorded.
     if Harvest.IsValidContainer(name) then
         tsId = 0
-        if Harvest.settings.debug then
+        if Harvest.settings.verbose then
             d("Container is not used in this version id assigned : " .. tsId)
         end
         return tsId
@@ -761,7 +761,7 @@ function Harvest.GetProfessionType(id, name)
         for key2, value in pairs(tsData) do
             if value == id then
                 tsId = key1
-                if Harvest.settings.debug then
+                if Harvest.settings.verbose then
                     d("Esohead id assigned : " .. tsId)
                 end
                 return tsId
@@ -769,7 +769,7 @@ function Harvest.GetProfessionType(id, name)
         end
     end
 
-    if Harvest.settings.debug then
+    if Harvest.settings.verbose then
         d("No Profession Type found with id : " .. id)
         d("In GetProfessionType with name : " .. name)
     end

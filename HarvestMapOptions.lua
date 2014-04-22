@@ -137,12 +137,4 @@ function Harvest.InitializeOptions()
         end,
     false, nil)
 
-    LAM:AddCheckbox(panelID, "HarvestMapDebugAction", "Loot Debug Results", "Enable loot result debug mode",
-        function()
-            return Harvest.settings.loot
-        end,
-        function( value )
-            Harvest.settings.loot = value
-        end,
-    false, nil)
 end
