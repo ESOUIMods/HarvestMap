@@ -158,18 +158,15 @@ function Harvest.OnLootReceived( receivedBy, objectName, stackCount, soundCatego
         d("OnLootReceived")
     end
 
-    if Harvest.settings.loot then
-        if lootedBySelf then
-            d("1: Looted by self!")
-        end
-        if Harvest.isHarvesting then
-            d("2: Harvesting!")
-        end
-	end
-
-    -- Not working as intended for some reason, LootedBySelf is always False
-    -- if (not Harvest.isHarvesting) or (not LootedBySelf) then
     if not Harvest.isHarvesting or not lootedBySelf then
+        if Harvest.settings.verbose then
+            if not Harvest.isHarvesting then
+                d("Not Harvesting!")
+            end
+            if not lootedBySelf then
+                d("Not Looted by self!")
+            end
+        end
         return
     end
 
@@ -196,15 +193,6 @@ function Harvest.OnLootReceived( receivedBy, objectName, stackCount, soundCatego
     end
 
     local TargetNodeName, TargetInteractionType, TargetActionName = GetLootTargetInfo()
-    if Harvest.settings.loot then
-        local CurentInteractionType = GetInteractionType()
-        -- Display Results
-        d("Lootindex : " .. Harvest.lootIndex .. " : Number of Item Looted  : " .. Harvest.NumItemLooted .. " : " .. TargetActionName .. " : Node Name : " .. TargetNodeName .. " : Item Name : " .. link.name )
-        -- InterAction Type
-        d("InteractionType : " .. CurentInteractionType .. " : TargetInteractionType : preferred(" .. TargetInteractionType .. ")" )
-        -- ItemType
-        d("itemID : " .. link.id .. " : Item Type : " .. link.type )
-    end
 
     -- 0: INTERACT_TARGET_TYPE_NONE
     -- 1: INTERACT_TARGET_TYPE_OBJECT - NPC, Pure Water, Essence Rune
@@ -214,6 +202,18 @@ function Harvest.OnLootReceived( receivedBy, objectName, stackCount, soundCatego
     -- 6: INTERACT_TARGET_TYPE_AOE_LOOT
 
     profession = Harvest.GetProfessionType(link.id, TargetNodeName)
+    if Harvest.settings.debug then
+        d("Looted : " .. link.name .. " : ItemID : " .. link.id .. " : Profession Type : " .. tostring(profession) )
+    end
+
+    if Harvest.settings.loot then
+        local CurentInteractionType = GetInteractionType()
+        -- Display Results
+        d("Lootindex : " .. Harvest.lootIndex .. " : Number of item(s) looted since login : " .. Harvest.NumItemLooted )
+        d("itemID : " .. link.id .. " : Item Type : " .. link.type .. " : Profession Type : " .. tostring(profession) )
+        d("InteractionType : " .. CurentInteractionType .. " : [pref]TargetInteractionType : " .. TargetInteractionType )
+        d("TargetActionName : " .. TargetActionName .. " : Node Name : " .. TargetNodeName .. " : Item Name : " .. link.name )
+    end
 
     -- Don't need to track torchbug loot
     if (profession < 1) then
@@ -385,7 +385,7 @@ function Harvest.OnUpdate(time)
     end
 
     local newAction, nodeName, blockedNode, additionalInfo, contextlInfo = GetGameCameraInteractableActionInfo()
-    local isHarvesting = ( IsPlayerInteractingWithObject() and Harvest.IsPlayerHarvesting() ) 
+    local isHarvesting = ( IsPlayerInteractingWithObject() and Harvest.IsPlayerHarvesting() )
     if not isHarvesting then
         -- d("I am NOT busy!")
         if nodeName then
@@ -399,21 +399,21 @@ function Harvest.OnUpdate(time)
         if newAction ~= Harvest.action then
             Harvest.action = newAction
 
-            if Harvest.settings.loot and Harvest.action ~= nil then
+            if Harvest.settings.verbose and Harvest.action ~= nil then
                 d("Action : " .. Harvest.action)
             end
-            if Harvest.settings.loot and nodeName ~= nil then
+            if Harvest.settings.verbose and nodeName ~= nil then
                 d("Node Name : " .. nodeName)
             end
-            if Harvest.settings.loot and blockedNode ~= nil then
+            if Harvest.settings.verbose and blockedNode ~= nil then
                 if blockedNode then
                     d("blockedNode : Is True")
                 end
             end
-            if Harvest.settings.loot and additionalInfo ~= nil then
+            if Harvest.settings.verbose and additionalInfo ~= nil then
                 d("Additional Info : " .. additionalInfo)
             end
-            if Harvest.settings.loot and contextlInfo ~= nil then
+            if Harvest.settings.verbose and contextlInfo ~= nil then
                 d("Contextual Info : " .. contextlInfo)
             end
 
