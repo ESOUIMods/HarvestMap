@@ -178,8 +178,8 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
 
     local zone, x, y = Harvest.GetLocation()
     -- Global Harvest.NumItemLooted
-    local itemLink = GetLootItemLink(Harvest.NumItemLooted)
-    local link = Harvest.ItemLinkParse( itemLink )
+    -- local itemLink = GetLootItemLink(Harvest.NumItemLooted) -- check variable
+    local link = Harvest.ItemLinkParse( objectName )
 
     -- if link.id is nil Harvest.GetProfessionType will fail
     if link.id == nil then
