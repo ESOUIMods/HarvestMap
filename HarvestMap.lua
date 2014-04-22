@@ -212,7 +212,7 @@ function Harvest.OnLootReceived( receivedBy, objectName, stackCount, soundCatego
         d("Lootindex : " .. Harvest.lootIndex .. " : Number of item(s) looted since login : " .. Harvest.NumItemLooted )
         d("itemID : " .. link.id .. " : Item Type : " .. link.type .. " : Profession Type : " .. tostring(profession) )
         d("InteractionType : " .. CurentInteractionType .. " : [pref]TargetInteractionType : " .. TargetInteractionType )
-        d("TargetActionName : " .. TargetActionName .. " : Node Name : " .. TargetNodeName .. " : Item Name : " .. link.name )
+        d("TargetActionName : " .. TargetActionName .. " : Node Name : " .. TargetNodeName )
     end
 
     -- Don't need to track torchbug loot
