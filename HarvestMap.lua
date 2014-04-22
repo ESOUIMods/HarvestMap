@@ -202,9 +202,6 @@ function Harvest.OnLootReceived( receivedBy, objectName, stackCount, soundCatego
     -- 6: INTERACT_TARGET_TYPE_AOE_LOOT
 
     profession = Harvest.GetProfessionType(link.id, TargetNodeName)
-    if Harvest.settings.debug then
-        d("Looted : " .. link.name .. " : ItemID : " .. link.id .. " : Profession Type : " .. tostring(profession) )
-    end
 
     if Harvest.settings.loot then
         local CurentInteractionType = GetInteractionType()
@@ -250,7 +247,7 @@ function Harvest.OnLootUpdate()
     for lootIndex = 1,items do
         Harvest.lootIndex = lootIndex
         Harvest.NumItemLooted, itemName = GetLootItemInfo(Harvest.lootIndex)
-        if Harvest.settings.loot then
+        if Harvest.settings.loot or Harvest.settings.debug then
             d("Item #".. tostring(Harvest.NumItemLooted) .. " : " .. Harvest.FormatString(itemName))
         end
         -- ( receivedBy, objectName, stackCount, soundCategory, lootType, lootedBySelf )
