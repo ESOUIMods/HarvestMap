@@ -130,7 +130,6 @@ Harvest.professions = {
         30164,
         30165,
         30166,
-        42871,
     },
     -- : Wood ; In Esohead Wood is (6)
     [5] = {
@@ -518,51 +517,146 @@ Harvest.books = {
     },
 }
 
-function Harvest.IsValidMining(name)
+function Harvest.IsValidMining(id, name)
+    local nameMatch = false
+    local itemIDMatch = false
+
+    for key1, value in pairs(Harvest.professions[1]) do
+        if value == id then
+            itemIDMatch = true
+            if itemIDMatch then
+                d("ItemID Matched!")
+            end
+        end
+    end
+
     for k, v in pairs(Harvest.mining[Harvest.language]) do
         if v == name then
-            return true
+            nameMatch = true
+            if nameMatch then
+                d("Name Matched!")
+            end
         end
+    end
+
+    if nameMatch and itemIDMatch then
+        return true
     end
 
     return false
 end
 
-function Harvest.IsValidClothing(name)
+function Harvest.IsValidClothing(id, name)
+    local nameMatch = false
+    local itemIDMatch = false
+
+    for key1, value in pairs(Harvest.professions[2]) do
+        if value == id then
+            itemIDMatch = true
+            if itemIDMatch then
+                d("ItemID Matched!")
+            end
+        end
+    end
+
     for k, v in pairs(Harvest.clothing[Harvest.language]) do
         if v == name then
-            return true
+            nameMatch = true
+            if nameMatch then
+                d("Name Matched!")
+            end
         end
+    end
+
+    if nameMatch and itemIDMatch then
+        return true
     end
 
     return false
 end
 
-function Harvest.IsValidEnchanting(name)
+function Harvest.IsValidEnchanting(id, name)
+    local nameMatch = false
+    local itemIDMatch = false
+
+    for key1, value in pairs(Harvest.professions[3]) do
+        if value == id then
+            itemIDMatch = true
+            if itemIDMatch then
+                d("ItemID Matched!")
+            end
+        end
+    end
+
     for k, v in pairs(Harvest.enchanting[Harvest.language]) do
         if v == name then
-            return true
+            nameMatch = true
+            if nameMatch then
+                d("Name Matched!")
+            end
         end
+    end
+
+    if nameMatch and itemIDMatch then
+        return true
     end
 
     return false
 end
 
-function Harvest.IsValidAlchemy(name)
+function Harvest.IsValidAlchemy(id, name)
+    local nameMatch = false
+    local itemIDMatch = false
+
+    for key1, value in pairs(Harvest.professions[4]) do
+        if value == id then
+            itemIDMatch = true
+            if itemIDMatch then
+                d("ItemID Matched!")
+            end
+        end
+    end
+
     for k, v in pairs(Harvest.alchemy[Harvest.language]) do
         if v == name then
-            return true
+            nameMatch = true
+            if nameMatch then
+                d("Name Matched!")
+            end
         end
+    end
+
+    if nameMatch and itemIDMatch then
+        return true
     end
 
     return false
 end
 
-function Harvest.IsValidWoodworking(name)
+function Harvest.IsValidWoodworking(id, name)
+    local nameMatch = false
+    local itemIDMatch = false
+
+    for key1, value in pairs(Harvest.professions[5]) do
+        if value == id then
+            itemIDMatch = true
+            if itemIDMatch then
+                d("ItemID Matched!")
+            end
+        end
+    end
+
     for k, v in pairs(Harvest.woodworking[Harvest.language]) do
         if v == name then
-            return true
+            nameMatch = true
+            if nameMatch then
+                d("Name Matched!")
+            end
         end
+    end
+
+    if nameMatch and itemIDMatch then
+        return true
     end
 
     return false
@@ -588,16 +682,6 @@ function Harvest.IsValidContainer(name)
     return false
 end
 
-function Harvest.IsValidBook(name)
-    for k, v in pairs(Harvest.books[Harvest.language]) do
-        if v == name then
-            return true
-        end
-    end
-
-    return false
-end
-
 -- Arguments Required ItemID, NodeName
 -- Returns -1 when Object interacted with is invalid
 -- Valid types: (1)Mining, (2)Clothing, (3)Enchanting
@@ -610,49 +694,49 @@ function Harvest.GetProfessionType(id, name)
 
     if Harvest.settings.debug then
         d("Attempting GetProfessionType with id : " .. id)
-        d("and item name : " .. name)
+        d("Node Name : " .. name)
     end
 
     -- Set (1)Mining
-    if Harvest.IsValidMining(name) then
-        tsId = 1
-        if Harvest.settings.debug then
-            d("Mining id assigned : " .. tsId)
-        end
-        return tsId
-    end
+    -- if Harvest.IsValidMining(id, name) then
+    --     tsId = 1
+    --     if Harvest.settings.debug then
+    --         d("Mining id assigned : " .. tsId)
+    --     end
+    --     return tsId
+    -- end
     -- Set (2)Clothing
-    if Harvest.IsValidClothing(name) then
-        tsId = 2
-        if Harvest.settings.debug then
-            d("Clothing id assigned : " .. tsId)
-        end
-        return tsId
-    end
+    -- if Harvest.IsValidClothing(id, name) then
+    --     tsId = 2
+    --     if Harvest.settings.debug then
+    --         d("Clothing id assigned : " .. tsId)
+    --     end
+    --     return tsId
+    -- end
     -- Set (3)Enchanting
-    if Harvest.IsValidEnchanting(name) then
-        tsId = 3
-        if Harvest.settings.debug then
-            d("Enchanting id assigned : " .. tsId)
-        end
-        return tsId
-    end
+    -- if Harvest.IsValidEnchanting(id, name) then
+    --     tsId = 3
+    --     if Harvest.settings.debug then
+    --         d("Enchanting id assigned : " .. tsId)
+    --     end
+    --     return tsId
+    -- end
     -- Set (4)Alchemy
-    if Harvest.IsValidAlchemy(name) then
-        tsId = 4
-        if Harvest.settings.debug then
-            d("Alchemy id assigned : " .. tsId)
-        end
-        return tsId
-    end
+    -- if Harvest.IsValidAlchemy(id, name) then
+    --     tsId = 4
+    --     if Harvest.settings.debug then
+    --         d("Alchemy id assigned : " .. tsId)
+    --     end
+    --     return tsId
+    -- end
     -- Set (5)Woodworking
-    if Harvest.IsValidWoodworking(name) then
-        tsId = 5
-        if Harvest.settings.debug then
-            d("Woodworking id assigned : " .. tsId)
-        end
-        return tsId
-    end
+    -- if Harvest.IsValidWoodworking(id, name) then
+    --     tsId = 5
+    --     if Harvest.settings.debug then
+    --         d("Woodworking id assigned : " .. tsId)
+    --     end
+    --     return tsId
+    -- end
     -- Set (7)Solvent
     if Harvest.IsValidSolvent(name) then
         tsId = 7

@@ -153,10 +153,13 @@ end
 -- 1: lootIndex
 -- 2: Boolean: Is it Quest Loot
 -- 3: Boolean: Looted By Player
-function Harvest.OnLootReceived( receivedBy, objectName, stackCount, soundCategory, lootType, lootedBySelf )
+function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, soundCategory, lootType, lootedBySelf )
     if Harvest.settings.verbose then
         d("OnLootReceived")
     end
+
+    -- These is only available in OnUpdate
+    -- NumItemLooted = GetNumLootItems()
 
     if not Harvest.isHarvesting or not lootedBySelf then
         if Harvest.settings.verbose then
@@ -169,11 +172,12 @@ function Harvest.OnLootReceived( receivedBy, objectName, stackCount, soundCatego
         end
         return
     end
-
+    
     local zone, x, y = Harvest.GetLocation()
-    -- Global Harvest.NumItemLooted
-    -- local itemLink = GetLootItemLink(Harvest.NumItemLooted) -- check variable
-    local link = Harvest.ItemLinkParse( objectName )
+    link = Harvest.ItemLinkParse( objectName )
+    if (Harvest.settings.loot) or (Harvest.settings.debug) then
+        d("Item Name: " .. Harvest.FormatString(link.name) .. " : ItemID : " .. tostring(link.id) )
+    end
 
     -- if link.id is nil Harvest.GetProfessionType will fail
     if link.id == nil then
@@ -183,17 +187,6 @@ function Harvest.OnLootReceived( receivedBy, objectName, stackCount, soundCatego
         return
     end
 
-    -- Global Harvest.lootIndex
-    _, _, _, _, _, _, LootIsQuest = GetLootItemInfo(Harvest.lootIndex)
-    if LootIsQuest then
-        if Harvest.settings.loot then
-            d("This is Quest Loot!")
-            return
-        end
-    end
-
-    local TargetNodeName, TargetInteractionType, TargetActionName = GetLootTargetInfo()
-
     -- 0: INTERACT_TARGET_TYPE_NONE
     -- 1: INTERACT_TARGET_TYPE_OBJECT - NPC, Pure Water, Essence Rune
     -- 2: INTERACT_TARGET_TYPE_ITEM
@@ -201,15 +194,18 @@ function Harvest.OnLootReceived( receivedBy, objectName, stackCount, soundCatego
     -- 5: INTERACT_TARGET_TYPE_FIXTURE - Trunk, Dresser
     -- 6: INTERACT_TARGET_TYPE_AOE_LOOT
 
-    profession = Harvest.GetProfessionType(link.id, TargetNodeName)
+    if ( link.type == LOOT_TYPE_QUEST_ITEM) then
+        if Harvest.settings.loot then
+            d("This is Quest Loot!")
+            return
+        end
+    end
+
+    profession = Harvest.GetProfessionType(link.id, Harvest.nodeName)
 
     if Harvest.settings.loot then
-        local CurentInteractionType = GetInteractionType()
-        -- Display Results
-        d("Lootindex : " .. Harvest.lootIndex .. " : Number of item(s) looted since login : " .. Harvest.NumItemLooted )
-        d("itemID : " .. link.id .. " : Item Type : " .. link.type .. " : Profession Type : " .. tostring(profession) )
-        d("InteractionType : " .. CurentInteractionType .. " : [pref]TargetInteractionType : " .. TargetInteractionType )
-        d("TargetActionName : " .. TargetActionName .. " : Node Name : " .. TargetNodeName )
+        d("Item Type : " .. link.type .. " : Profession Type : " .. tostring(profession) )
+        d("Node Name : " .. Harvest.nodeName )
     end
 
     -- Don't need to track torchbug loot
@@ -230,7 +226,7 @@ end
 
 function Harvest.OnLootUpdate()
 
-    if Harvest.settings.verbose then
+    if Harvest.settings.loot then
         d("OnLootUpdate")
     end
 
@@ -244,17 +240,16 @@ function Harvest.OnLootUpdate()
         return
     end
 
-    for lootIndex = 1,items do
-        Harvest.lootIndex = lootIndex
-        Harvest.NumItemLooted, itemName = GetLootItemInfo(Harvest.lootIndex)
-        if Harvest.settings.loot or Harvest.settings.debug then
-            d("Item #".. tostring(Harvest.NumItemLooted) .. " : " .. Harvest.FormatString(itemName))
+    local NumItemLooted
+    for lootIndex = 1, items do
+        NumItemLooted, itemName = GetLootItemInfo(lootIndex)
+        if (Harvest.settings.loot) or (Harvest.settings.debug) then
+            d("Number of Item seen since login : ".. tostring(NumItemLooted) )
         end
-        -- ( receivedBy, objectName, stackCount, soundCategory, lootType, lootedBySelf )
-        Harvest.OnLootReceived( nil , GetLootItemLink(Harvest.NumItemLooted), nil , nil , nil , true )
+        Harvest.OnLootReceived( nil, nil, GetLootItemLink(NumItemLooted), nil, nil, nil, true )
     end
 
-    if Harvest.settings.verbose then
+    if Harvest.settings.loot then
         d("OnLootUpdate Exited")
     end
 
@@ -445,8 +440,7 @@ function Harvest.OnLoad(eventCode, addOnName)
 
     -- NEW keep these they init things
     Harvest.isHarvesting = false
-    Harvest.NumItemLooted = 0
-    Harvest.lootIndex = 0
+    Harvest.action = nil
 
     Harvest.minDist = 0.000025 -- 0.005^2
     Harvest.nodes = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "nodes", { data = {} } )
