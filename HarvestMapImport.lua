@@ -20,7 +20,8 @@ function Harvest.importFromEsohead()
 
     -- Additional HarvestMap Catagories
     -- 6 = Chest, 7 = Solvent, 8 = Fish
-
+    
+    local professionFound
     d("Import Harvest Nodes:")
     for map, data in pairs(EH.savedVars["harvest"].data) do
         d("import data from "..map)
@@ -28,7 +29,10 @@ function Harvest.importFromEsohead()
         if newMapName then
             for index, nodes in pairs(data) do
                 for _, node in pairs(nodes) do
-                    Harvest.saveData( newMapName, node[1], node[2], Harvest.GetProfessionType(node[5], node[4]), node[4], node[5] )
+                    professionFound = Harvest.GetProfessionType(node[5], node[4])
+                    if professionFound >= 1 then
+                        Harvest.saveData( newMapName, node[1], node[2], professionFound, node[4], node[5] )
+                    end
                 end
             end
         end
