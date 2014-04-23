@@ -56,6 +56,7 @@ function Harvest.importFromEsohead()
         newMapName = Harvest.GetNewMapName(map)
         if newMapName then
             for _, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 -- Esohead "chest" has nodes only, add appropriate data
                 -- The 6 before "chest" refers to it's Profession ID
                 Harvest.saveData( newMapName, node[1], node[2], 6, "chest", nil )
@@ -69,6 +70,7 @@ function Harvest.importFromEsohead()
         newMapName = Harvest.GetNewMapName(map)
         if newMapName then
             for _, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 -- Esohead "fish" has nodes only, add appropriate data
                 -- The 8 before "fish" refers to it's Profession ID
                 Harvest.saveData( newMapName, node[1], node[2], 8, "fish", nil )
@@ -78,7 +80,7 @@ function Harvest.importFromEsohead()
 
     d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
     d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
-    d("Number of False Nodes Skipped : " .. tostring(Harvest.NumFalseNodes) )
+    d("Number of False nodes skipped : " .. tostring(Harvest.NumFalseNodes) )
     d("Finished.")
     Harvest.RefreshPins()
 end
