@@ -198,12 +198,12 @@ Harvest.mining = {
         "Minerai de Fer Noble",
         "Orichalc Ore",
         "Minerai D'orichalque",
-        "Dwarven Ore",
-        "Ebony Ore",
-        "Calcinium Ore",
-        "Galatite Ore",
+        "Minerai Dwemer",
+        "Minerai d'Ebonite",
+        "Minerai de Calcinium",
+        "Minerai de Galatite",
         "Quicksilver Ore",
-        "Voidstone Ore",
+        "Minerai de Pierre de Vide",
     },
 }
 
@@ -236,15 +236,15 @@ Harvest.clothing = {
         "Kresh Weed",
     },
     ["fr"] = {
-        "Cotton",
-        "Ebonthread",
+        "Coton",
+        "Fil d'Ebonite",
         "Lin",
-        "Ironweed",
+        "Herbe de fer",
         "Jute",
         "Kreshweed",
         "Silverweed",
-        "Spidersilk",
-        "Void Bloom",
+        "Toile D'araignée",
+        "Tissu de Vide",
         "Silver Weed",
         "Kresh Weed",
     },
@@ -290,44 +290,44 @@ Harvest.alchemy = {
         "Wormwood",
     },
     ["de"] = {
-        "Blessed Thistle",
-        "Entoloma",
-        "Bugloss",
-        "Columbine",
-        "Corn Flower",
-        "Dragonthorn",
-        "Emetic Russula",
-        "Imp Stool",
-        "Lady's Smock",
-        "Luminous Russula",
-        "Mountain Flower",
-        "Namira's Rot",
-        "Nirnroot",
-        "Stinkhorn",
-        "Violet Copninus",
-        "Water Hyacinth",
-        "White Cap",
-        "Wormwood",
+        "Benediktenkraut",
+        "Glöckling",
+        "Wolfsauge",
+        "Akelei",
+        "Kornblume",
+        "Drachendorn",
+        "Speitäubling",
+        "Koboldschemel",
+        "Wiesenschaumkraut",
+        "Leuchttäubling",
+        "Bergblume",
+        "Namira's Fäulnis",
+        "Nirnwurz",
+        "Stinkmorchel",
+        "Violetter Coprinus",
+        "Wasserhyazinthe",
+        "Weiße Kappe",
+        "Wermut",
     },
     ["fr"] = {
-        "Blessed Thistle",
+        "Chardon Béni",
         "Entoloma",
-        "Bugloss",
-        "Columbine",
-        "Corn Flower",
-        "Dragonthorn",
-        "Emetic Russula",
-        "Imp Stool",
-        "Lady's Smock",
-        "Luminous Russula",
-        "Mountain Flower",
-        "Namira's Rot",
-        "Nirnroot",
-        "Stinkhorn",
-        "Violet Copninus",
-        "Water Hyacinth",
-        "White Cap",
-        "Wormwood",
+        "Noctuelle",
+        "Ancolie",
+        "Bleuet",
+        "Épine-de-Dragon",
+        "Russule Emetique",
+        "Pied-de-Lutin",
+        "Cardamine des Prés",
+        "Russule Phosphorescente",
+        "Lys des Cimes",
+        "Truffe de Namira",
+        "Nirnrave",
+        "Mutinus Elégans",
+        "Coprin Violet",
+        "Jacinthe D'eau",
+        "Chapeau Blanc",
+        "Absinthe",
     },
 }
 -- (5) Woodworking ; In Esohead Woodworking is (6)
@@ -359,9 +359,9 @@ Harvest.woodworking = {
         "Hêtre",
         "Bouleau",
         "Hickory",
-        "Mahogany",
+        "Acajou",
         "Érable",
-        "Nightwood",
+        "Bois de nuit",
         "Chêne",
         "If",
     },
@@ -396,7 +396,7 @@ Harvest.solvent = {
         "Gefäß",
         "Krug",
         "Becher",
-        "Pure Water",
+        "Reines Wasser",
         "Wasserhaut",
         "Weinregal",
     },
@@ -458,7 +458,7 @@ Harvest.container = {
         "Schrank",
         "Schreibtisch",
         "Kommode",
-        "Heavy Sack",
+        "Schwerer Sack",
         "Nachttisch",
         "Topf",
         "Sack",
@@ -524,18 +524,22 @@ function Harvest.IsValidMining(id, name)
     for key1, value in pairs(Harvest.professions[1]) do
         if value == id then
             itemIDMatch = true
-            if itemIDMatch then
-                d("ItemID Matched!")
-            end
         end
     end
 
-    for k, v in pairs(Harvest.mining[Harvest.language]) do
+    for k, v in pairs(Harvest.mining["en"]) do
         if v == name then
             nameMatch = true
-            if nameMatch then
-                d("Name Matched!")
-            end
+        end
+    end
+    for k, v in pairs(Harvest.mining["de"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.mining["fr"]) do
+        if v == name then
+            nameMatch = true
         end
     end
 
@@ -553,18 +557,22 @@ function Harvest.IsValidClothing(id, name)
     for key1, value in pairs(Harvest.professions[2]) do
         if value == id then
             itemIDMatch = true
-            if itemIDMatch then
-                d("ItemID Matched!")
-            end
         end
     end
 
-    for k, v in pairs(Harvest.clothing[Harvest.language]) do
+    for k, v in pairs(Harvest.clothing["en"]) do
         if v == name then
             nameMatch = true
-            if nameMatch then
-                d("Name Matched!")
-            end
+        end
+    end
+    for k, v in pairs(Harvest.clothing["de"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.clothing["fr"]) do
+        if v == name then
+            nameMatch = true
         end
     end
 
@@ -582,18 +590,22 @@ function Harvest.IsValidEnchanting(id, name)
     for key1, value in pairs(Harvest.professions[3]) do
         if value == id then
             itemIDMatch = true
-            if itemIDMatch then
-                d("ItemID Matched!")
-            end
         end
     end
 
-    for k, v in pairs(Harvest.enchanting[Harvest.language]) do
+    for k, v in pairs(Harvest.enchanting["en"]) do
         if v == name then
             nameMatch = true
-            if nameMatch then
-                d("Name Matched!")
-            end
+        end
+    end
+    for k, v in pairs(Harvest.enchanting["de"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.enchanting["fr"]) do
+        if v == name then
+            nameMatch = true
         end
     end
 
@@ -611,18 +623,22 @@ function Harvest.IsValidAlchemy(id, name)
     for key1, value in pairs(Harvest.professions[4]) do
         if value == id then
             itemIDMatch = true
-            if itemIDMatch then
-                d("ItemID Matched!")
-            end
         end
     end
 
-    for k, v in pairs(Harvest.alchemy[Harvest.language]) do
+    for k, v in pairs(Harvest.alchemy["en"]) do
         if v == name then
             nameMatch = true
-            if nameMatch then
-                d("Name Matched!")
-            end
+        end
+    end
+    for k, v in pairs(Harvest.alchemy["de"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.alchemy["fr"]) do
+        if v == name then
+            nameMatch = true
         end
     end
 
@@ -640,23 +656,67 @@ function Harvest.IsValidWoodworking(id, name)
     for key1, value in pairs(Harvest.professions[5]) do
         if value == id then
             itemIDMatch = true
-            if itemIDMatch then
-                d("ItemID Matched!")
-            end
         end
     end
 
-    for k, v in pairs(Harvest.woodworking[Harvest.language]) do
+    for k, v in pairs(Harvest.woodworking["en"]) do
         if v == name then
             nameMatch = true
-            if nameMatch then
-                d("Name Matched!")
-            end
+        end
+    end
+    for k, v in pairs(Harvest.woodworking["de"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.woodworking["fr"]) do
+        if v == name then
+            nameMatch = true
         end
     end
 
     if nameMatch and itemIDMatch then
         return true
+    end
+
+    return false
+end
+
+function Harvest.IsValidSolventOnImport(name)
+    for k, v in pairs(Harvest.solvent["en"]) do
+        if v == name then
+            return true
+        end
+    end
+    for k, v in pairs(Harvest.solvent["de"]) do
+        if v == name then
+            return true
+        end
+    end
+    for k, v in pairs(Harvest.solvent["fr"]) do
+        if v == name then
+            return true
+        end
+    end
+
+    return false
+end
+
+function Harvest.IsValidContainerOnImport(name)
+    for k, v in pairs(Harvest.container["en"]) do
+        if v == name then
+            return true
+        end
+    end
+    for k, v in pairs(Harvest.container["de"]) do
+        if v == name then
+            return true
+        end
+    end
+    for k, v in pairs(Harvest.container["fr"]) do
+        if v == name then
+            return true
+        end
     end
 
     return false
@@ -687,93 +747,36 @@ end
 -- Valid types: (1)Mining, (2)Clothing, (3)Enchanting
 -- (4)Alchemy, (5)Wood, (6)Chests, (7)Solvents
 -- (8)Fish
-function Harvest.GetProfessionTypeOnImport(id, name)
-    local tsId
+function Harvest.CheckProfessionTypeOnImport(id, name)
+    local isOk = false
     id = tonumber(id)
 
-    if Harvest.settings.verbose then
-        d("Attempting GetProfessionType with id : " .. id)
-        d("Node Name : " .. name)
-    end
-
     -- Set (1)Mining
-    -- if Harvest.IsValidMining(id, name) then
-    --     tsId = 1
-    --     if Harvest.settings.debug then
-    --         d("Mining id assigned : " .. tsId)
-    --     end
-    --     return tsId
-    -- end
+    if Harvest.IsValidMining(id, name) then
+        isOk = true
+    end
     -- Set (2)Clothing
-    -- if Harvest.IsValidClothing(id, name) then
-    --     tsId = 2
-    --     if Harvest.settings.debug then
-    --         d("Clothing id assigned : " .. tsId)
-    --     end
-    --     return tsId
-    -- end
+     if Harvest.IsValidClothing(id, name) then
+        isOk = true
+    end
     -- Set (3)Enchanting
-    -- if Harvest.IsValidEnchanting(id, name) then
-    --     tsId = 3
-    --     if Harvest.settings.debug then
-    --         d("Enchanting id assigned : " .. tsId)
-    --     end
-    --     return tsId
-    -- end
+     if Harvest.IsValidEnchanting(id, name) then
+        isOk = true
+    end
     -- Set (4)Alchemy
-    -- if Harvest.IsValidAlchemy(id, name) then
-    --     tsId = 4
-    --     if Harvest.settings.debug then
-    --         d("Alchemy id assigned : " .. tsId)
-    --     end
-    --     return tsId
-    -- end
+     if Harvest.IsValidAlchemy(id, name) then
+        isOk = true
+    end
     -- Set (5)Woodworking
-    -- if Harvest.IsValidWoodworking(id, name) then
-    --     tsId = 5
-    --     if Harvest.settings.debug then
-    --         d("Woodworking id assigned : " .. tsId)
-    --     end
-    --     return tsId
-    -- end
-    -- Set (7)Solvent
-    if Harvest.IsValidSolvent(name) then
-        tsId = 7
-        if Harvest.settings.verbose then
-            d("Solvent id assigned : " .. tsId)
-        end
-        return tsId
+     if Harvest.IsValidWoodworking(id, name) then
+        isOk = true
+    end
+    -- Set (5)Solvent
+    if Harvest.IsValidSolventOnImport(name) then
+        isOk = true
     end
 
-    -- For this HarvestMap version there are no containers
-    -- Set any container found to 0 so that it is not recorded.
-    if Harvest.IsValidContainer(name) then
-        tsId = 0
-        if Harvest.settings.verbose then
-            d("Container is not used in this version id assigned : " .. tsId)
-        end
-        return tsId
-    end
-
-    -- if no valid Node Name by Name is found use ItemID
-    for key1, tsData in pairs(Harvest.professions) do
-        for key2, value in pairs(tsData) do
-            if value == id then
-                tsId = key1
-                if Harvest.settings.verbose then
-                    d("Esohead id assigned : " .. tsId)
-                end
-                return tsId
-            end
-        end
-    end
-
-    if Harvest.settings.verbose then
-        d("No Profession Type found with id : " .. id)
-        d("In GetProfessionType with name : " .. name)
-    end
-
-    return -1
+    return isOk
 end
 
 -- Arguments Required ItemID, NodeName

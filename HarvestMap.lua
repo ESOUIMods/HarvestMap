@@ -436,6 +436,7 @@ function Harvest.OnLoad(eventCode, addOnName)
     Harvest.isHarvesting = false
     Harvest.action = nil
     Harvest.NumbersNodesAdded = 0
+    Harvest.NumFalseNodes = 0
 
     Harvest.minDist = 0.000025 -- 0.005^2
     Harvest.nodes = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "nodes", { data = {} } )
