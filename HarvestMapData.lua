@@ -683,43 +683,47 @@ function Harvest.IsValidWoodworking(id, name)
 end
 
 function Harvest.IsValidSolventOnImport(name)
+    local nameMatch = false
+    
     for k, v in pairs(Harvest.solvent["en"]) do
         if v == name then
-            return true
+            nameMatch = true
         end
     end
     for k, v in pairs(Harvest.solvent["de"]) do
         if v == name then
-            return true
+            nameMatch = true
         end
     end
     for k, v in pairs(Harvest.solvent["fr"]) do
         if v == name then
-            return true
+            nameMatch = true
         end
     end
 
-    return false
+    return nameMatch
 end
 
 function Harvest.IsValidContainerOnImport(name)
+    local nameMatch = false
+
     for k, v in pairs(Harvest.container["en"]) do
         if v == name then
-            return true
+            nameMatch = true
         end
     end
     for k, v in pairs(Harvest.container["de"]) do
         if v == name then
-            return true
+            nameMatch = true
         end
     end
     for k, v in pairs(Harvest.container["fr"]) do
         if v == name then
-            return true
+            nameMatch = true
         end
     end
 
-    return false
+    return nameMatch
 end
 
 function Harvest.IsValidSolvent(name)
@@ -771,7 +775,7 @@ function Harvest.CheckProfessionTypeOnImport(id, name)
      if Harvest.IsValidWoodworking(id, name) then
         isOk = true
     end
-    -- Set (5)Solvent
+    -- Set (7)Solvent
     if Harvest.IsValidSolventOnImport(name) then
         isOk = true
     end

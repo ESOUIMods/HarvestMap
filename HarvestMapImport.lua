@@ -1,6 +1,7 @@
 function Harvest.importFromEsohead()
     Harvest.NumbersNodesAdded = 0
     Harvest.NumFalseNodes = 0
+    Harvest.NumNodesProcessed = 0
 
     if not EH then
         d("Please enable the Esohead addon to import data!")
@@ -32,7 +33,8 @@ function Harvest.importFromEsohead()
         if newMapName then
             for index, nodes in pairs(data) do
                 for _, node in pairs(nodes) do
-                    if not Harvest.IsValidContainerOnImport(node[5], node[4]) then -- << Not a Container
+                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                    if not Harvest.IsValidContainerOnImport(node[4]) then -- << Not a Container
                         if Harvest.CheckProfessionTypeOnImport(node[5], node[4]) then -- << If Valid Profession Type
                             professionFound = Harvest.GetProfessionType(node[5], node[4])
                             if professionFound >= 1 then
@@ -40,6 +42,7 @@ function Harvest.importFromEsohead()
                             end
                         else -- << If Valid Profession Type
                             Harvest.NumFalseNodes = Harvest.NumFalseNodes + 1
+                            d("Node:" .. node[4] .. " ItemID " .. tostring(node[5]) .. " skipped")
                         end -- << If Valid Profession Type
                     end -- << Not a Container
                 end
@@ -73,6 +76,7 @@ function Harvest.importFromEsohead()
         end
     end
 
+    d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
     d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
     d("Number of False Nodes Skipped : " .. tostring(Harvest.NumFalseNodes) )
     d("Finished.")
