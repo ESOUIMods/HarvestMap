@@ -1,4 +1,5 @@
 function Harvest.importFromEsohead()
+    Harvest.NumbersNodesAdded = 0
     if not EH then
         d("Please enable the Esohead addon to import data!")
         return
@@ -64,6 +65,7 @@ function Harvest.importFromEsohead()
         end
     end
 
+    d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
     d("Finished.")
     Harvest.RefreshPins()
 end

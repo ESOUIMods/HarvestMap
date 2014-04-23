@@ -300,6 +300,7 @@ function Harvest.saveData( zone, x, y, profession, nodeName, itemID )
     end
 
     table.insert( Harvest.nodes.data[zone][profession], { x, y, { nodeName }, itemID } )
+    Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
 
 end
 
@@ -434,6 +435,7 @@ function Harvest.OnLoad(eventCode, addOnName)
     -- NEW keep these they init things
     Harvest.isHarvesting = false
     Harvest.action = nil
+    Harvest.NumbersNodesAdded = 0
 
     Harvest.minDist = 0.000025 -- 0.005^2
     Harvest.nodes = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "nodes", { data = {} } )
