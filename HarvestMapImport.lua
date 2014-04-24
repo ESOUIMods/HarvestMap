@@ -41,7 +41,7 @@ function Harvest.importFromEsohead()
                             professionFound = Harvest.GetProfessionType(node[5], node[4])
                             if professionFound >= 1 then
                                 -- When import filter is false do NOT import the node
-                                if Harvest.settings.importFilters[ professionFound ] == false then
+                                if not Harvest.settings.importFilters[ professionFound ] then
                                     Harvest.saveData( newMapName, node[1], node[2], professionFound, node[4], node[5] )
                                 else
                                     -- d("skipping Node : " .. node[4] .. " : ID : " .. tostring(node[5]))
@@ -71,7 +71,7 @@ function Harvest.importFromEsohead()
                 -- Esohead "chest" has nodes only, add appropriate data
                 -- The 6 before "chest" refers to it's Profession ID
                 -- When import filter is false do NOT import the node
-                if Harvest.settings.importFilters[ 6 ] == false then
+                if not Harvest.settings.importFilters[ 6 ] then
                     Harvest.saveData( newMapName, node[1], node[2], 6, "chest", nil )
                 else
                     Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
@@ -90,7 +90,7 @@ function Harvest.importFromEsohead()
                 -- Esohead "fish" has nodes only, add appropriate data
                 -- The 8 before "fish" refers to it's Profession ID
                 -- When import filter is false do NOT import the node
-                if Harvest.settings.importFilters[ 8 ] == false then
+                if not Harvest.settings.importFilters[ 8 ] then
                     Harvest.saveData( newMapName, node[1], node[2], 8, "fish", nil )
                 else
                     Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1

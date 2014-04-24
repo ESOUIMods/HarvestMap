@@ -205,6 +205,13 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
         end
     end
 
+    if not Harvest.settings.gatherFilters[ profession ] then
+        if Harvest.settings.debug then
+            d("Gathering disabled for profession : " .. tostring(profession) )
+        end
+        return
+    end
+
     Harvest.saveData( zone, x, y, profession, Harvest.nodeName, link.id )
     Harvest.RefreshPins( profession )
 
@@ -276,13 +283,6 @@ function Harvest.saveData( zone, x, y, profession, nodeName, itemID )
         return
     end
     
-    if not Harvest.settings.gatherFilters[ profession ] then
-        if Harvest.settings.debug then
-            d("Gathering disabled for profession : " .. tostring(profession) )
-        end
-        return
-    end
-
     if Harvest.alreadyFound( zone, x, y, profession, nodeName ) then
         return
     end
@@ -411,17 +411,21 @@ function Harvest.OnUpdate(time)
             end
 
             -- Track Chest
-            if Harvest.action == GetString(SI_GAMECAMERAACTIONTYPE12) then
-                local zone, x, y = Harvest.GetLocation()
-                Harvest.saveData( zone, x, y, Harvest.chestID, "chest", nil )
-                Harvest.RefreshPins( Harvest.chestID )
+            if not Harvest.settings.gatherFilters[ Harvest.chestID ] then
+                if Harvest.action == GetString(SI_GAMECAMERAACTIONTYPE12) then
+                    local zone, x, y = Harvest.GetLocation()
+                    Harvest.saveData( zone, x, y, Harvest.chestID, "chest", nil )
+                    Harvest.RefreshPins( Harvest.chestID )
+                end
             end
 
             -- Track Fishing Hole
-            if Harvest.action == GetString(SI_GAMECAMERAACTIONTYPE16) then
-                local zone, x, y = Harvest.GetLocation()
-                Harvest.saveData( zone, x, y, Harvest.fishID, "fish", nil )
-                Harvest.RefreshPins( Harvest.fishID )
+            if not Harvest.settings.gatherFilters[ Harvest.fishID ] then
+                if Harvest.action == GetString(SI_GAMECAMERAACTIONTYPE16) then
+                    local zone, x, y = Harvest.GetLocation()
+                    Harvest.saveData( zone, x, y, Harvest.fishID, "fish", nil )
+                    Harvest.RefreshPins( Harvest.fishID )
+                end
             end
 
         end
