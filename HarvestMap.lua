@@ -441,7 +441,7 @@ function Harvest.OnLoad(eventCode, addOnName)
 
     Harvest.minDist = 0.000025 -- 0.005^2
     Harvest.nodes = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "nodes", { data = {} } )
-    Harvest.settings = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 1, "settings",
+	Harvest.settings = ZO_SavedVars:New("Harvest_SavedVars", 1, "settings",
         {
             filters = {
                 -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
