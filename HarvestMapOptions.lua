@@ -65,7 +65,7 @@ end
 
 local function CreateImportFilter( profession )
 
-    LAM:AddCheckbox(panelID, "HarvestMapFilter"..profession, Harvest.localization[ "import"..profession ], Harvest.localization[ "impfiltertooltip"..profession ],
+    LAM:AddCheckbox(panelID, "HarvestImportFilter"..profession, Harvest.localization[ "import"..profession ], Harvest.localization[ "impfiltertooltip"..profession ],
         function()
             return Harvest.GetImportFilter( profession )
         end,
@@ -78,7 +78,7 @@ end
 
 local function CreateGatherFilter( profession )
 
-    LAM:AddCheckbox(panelID, "HarvestMapFilter"..profession, Harvest.localization[ "gather"..profession ], Harvest.localization[ "gatfiltertooltip"..profession ],
+    LAM:AddCheckbox(panelID, "HarvestGatherFilter"..profession, Harvest.localization[ "gather"..profession ], Harvest.localization[ "gatfiltertooltip"..profession ],
         function()
             return Harvest.GetGatherFilter( profession )
         end,
@@ -160,6 +160,8 @@ function Harvest.InitializeOptions()
     for profession = 1,8 do
 		LAM:AddHeader(panelID, "HarvestMapPinHeader"..profession, Harvest.localization[ "filter"..profession ] .. " pin Options")
 		CreateFilter( profession )
+		CreateImportFilter( profession )
+		CreateGatherFilter( profession )
 		CreateSizeSlider( profession )
 		CreateColorPicker( profession )
 	end
