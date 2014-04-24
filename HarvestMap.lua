@@ -444,6 +444,8 @@ function Harvest.OnLoad(eventCode, addOnName)
     Harvest.action = nil
     Harvest.NumbersNodesAdded = 0
     Harvest.NumFalseNodes = 0
+    Harvest.NumContainerSkipped = 0
+    Harvest.NumbersNodesFiltered = 0
     Harvest.NumNodesProcessed = 0
 
     Harvest.minDist = 0.000025 -- 0.005^2

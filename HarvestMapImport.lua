@@ -1,6 +1,8 @@
 function Harvest.importFromEsohead()
     Harvest.NumbersNodesAdded = 0
     Harvest.NumFalseNodes = 0
+    Harvest.NumContainerSkipped = 0
+    Harvest.NumbersNodesFiltered = 0
     Harvest.NumNodesProcessed = 0
 
     if not EH then
@@ -42,13 +44,17 @@ function Harvest.importFromEsohead()
                                 if Harvest.settings.importFilters[ professionFound ] == false then
                                     Harvest.saveData( newMapName, node[1], node[2], professionFound, node[4], node[5] )
                                 else
-                                    d("skipping Node : " .. node[4] .. " : ID : " .. tostring(node[5]))
+                                    -- d("skipping Node : " .. node[4] .. " : ID : " .. tostring(node[5]))
+                                    Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
                                 end
                             end
                         else -- << If Valid Profession Type
                             Harvest.NumFalseNodes = Harvest.NumFalseNodes + 1
                             -- d("Node:" .. node[4] .. " ItemID " .. tostring(node[5]) .. " skipped")
                         end -- << If Valid Profession Type
+                    else -- << Not a Container
+                        Harvest.NumContainerSkipped = Harvest.NumContainerSkipped + 1
+                        -- d("Container :" .. node[4] .. " ItemID " .. tostring(node[5]) .. " skipped")
                     end -- << Not a Container
                 end
             end
@@ -67,6 +73,8 @@ function Harvest.importFromEsohead()
                 -- When import filter is false do NOT import the node
                 if Harvest.settings.importFilters[ 6 ] == false then
                     Harvest.saveData( newMapName, node[1], node[2], 6, "chest", nil )
+                else
+                    Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
                 end
             end
         end
@@ -84,6 +92,8 @@ function Harvest.importFromEsohead()
                 -- When import filter is false do NOT import the node
                 if Harvest.settings.importFilters[ 8 ] == false then
                     Harvest.saveData( newMapName, node[1], node[2], 8, "fish", nil )
+                else
+                    Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
                 end
             end
         end
@@ -91,6 +101,8 @@ function Harvest.importFromEsohead()
 
     d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
     d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
+    d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
+    d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
     d("Number of False nodes skipped : " .. tostring(Harvest.NumFalseNodes) )
     d("Finished.")
     Harvest.RefreshPins()
