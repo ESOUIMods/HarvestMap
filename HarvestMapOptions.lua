@@ -8,7 +8,25 @@ function Harvest.GetFilter( profession )
     return Harvest.settings.filters[ profession ]
 end
 
+function Harvest.GetImportFilter( profession )
+    return Harvest.settings.filters[ profession ]
+end
+
+function Harvest.GetGatherFilter( profession )
+    return Harvest.settings.filters[ profession ]
+end
+
 function Harvest.SetFilter( profession, value )
+    Harvest.settings.filters[ profession ] = value
+    Harvest.RefreshPins( profession )
+end
+
+function Harvest.SetImportFilter( profession, value )
+    Harvest.settings.filters[ profession ] = value
+    Harvest.RefreshPins( profession )
+end
+
+function Harvest.SetGatherFilter( profession, value )
     Harvest.settings.filters[ profession ] = value
     Harvest.RefreshPins( profession )
 end
@@ -40,6 +58,32 @@ local function CreateFilter( profession )
         end,
         function( value )
             Harvest.SetFilter( profession, value )
+        end,
+        false, nil)
+
+end
+
+local function CreateImportFilter( profession )
+
+    LAM:AddCheckbox(panelID, "HarvestMapFilter"..profession, Harvest.localization[ "import"..profession ], Harvest.localization[ "impfiltertooltip"..profession ],
+        function()
+            return Harvest.GetImportFilter( profession )
+        end,
+        function( value )
+            Harvest.SetImportFilter( profession, value )
+        end,
+        false, nil)
+
+end
+
+local function CreateGatherFilter( profession )
+
+    LAM:AddCheckbox(panelID, "HarvestMapFilter"..profession, Harvest.localization[ "gather"..profession ], Harvest.localization[ "gatfiltertooltip"..profession ],
+        function()
+            return Harvest.GetGatherFilter( profession )
+        end,
+        function( value )
+            Harvest.SetGatherFilter( profession, value )
         end,
         false, nil)
 

@@ -447,6 +447,12 @@ function Harvest.OnLoad(eventCode, addOnName)
                 -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
                 [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
             },
+            importFilters = {
+                [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
+            },
+            gatherFilters = {
+                [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
+            },
             mapLayouts = Harvest.defaultMapLayouts,
             compassLayouts = Harvest.defaultCompassLayouts
         }
