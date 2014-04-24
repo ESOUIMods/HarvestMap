@@ -275,6 +275,11 @@ function Harvest.saveData( zone, x, y, profession, nodeName, itemID )
     if not profession then
         return
     end
+    
+    if not Harvest.settings.gatherFilters[ profession ] then
+        d("Gathering disabled for profession : " .. tostring(profession) )
+        return
+    end
 
     if Harvest.alreadyFound( zone, x, y, profession, nodeName ) then
         return
@@ -447,9 +452,11 @@ function Harvest.OnLoad(eventCode, addOnName)
                 -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
                 [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
             },
+            -- Import filters false by default so they are imported
             importFilters = {
-                [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
+                [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
             },
+            -- Gather filters true by default so they are gathered
             gatherFilters = {
                 [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
             },

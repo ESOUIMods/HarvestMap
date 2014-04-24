@@ -9,11 +9,11 @@ function Harvest.GetFilter( profession )
 end
 
 function Harvest.GetImportFilter( profession )
-    return Harvest.settings.filters[ profession ]
+    return Harvest.settings.importFilters[ profession ]
 end
 
 function Harvest.GetGatherFilter( profession )
-    return Harvest.settings.filters[ profession ]
+    return Harvest.settings.gatherFilters[ profession ]
 end
 
 function Harvest.SetFilter( profession, value )
@@ -22,13 +22,15 @@ function Harvest.SetFilter( profession, value )
 end
 
 function Harvest.SetImportFilter( profession, value )
-    Harvest.settings.filters[ profession ] = value
-    Harvest.RefreshPins( profession )
+    Harvest.settings.importFilters[ profession ] = value
+    -- No need to refresh pins since it happens on import
+    -- Harvest.RefreshPins( profession )
 end
 
 function Harvest.SetGatherFilter( profession, value )
-    Harvest.settings.filters[ profession ] = value
-    Harvest.RefreshPins( profession )
+    Harvest.settings.gatherFilters[ profession ] = value
+    -- No need to refresh pins since it happens when gathering
+    -- Harvest.RefreshPins( profession )
 end
 
 function Harvest.GetSize( profession )

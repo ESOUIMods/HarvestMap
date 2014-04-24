@@ -38,7 +38,10 @@ function Harvest.importFromEsohead()
                         if Harvest.CheckProfessionTypeOnImport(node[5], node[4]) then -- << If Valid Profession Type
                             professionFound = Harvest.GetProfessionType(node[5], node[4])
                             if professionFound >= 1 then
-                                Harvest.saveData( newMapName, node[1], node[2], professionFound, node[4], node[5] )
+                                -- When import filter is false do NOT import the node
+                                if not Harvest.settings.importFilters[ professionFound ] then
+                                    Harvest.saveData( newMapName, node[1], node[2], professionFound, node[4], node[5] )
+                                end
                             end
                         else -- << If Valid Profession Type
                             Harvest.NumFalseNodes = Harvest.NumFalseNodes + 1
@@ -59,7 +62,10 @@ function Harvest.importFromEsohead()
                 Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 -- Esohead "chest" has nodes only, add appropriate data
                 -- The 6 before "chest" refers to it's Profession ID
-                Harvest.saveData( newMapName, node[1], node[2], 6, "chest", nil )
+                -- When import filter is false do NOT import the node
+                if not Harvest.settings.importFilters[ 6 ] then
+                    Harvest.saveData( newMapName, node[1], node[2], 6, "chest", nil )
+                end
             end
         end
     end
@@ -73,7 +79,10 @@ function Harvest.importFromEsohead()
                 Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 -- Esohead "fish" has nodes only, add appropriate data
                 -- The 8 before "fish" refers to it's Profession ID
-                Harvest.saveData( newMapName, node[1], node[2], 8, "fish", nil )
+                -- When import filter is false do NOT import the node
+                if not Harvest.settings.importFilters[ 8 ] then
+                    Harvest.saveData( newMapName, node[1], node[2], 8, "fish", nil )
+                end
             end
         end
     end
