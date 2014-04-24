@@ -277,7 +277,9 @@ function Harvest.saveData( zone, x, y, profession, nodeName, itemID )
     end
     
     if not Harvest.settings.gatherFilters[ profession ] then
-        d("Gathering disabled for profession : " .. tostring(profession) )
+        if Harvest.settings.debug then
+            d("Gathering disabled for profession : " .. tostring(profession) )
+        end
         return
     end
 

@@ -67,7 +67,7 @@ end
 
 local function CreateImportFilter( profession )
 
-    LAM:AddCheckbox(panelID, "HarvestImportFilter"..profession, Harvest.localization[ "import"..profession ], Harvest.localization[ "impfiltertooltip"..profession ],
+    LAM:AddCheckbox(panelID, "HarvestImportFilter"..profession, Harvest.localization[ "import"..profession ], Harvest.localization[ "importtooltip"..profession ],
         function()
             return Harvest.GetImportFilter( profession )
         end,
@@ -80,7 +80,7 @@ end
 
 local function CreateGatherFilter( profession )
 
-    LAM:AddCheckbox(panelID, "HarvestGatherFilter"..profession, Harvest.localization[ "gather"..profession ], Harvest.localization[ "gatfiltertooltip"..profession ],
+    LAM:AddCheckbox(panelID, "HarvestGatherFilter"..profession, Harvest.localization[ "gather"..profession ], Harvest.localization[ "gathertooltip"..profession ],
         function()
             return Harvest.GetGatherFilter( profession )
         end,
