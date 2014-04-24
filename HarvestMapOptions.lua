@@ -144,7 +144,8 @@ function Harvest.InitializeOptions()
 	WORLD_MAP_FILTERS.pvePanel:SetMapMode(2) -- prevents crashing on GetPinFilter in above case
 	
 	local refreshCheckbox = function()
-		for i=1,6 do
+		-- for i=1,6 do
+		for i=1,8 do
 			local profession = i
 			newPVECheckboxes[ profession ]:SetState(Harvest.GetFilter( profession ) and 1 or 0)
 			newPVECheckboxes[ profession ]:toggleFunction(Harvest.GetFilter( profession ))
@@ -199,7 +200,8 @@ local oldVars = WORLD_MAP_FILTERS.SetSavedVars
 WORLD_MAP_FILTERS.SetSavedVars = function( self, savedVars )
     oldVars( self, savedVars)
     
-    for i=1,6 do
+    -- for i=1,6 do
+    for i=1,8 do
 	local profession = i
 	self.pvePanel.AddPinFilterCheckBox( self.pvePanel, Harvest.GetPinType( profession ), function() Harvest.RefreshPins( profession ) end)
 	
