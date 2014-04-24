@@ -45,7 +45,7 @@ function Harvest.importFromEsohead()
                             end
                         else -- << If Valid Profession Type
                             Harvest.NumFalseNodes = Harvest.NumFalseNodes + 1
-                            d("Node:" .. node[4] .. " ItemID " .. tostring(node[5]) .. " skipped")
+                            -- d("Node:" .. node[4] .. " ItemID " .. tostring(node[5]) .. " skipped")
                         end -- << If Valid Profession Type
                     end -- << Not a Container
                 end
