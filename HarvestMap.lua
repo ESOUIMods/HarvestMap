@@ -205,7 +205,7 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
         end
     end
 
-    if not Harvest.settings.gatherFilters[ profession ] then
+    if Harvest.settings.gatherFilters[ profession ] then
         if Harvest.settings.debug then
             d("Gathering disabled for profession : " .. tostring(profession) )
         end
@@ -466,7 +466,7 @@ function Harvest.OnLoad(eventCode, addOnName)
             },
             -- Gather filters true by default so they are gathered
             gatherFilters = {
-                [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
+                [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
             },
             mapLayouts = Harvest.defaultMapLayouts,
             compassLayouts = Harvest.defaultCompassLayouts
