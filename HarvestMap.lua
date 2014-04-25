@@ -439,24 +439,12 @@ function Harvest.OnUpdate(time)
 end
 
 function Harvest.OnLoad(eventCode, addOnName)
-    if addOnName ~= "HarvestMap" then
-        return
-    end
 
-    -- NEW keep these they init things
-    Harvest.isHarvesting = false
-    Harvest.action = nil
-    Harvest.NumbersNodesAdded = 0
-    Harvest.NumFalseNodes = 0
-    Harvest.NumContainerSkipped = 0
-    Harvest.NumbersNodesFiltered = 0
-    Harvest.NumNodesProcessed = 0
-
-    Harvest.minDist = 0.000025 -- 0.005^2
     Harvest.nodes = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "nodes", { data = {} } )
     if Harvest.settings.account then
         Harvest.settings = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 1, "settings",
             {
+                account = false,
                 filters = {
                     -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
                     [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
@@ -476,6 +464,7 @@ function Harvest.OnLoad(eventCode, addOnName)
     else
         Harvest.settings = ZO_SavedVars:New("Harvest_SavedVars", 1, "settings",
             {
+                account = false,
                 filters = {
                     -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
                     [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
@@ -508,4 +497,28 @@ function Harvest.OnLoad(eventCode, addOnName)
 
 end
 
-EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_ADD_ON_LOADED, Harvest.OnLoad)
+function Initialize()
+    defaultValues = {
+		["account"] = false,
+        ["verbose"] = false,
+        ["debug"] = false,
+       }
+
+    Harvest.settings = defaultValues
+    Harvest.isHarvesting = false
+    Harvest.action = nil
+    Harvest.NumbersNodesAdded = 0
+    Harvest.NumFalseNodes = 0
+    Harvest.NumContainerSkipped = 0
+    Harvest.NumbersNodesFiltered = 0
+    Harvest.NumNodesProcessed = 0
+    Harvest.minDist = 0.000025 -- 0.005^2
+
+end
+
+EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_ADD_ON_LOADED, function (eventCode, addOnName)
+	if addOnName == "HarvestMap" then
+        Initialize()
+        Harvest.OnLoad(eventCode, addOnName)
+	end
+end)
