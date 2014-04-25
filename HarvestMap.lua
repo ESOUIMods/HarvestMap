@@ -454,24 +454,45 @@ function Harvest.OnLoad(eventCode, addOnName)
 
     Harvest.minDist = 0.000025 -- 0.005^2
     Harvest.nodes = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "nodes", { data = {} } )
-	Harvest.settings = ZO_SavedVars:New("Harvest_SavedVars", 1, "settings",
-        {
-            filters = {
-                -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
-                [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
-            },
-            -- Import filters false by default so they are imported
-            importFilters = {
-                [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
-            },
-            -- Gather filters true by default so they are gathered
-            gatherFilters = {
-                [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
-            },
-            mapLayouts = Harvest.defaultMapLayouts,
-            compassLayouts = Harvest.defaultCompassLayouts
-        }
-    )
+    if Harvest.settings.account then
+        Harvest.settings = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 1, "settings",
+            {
+                filters = {
+                    -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
+                    [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
+                },
+                -- Import filters false by default so they are imported
+                importFilters = {
+                    [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
+                },
+                -- Gather filters true by default so they are gathered
+                gatherFilters = {
+                    [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
+                },
+                mapLayouts = Harvest.defaultMapLayouts,
+                compassLayouts = Harvest.defaultCompassLayouts
+            }
+        )
+    else
+        Harvest.settings = ZO_SavedVars:New("Harvest_SavedVars", 1, "settings",
+            {
+                filters = {
+                    -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
+                    [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
+                },
+                -- Import filters false by default so they are imported
+                importFilters = {
+                    [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
+                },
+                -- Gather filters true by default so they are gathered
+                gatherFilters = {
+                    [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
+                },
+                mapLayouts = Harvest.defaultMapLayouts,
+                compassLayouts = Harvest.defaultCompassLayouts
+            }
+        )
+    end
 
     if (Harvest.nodes.internalVersion or 0) < internalVersion then
         Harvest.updateNodes(Harvest.nodes.internalVersion or 0)
