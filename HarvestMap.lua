@@ -441,10 +441,12 @@ end
 function Harvest.OnLoad(eventCode, addOnName)
 
     Harvest.nodes = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "nodes", { data = {} } )
-    if Harvest.settings.account then
+    Harvest.defaults = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "defaults", { wideSetting = {["accountWide"] = false,} } )
+    Harvest.IsAccountWideSet = Harvest.defaults.wideSetting.accountWide
+
+    if Harvest.IsAccountWideSet then
         Harvest.settings = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 1, "settings",
             {
-                account = false,
                 filters = {
                     -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
                     [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
@@ -464,7 +466,6 @@ function Harvest.OnLoad(eventCode, addOnName)
     else
         Harvest.settings = ZO_SavedVars:New("Harvest_SavedVars", 1, "settings",
             {
-                account = false,
                 filters = {
                     -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
                     [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
@@ -482,6 +483,8 @@ function Harvest.OnLoad(eventCode, addOnName)
             }
         )
     end
+    
+    Harvest.settings.account = Harvest.defaults.wideSetting.accountWide
 
     if (Harvest.nodes.internalVersion or 0) < internalVersion then
         Harvest.updateNodes(Harvest.nodes.internalVersion or 0)
@@ -498,14 +501,9 @@ function Harvest.OnLoad(eventCode, addOnName)
 end
 
 function Initialize()
-    defaultValues = {
-		["account"] = false,
-        ["verbose"] = false,
-        ["debug"] = false,
-       }
 
-    Harvest.settings = defaultValues
     Harvest.isHarvesting = false
+    Harvest.IsAccountWideSet = false
     Harvest.action = nil
     Harvest.NumbersNodesAdded = 0
     Harvest.NumFalseNodes = 0

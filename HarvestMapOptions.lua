@@ -114,6 +114,11 @@ local function CreateColorPicker( profession )
         false, nil)
 end
 
+local function changeAccountWideSettings(val)
+    Harvest.defaults.wideSetting.accountWide = val
+    ReloadUI()
+end
+
 function Harvest.InitializeOptions()
     panelID = LAM:CreateControlPanel("HarvestMapControl", "HarvestMap")
 
@@ -197,7 +202,7 @@ function Harvest.InitializeOptions()
         end,
         function( value )
             Harvest.settings.account = value
-            ReloadUI()
+            changeAccountWideSettings(value)
         end,
     false, nil)
 
