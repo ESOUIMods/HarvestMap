@@ -49,6 +49,13 @@ function Harvest.GetPinType( profession )
 end
 
 function Harvest.CreateMapPin(profession)
+
+    if Harvest.settings.verbose then 
+        d(Harvest.settings)
+        d(Harvest.settings.mapLayouts)
+        d(Harvest.settings.mapLayouts[ profession ])
+    end
+
     local pinType = Harvest.GetPinType( profession )
     ZO_WorldMap_AddCustomPin(
         pinType,

@@ -115,71 +115,71 @@ local function CreateColorPicker( profession )
 end
 
 function Harvest.InitializeOptions()
-	panelID = LAM:CreateControlPanel("HarvestMapControl", "HarvestMap")
+    panelID = LAM:CreateControlPanel("HarvestMapControl", "HarvestMap")
 
-	LAM:AddHeader(panelID, "HarvestMapHeader", "Compass Options")
-	
-	LAM:AddCheckbox(panelID, "HarvestMapCompass", Harvest.localization[ "compass" ], Harvest.localization[ "compasstooltip" ],
-		function()
-			return Harvest.settings.compass
-		end,
-		function( value )
-			Harvest.settings.compass = value
-			COMPASS_PINS:RefreshPins()
-		end,
-		false, nil)
-	
-	LAM:AddSlider(panelID, "HarvestMapFOV", Harvest.localization["fov"],Harvest.localization["fovtooltip"], 25, 100, 1,
-		function()
-			if Harvest.settings.compassLayouts[1].FOV then
-				return ( 100 * Harvest.settings.compassLayouts[1].FOV / (2 * math.pi) )
-			end
-			
-			return 100 * COMPASS_PINS.defaultFOV / (2 * math.pi)
-		end,
-		function( value )
+    LAM:AddHeader(panelID, "HarvestMapHeader", "Compass Options")
+
+    LAM:AddCheckbox(panelID, "HarvestMapCompass", Harvest.localization[ "compass" ], Harvest.localization[ "compasstooltip" ],
+        function()
+            return Harvest.settings.compass
+        end,
+        function( value )
+            Harvest.settings.compass = value
+            COMPASS_PINS:RefreshPins()
+        end,
+        false, nil)
+
+    LAM:AddSlider(panelID, "HarvestMapFOV", Harvest.localization["fov"],Harvest.localization["fovtooltip"], 25, 100, 1,
+        function()
+            if Harvest.settings.compassLayouts[1].FOV then
+                return ( 100 * Harvest.settings.compassLayouts[1].FOV / (2 * math.pi) )
+            end
+
+            return 100 * COMPASS_PINS.defaultFOV / (2 * math.pi)
+        end,
+        function( value )
             -- for profession = 1,6 do
             for profession = 1,8 do
-				Harvest.settings.compassLayouts[ profession ].FOV = 2 * value * math.pi / 100
-			end
-			COMPASS_PINS:RefreshPins()
-		end,
-		false, nil)
-	
-	LAM:AddSlider(panelID, "HarvestMapDistance", Harvest.localization["distance"],Harvest.localization["distancetooltip"], 1, 100, 1,
-		function()
-			return Harvest.settings.compassLayouts[1].maxDistance * 1000
-		end,
-		function( value )
+                Harvest.settings.compassLayouts[ profession ].FOV = 2 * value * math.pi / 100
+            end
+            COMPASS_PINS:RefreshPins()
+        end,
+        false, nil)
+
+    LAM:AddSlider(panelID, "HarvestMapDistance", Harvest.localization["distance"],Harvest.localization["distancetooltip"], 1, 100, 1,
+        function()
+            return Harvest.settings.compassLayouts[1].maxDistance * 1000
+        end,
+        function( value )
             -- for profession = 1,6 do
             for profession = 1,8 do
-				Harvest.settings.compassLayouts[ profession ].maxDistance  = value / 1000
-			end
-			COMPASS_PINS:RefreshPins()
-		end,
-		false, nil)
-	
+                Harvest.settings.compassLayouts[ profession ].maxDistance  = value / 1000
+            end
+            COMPASS_PINS:RefreshPins()
+        end,
+        false, nil)
+
     -- for profession = 1,6 do
     for profession = 1,8 do
-		LAM:AddHeader(panelID, "HarvestMapPinHeader"..profession, Harvest.localization[ "filter"..profession ] .. " pin Options")
-		CreateFilter( profession )
-		CreateImportFilter( profession )
-		CreateGatherFilter( profession )
-		CreateSizeSlider( profession )
-		CreateColorPicker( profession )
-	end
-	
-	LAM:AddHeader(panelID, "HarvestDebugHeader", "Debug")
-	
-	LAM:AddCheckbox(panelID, "HarvestMapDebug", "Debug mode", "Enable debug mode",
-		function()
-			return Harvest.settings.debug
-		end,
-		function( value )
-			Harvest.settings.debug = value
-		end,
-	false, nil)
-	
+        LAM:AddHeader(panelID, "HarvestMapPinHeader"..profession, Harvest.localization[ "filter"..profession ] .. " pin Options")
+        CreateFilter( profession )
+        CreateImportFilter( profession )
+        CreateGatherFilter( profession )
+        CreateSizeSlider( profession )
+        CreateColorPicker( profession )
+    end
+
+    LAM:AddHeader(panelID, "HarvestDebugHeader", "Debug")
+
+    LAM:AddCheckbox(panelID, "HarvestMapDebug", "Debug mode", "Enable debug mode",
+        function()
+            return Harvest.settings.debug
+        end,
+        function( value )
+            Harvest.settings.debug = value
+        end,
+    false, nil)
+
     LAM:AddCheckbox(panelID, "HarvestMapDebugVerbose", "Verbose debug mode", "Enable verbose debug mode",
         function()
             return Harvest.settings.verbose
@@ -189,46 +189,58 @@ function Harvest.InitializeOptions()
         end,
     false, nil)
 
-	--pvepanel has no mode if the character starts his session on a pvp map
-	WORLD_MAP_FILTERS.pvePanel:SetMapMode(2) -- prevents crashing on GetPinFilter in above case
-	
-	local refreshCheckbox = function()
-		-- for i=1,6 do
-		for i=1,8 do
-			local profession = i
+    LAM:AddHeader(panelID, "HarvestSettingsHeader", "Account Wide Settings")
+
+    LAM:AddCheckbox(panelID, "HarvestMapSettings", "Account Wide Settings", "Enable account Wide Settings",
+        function()
+            return Harvest.settings.account
+        end,
+        function( value )
+            Harvest.settings.account = value
+            ReloadUI()
+        end,
+    false, nil)
+
+    --pvepanel has no mode if the character starts his session on a pvp map
+    WORLD_MAP_FILTERS.pvePanel:SetMapMode(2) -- prevents crashing on GetPinFilter in above case
+
+    local refreshCheckbox = function()
+        -- for i=1,6 do
+        for i=1,8 do
+            local profession = i
             -- if Harvest.settings.importFilters[ profession ] then
                 newPVECheckboxes[ profession ]:SetState(Harvest.GetFilter( profession ) and 1 or 0)
                 newPVECheckboxes[ profession ]:toggleFunction(Harvest.GetFilter( profession ))
-			
+
                 newPVPCheckboxes[ profession ]:SetState(Harvest.GetFilter( profession ) and 1 or 0)
                 newPVPCheckboxes[ profession ]:toggleFunction(Harvest.GetFilter( profession ))
             -- end
-		end
-	end
-	local oldHidden = WORLD_MAP_FILTERS.control.SetHidden
-	WORLD_MAP_FILTERS.control.SetHidden = function (self, value)
-		refreshCheckbox()
-		oldHidden(self, value)
-	end
-	
-	local oldpveHidden = WORLD_MAP_FILTERS.pvePanel.SetHidden
-	local oldpvpHidden = WORLD_MAP_FILTERS.pvpPanel.SetHidden
-	
-	WORLD_MAP_FILTERS.pvePanel.SetHidden = function( self, value )
-		refreshCheckbox()
-		oldpveHidden(self, value)
-	end
-	WORLD_MAP_FILTERS.pvpPanel.SetHidden = function( self, value )
-		refreshCheckbox()
-		oldpvpHidden(self, value)
-	end
+        end
+    end
+    local oldHidden = WORLD_MAP_FILTERS.control.SetHidden
+    WORLD_MAP_FILTERS.control.SetHidden = function (self, value)
+        refreshCheckbox()
+        oldHidden(self, value)
+    end
+
+    local oldpveHidden = WORLD_MAP_FILTERS.pvePanel.SetHidden
+    local oldpvpHidden = WORLD_MAP_FILTERS.pvpPanel.SetHidden
+
+    WORLD_MAP_FILTERS.pvePanel.SetHidden = function( self, value )
+        refreshCheckbox()
+        oldpveHidden(self, value)
+    end
+    WORLD_MAP_FILTERS.pvpPanel.SetHidden = function( self, value )
+        refreshCheckbox()
+        oldpvpHidden(self, value)
+    end
 end
 
 function Harvest.GetNumberAfter( str, start )
-	if string.sub(str,1,string.len(start)) == start then
-		return tonumber(string.sub(str, string.len(start)+1, -1))
-	end
-	return nil
+    if string.sub(str,1,string.len(start)) == start then
+        return tonumber(string.sub(str, string.len(start)+1, -1))
+    end
+    return nil
 end
 
 local oldGetString = GetString
@@ -236,13 +248,13 @@ local oldGetString = GetString
 -- since there is no API to the filters, I had to hack a bit, to display my own strings :)
 function GetString( stringVariablePrefix, contextId )
     if stringVariablePrefix == "SI_MAPFILTER" and type(contextId) == "string" then
-	--if Harvest.startsWith( contextId, Harvest.GetPinType("") ) then
-		local profession = Harvest.GetNumberAfter(contextId, Harvest.GetPinType(""))
-		return Harvest.localization[ "filter"..profession ]
-	--end
+    --if Harvest.startsWith( contextId, Harvest.GetPinType("") ) then
+        local profession = Harvest.GetNumberAfter(contextId, Harvest.GetPinType(""))
+        return Harvest.localization[ "filter"..profession ]
+    --end
     end
-	return oldGetString( stringVariablePrefix, contextId )
-    
+    return oldGetString( stringVariablePrefix, contextId )
+
 end
 
 local oldVars = WORLD_MAP_FILTERS.SetSavedVars
@@ -250,23 +262,23 @@ local oldVars = WORLD_MAP_FILTERS.SetSavedVars
 -- after this function is called WORLD_MAP_FILTERS.pvePanel are initialized and can be manipulated
 WORLD_MAP_FILTERS.SetSavedVars = function( self, savedVars )
     oldVars( self, savedVars)
-    
+
     -- for i=1,6 do
     for i=1,8 do
-	local profession = i
-	self.pvePanel.AddPinFilterCheckBox( self.pvePanel, Harvest.GetPinType( profession ), function() Harvest.RefreshPins( profession ) end)
-	
-	newPVECheckboxes[ profession ] = self.pvePanel.pinFilterCheckBoxes[ #self.pvePanel.pinFilterCheckBoxes ]
-	ZO_CheckButton_SetToggleFunction( newPVECheckboxes[ profession ], function(button, checked)
-		Harvest.SetFilter( profession, checked )
-	end)
-	
-	self.pvpPanel.AddPinFilterCheckBox( self.pvpPanel, Harvest.GetPinType( profession ), function() Harvest.RefreshPins( profession ) end)
-	
-	newPVPCheckboxes[ profession ] = self.pvpPanel.pinFilterCheckBoxes[ #self.pvpPanel.pinFilterCheckBoxes ]
-	ZO_CheckButton_SetToggleFunction( newPVPCheckboxes[ profession ], function(button, checked)
-		Harvest.SetFilter( profession, checked )
-	end)
-	
+    local profession = i
+    self.pvePanel.AddPinFilterCheckBox( self.pvePanel, Harvest.GetPinType( profession ), function() Harvest.RefreshPins( profession ) end)
+
+    newPVECheckboxes[ profession ] = self.pvePanel.pinFilterCheckBoxes[ #self.pvePanel.pinFilterCheckBoxes ]
+    ZO_CheckButton_SetToggleFunction( newPVECheckboxes[ profession ], function(button, checked)
+        Harvest.SetFilter( profession, checked )
+    end)
+
+    self.pvpPanel.AddPinFilterCheckBox( self.pvpPanel, Harvest.GetPinType( profession ), function() Harvest.RefreshPins( profession ) end)
+
+    newPVPCheckboxes[ profession ] = self.pvpPanel.pinFilterCheckBoxes[ #self.pvpPanel.pinFilterCheckBoxes ]
+    ZO_CheckButton_SetToggleFunction( newPVPCheckboxes[ profession ], function(button, checked)
+        Harvest.SetFilter( profession, checked )
+    end)
+
     end
 end
