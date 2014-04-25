@@ -1,9 +1,13 @@
 local maxDistance = 0.02
 
 function Harvest.additionalLayout( pin )
-    local color = COMPASS_PINS.pinLayouts[ pin.pinType ].color
-    local tex = pin:GetNamedChild( "Background" )
-    tex:SetColor(color[1] , color[2] , color[3], 1)
+    if pin ~= nil and COMPASS_PINS.pinLayouts[ pin.pinType ].color ~= nil then
+        local color = COMPASS_PINS.pinLayouts[ pin.pinType ].color
+        local tex = pin:GetNamedChild( "Background" )
+        tex:SetColor(color[1] , color[2] , color[3], 1)
+    else
+        d("The Pin Type : " .. pinToCheck.pinType )
+    end
 end
 
 function Harvest.additionalLayoutReset( pin )
