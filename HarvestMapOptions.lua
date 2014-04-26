@@ -121,6 +121,7 @@ end
 
 function Harvest.InitializeOptions()
     panelID = LAM:CreateControlPanel("HarvestMapControl", "HarvestMap")
+    Harvest.panelID = panelID
 
     LAM:AddHeader(panelID, "HarvestMapHeader", "Compass Options")
 
@@ -213,13 +214,11 @@ function Harvest.InitializeOptions()
         -- for i=1,6 do
         for i=1,8 do
             local profession = i
-            -- if Harvest.settings.importFilters[ profession ] then
-                newPVECheckboxes[ profession ]:SetState(Harvest.GetFilter( profession ) and 1 or 0)
-                newPVECheckboxes[ profession ]:toggleFunction(Harvest.GetFilter( profession ))
+            newPVECheckboxes[ profession ]:SetState(Harvest.GetFilter( profession ) and 1 or 0)
+            newPVECheckboxes[ profession ]:toggleFunction(Harvest.GetFilter( profession ))
 
-                newPVPCheckboxes[ profession ]:SetState(Harvest.GetFilter( profession ) and 1 or 0)
-                newPVPCheckboxes[ profession ]:toggleFunction(Harvest.GetFilter( profession ))
-            -- end
+            newPVPCheckboxes[ profession ]:SetState(Harvest.GetFilter( profession ) and 1 or 0)
+            newPVPCheckboxes[ profession ]:toggleFunction(Harvest.GetFilter( profession ))
         end
     end
     local oldHidden = WORLD_MAP_FILTERS.control.SetHidden

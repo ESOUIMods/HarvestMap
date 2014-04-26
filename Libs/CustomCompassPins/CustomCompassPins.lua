@@ -1,5 +1,5 @@
 -- CustomCompassPins by Shinni
-local version = 1.12
+local version = 1.13
 local onlyUpdate = false
 
 if COMPASS_PINS then
@@ -37,12 +37,12 @@ function COMPASS_PINS:New( ... )
 end
 
 function COMPASS_PINS:UpdateVersion()
-    local pins = self.pinManager.pins
+    --local pins = self.pinManager.pins
     local data = self.pinManager.pinData
     self.pinManager = CompassPinManager:New()
-    if pins then
-        self.pinManager.pins = pins
-    end
+    --if pins then
+    --  self.pinManager.pins = pins
+    --end
     if data then
         self.pinManager.pinData = data
     end
@@ -109,18 +109,18 @@ function CompassPinManager:New( ... )
 end
 
 function CompassPinManager:Initialize( ... )
-    self.pins = {}
+    --self.pins = {}
     self.pinData = {}
     self.defaultAngle = 1
 end
 
 function CompassPinManager:CreatePinType( pinType )
-    self.pins[ pinType ] = {}
+    --self.pins[ pinType ] = {}
 end
 
 function CompassPinManager:GetNewPin( data )
     local pin, pinKey = self:AcquireObject()
-    table.insert( self.pins[ data.pinType ], pinKey )
+    --table.insert( self.pins[ data.pinType ], pinKey )
     self:ResetPin( pin )
     pin:SetHandler("OnMouseDown", nil)
     pin:SetHandler("OnMouseUp", nil)
@@ -155,22 +155,25 @@ function CompassPinManager:RemovePins( pinType )
     if not pinType then
         self:ReleaseAllObjects()
         self.pinData = {}
-        for pinType, _ in pairs( self.pins ) do
-            self.pins[ pinType ] = {}
-        end
+        --for pinType, _ in pairs( self.pins ) do
+        --  self.pins[ pinType ] = {}
+        --end
     else
-        if not self.pins[ pinType ] then
-            return
-        end
-        for _, pinKey in pairs( self.pins[ pinType ] ) do
-            self:ReleaseObject( pinKey )
-        end
+        --if not self.pins[ pinType ] then
+        --  return
+        --end
+        --for _, pinKey in pairs( self.pins[ pinType ] ) do
+        --  self:ReleaseObject( pinKey )
+        --end
         for key, data in pairs( self.pinData ) do
             if data.pinType == pinType then
+                if data.pinKey then
+                    self:ReleaseObject( data.pinKey )
+                end
                 self.pinData[key] = nil
             end
         end
-        self.pins[ pinType ] = {}
+        --self.pins[ pinType ] = {}
     end
 end
 
@@ -241,8 +244,10 @@ function CompassPinManager:Update( x, y, heading )
                         layout.additionalLayout[1]( pin, angle, normalizedAngle, normalizedDistance)
                     end
 
-                    -- end for inside maxAngle
-                end --stupid lua has no continue/next in loops >_>
+                end
+            else
+                d("CustomCompassPin Error:")
+                d("no pin with key : " .. pinData.pinKey .. ", found!")
             end
         else
             if pinData.pinKey then

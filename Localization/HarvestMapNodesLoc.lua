@@ -204,7 +204,7 @@ local en_fr = { --translation by jillorval
     }
 
 if Harvest.language == "en" then
-    Harvest.nodeLocalization = {}
+    Harvest.nodeLocalization = {["chest"] = "Chest"}
     for en, fr in pairs(en_fr) do
         Harvest.nodeLocalization[fr] = en
     end

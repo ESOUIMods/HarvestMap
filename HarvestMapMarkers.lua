@@ -14,6 +14,7 @@ function Harvest.addCallback( profession, g_mapPinManager )
     if not Harvest.settings.filters[ profession ] then
         return
     end
+    --d("Profession : " .. profession )
     local zone = Harvest.GetMap()
     local nodes = Harvest.nodes.data[ zone ]
     local pinType = Harvest.GetPinType( profession )

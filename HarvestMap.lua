@@ -105,7 +105,9 @@ end
 -----------------------------------------
 
 function Harvest.GetLocation()
-    SetMapToPlayerLocation()
+    if(SetMapToPlayerLocation() == SET_MAP_RESULT_MAP_CHANGED) then
+        CALLBACK_MANAGER:FireCallbacks("OnWorldMapChanged")
+    end
 
     local zone = Harvest.GetMap()
     local x, y = GetMapPlayerPosition( "player" )
@@ -160,7 +162,7 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
         end
         return
     end
-    
+
     local zone, x, y = Harvest.GetLocation()
     link = Harvest.ItemLinkParse( objectName )
     if Harvest.settings.debug then
@@ -248,7 +250,7 @@ function Harvest.OnLootUpdate()
     if Harvest.settings.verbose then
         d("OnLootUpdate Exited")
     end
-    
+
     if Harvest.isHarvesting == true then
         Harvest.isHarvesting = false
     end
@@ -282,7 +284,7 @@ function Harvest.saveData( zone, x, y, profession, nodeName, itemID )
     if not profession then
         return
     end
-    
+
     if Harvest.alreadyFound( zone, x, y, profession, nodeName ) then
         return
     end
@@ -483,7 +485,7 @@ function Harvest.OnLoad(eventCode, addOnName)
             }
         )
     end
-    
+
     Harvest.settings.account = Harvest.defaults.wideSetting.accountWide
 
     if (Harvest.nodes.internalVersion or 0) < internalVersion then
@@ -515,8 +517,8 @@ function Harvest.Initialize()
 end
 
 EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_ADD_ON_LOADED, function (eventCode, addOnName)
-	if addOnName == "HarvestMap" then
+    if addOnName == "HarvestMap" then
         Harvest.Initialize()
         Harvest.OnLoad(eventCode, addOnName)
-	end
+    end
 end)
