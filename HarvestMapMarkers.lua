@@ -1,4 +1,4 @@
--- Originally 6 changed to 9 adding (7)solvents, (8)containers, (9)fish, (10)book
+-- Originally 6 changed to 8 adding (7)solvents, (8)fish
 Harvest.defaultMapLayouts = {
         { level = 20, texture = "HarvestMap/Textures/Map/mining.dds", size = 20, color = {1, 1, 1} },
         { level = 20, texture = "HarvestMap/Textures/Map/clothing.dds", size = 20, color = {1, 1, 1} },

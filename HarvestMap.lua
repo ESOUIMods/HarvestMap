@@ -500,7 +500,7 @@ function Harvest.OnLoad(eventCode, addOnName)
 
 end
 
-function Initialize()
+function Harvest.Initialize()
 
     Harvest.isHarvesting = false
     Harvest.IsAccountWideSet = false
@@ -510,13 +510,12 @@ function Initialize()
     Harvest.NumContainerSkipped = 0
     Harvest.NumbersNodesFiltered = 0
     Harvest.NumNodesProcessed = 0
-    Harvest.minDist = 0.000025 -- 0.005^2
 
 end
 
 EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_ADD_ON_LOADED, function (eventCode, addOnName)
 	if addOnName == "HarvestMap" then
-        Initialize()
+        Harvest.Initialize()
         Harvest.OnLoad(eventCode, addOnName)
 	end
 end)

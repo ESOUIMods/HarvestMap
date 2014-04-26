@@ -5,8 +5,6 @@ function Harvest.additionalLayout( pin )
         local color = COMPASS_PINS.pinLayouts[ pin.pinType ].color
         local tex = pin:GetNamedChild( "Background" )
         tex:SetColor(color[1] , color[2] , color[3], 1)
-    else
-        d("The Pin Type : " .. pinToCheck.pinType )
     end
 end
 

@@ -495,7 +495,7 @@ Harvest.container = {
     },
 }
 
--- 10 = Books
+-- : Books
 Harvest.books = {
     ["en"] = {
         "Book",
