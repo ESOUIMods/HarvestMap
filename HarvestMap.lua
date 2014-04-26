@@ -502,6 +502,7 @@ end
 
 function Harvest.Initialize()
 
+    Harvest.minDist = 0.000025 -- 0.005^2
     Harvest.isHarvesting = false
     Harvest.IsAccountWideSet = false
     Harvest.action = nil
