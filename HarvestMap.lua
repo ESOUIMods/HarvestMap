@@ -147,18 +147,6 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
     -- GetLootItemInfo(lootIndex)
     -- GetLootItemLink(NumItemLooted)
 
-    if not Harvest.isHarvesting or not lootedBySelf then
-        if Harvest.settings.debug then
-            if not Harvest.isHarvesting then
-                d("Not Harvesting!")
-            end
-            if not lootedBySelf then
-                d("Not Looted by self!")
-            end
-        end
-        return
-    end
-
     local zone, x, y = Harvest.GetLocation()
     link = Harvest.ItemLinkParse( objectName )
     if Harvest.settings.debug then
@@ -189,6 +177,26 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
 
     profession = Harvest.GetProfessionType(link.id, Harvest.nodeName)
 
+    -- These are only available in OnUpdate
+    -- GetNumLootItems()
+    -- GetLootItemInfo(lootIndex)
+    -- GetLootItemLink(NumItemLooted)
+    
+    -- Moved here to track Solvents
+    if profession ~= 7 then
+        if not Harvest.isHarvesting or not lootedBySelf then
+            if Harvest.settings.debug then
+                if not Harvest.isHarvesting then
+                    d("Not Harvesting!")
+                end
+                if not lootedBySelf then
+                    d("Not Looted by self!")
+                end
+            end
+            return
+        end
+    end
+        
     -- Don't need to track torchbug loot
     if (profession < 1) then
         if Harvest.settings.debug then

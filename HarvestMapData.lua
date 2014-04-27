@@ -371,6 +371,8 @@ Harvest.woodworking = {
 -- if all of them have Solvents in then
 -- 1187 Clear Water, Pure Water, Deshaan
 -- 23265 Cleansed Water, Pure Water, TheRift
+-- Bottles Give Beverages, but can give a Solvent like Clear Water
+-- Wine Racks can give Solvent like Clear Water, needs more research
 Harvest.solvent = {
     ["en"] = {
         -- "Bottle",
