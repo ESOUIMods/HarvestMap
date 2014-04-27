@@ -146,7 +146,7 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
     -- GetNumLootItems()
     -- GetLootItemInfo(lootIndex)
     -- GetLootItemLink(NumItemLooted)
-    
+
     -- Moved here to track Solvents
     -- Revised: Some bottles give Beverages, needs more testing
     -- Water Sacks and Pure Water are considered Harvesting
@@ -193,7 +193,7 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
     end
 
     profession = Harvest.GetProfessionType(link.id, Harvest.nodeName)
-        
+
     -- Don't need to track torchbug loot
     -- Leave for future revision of Solvent Tracking
     if (profession < 1) then
