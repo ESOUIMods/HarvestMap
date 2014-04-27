@@ -199,7 +199,7 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
     if (profession < 1) then
         if Harvest.settings.debug then
             d("No valid profession type for : " .. Harvest.FormatString(link.name))
-        d("Node Name : " .. Harvest.nodeName )
+            d("Node Name : " .. Harvest.nodeName )
         end
         return
     else
