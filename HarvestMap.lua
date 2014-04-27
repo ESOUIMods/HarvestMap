@@ -146,6 +146,23 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
     -- GetNumLootItems()
     -- GetLootItemInfo(lootIndex)
     -- GetLootItemLink(NumItemLooted)
+    
+    -- Moved here to track Solvents
+    -- Revised: Some bottles give Beverages, needs more testing
+    -- Water Sacks and Pure Water are considered Harvesting
+    -- if profession ~= 7 then
+        if not Harvest.isHarvesting or not lootedBySelf then
+            if Harvest.settings.debug then
+                if not Harvest.isHarvesting then
+                    d("Not Harvesting!")
+                end
+                if not lootedBySelf then
+                    d("Not Looted by self!")
+                end
+            end
+            return
+        end
+    -- end
 
     local zone, x, y = Harvest.GetLocation()
     link = Harvest.ItemLinkParse( objectName )
@@ -176,28 +193,9 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
     end
 
     profession = Harvest.GetProfessionType(link.id, Harvest.nodeName)
-
-    -- These are only available in OnUpdate
-    -- GetNumLootItems()
-    -- GetLootItemInfo(lootIndex)
-    -- GetLootItemLink(NumItemLooted)
-    
-    -- Moved here to track Solvents
-    if profession ~= 7 then
-        if not Harvest.isHarvesting or not lootedBySelf then
-            if Harvest.settings.debug then
-                if not Harvest.isHarvesting then
-                    d("Not Harvesting!")
-                end
-                if not lootedBySelf then
-                    d("Not Looted by self!")
-                end
-            end
-            return
-        end
-    end
         
     -- Don't need to track torchbug loot
+    -- Leave for future revision of Solvent Tracking
     if (profession < 1) then
         if Harvest.settings.debug then
             d("No valid profession type for : " .. Harvest.FormatString(link.name))
