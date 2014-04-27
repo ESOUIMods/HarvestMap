@@ -199,10 +199,10 @@ function Harvest.InitializeOptions()
 
     LAM:AddCheckbox(panelID, "HarvestMapSettings", "Account Wide Settings", "Enable account Wide Settings",
         function()
-            return Harvest.settings.account
+            return Harvest.defaults.wideSetting.accountWide
         end,
         function( value )
-            Harvest.settings.account = value
+            Harvest.defaults.wideSetting.accountWide = value
             changeAccountWideSettings(value)
         end,
     false, nil)

@@ -137,10 +137,6 @@ function Harvest.ItemLinkParse(link)
 end
 
 
--- Define Function Better
--- 1: lootIndex
--- 2: Boolean: Is it Quest Loot
--- 3: Boolean: Looted By Player
 function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, soundCategory, lootType, lootedBySelf )
     if Harvest.settings.verbose then
         d("OnLootReceived")
@@ -379,6 +375,11 @@ function Harvest.OnUpdate(time)
         return
     end
 
+    -- if Harvest.IsPlayerHarvesting() then
+    --     d("I am Harvesting!")
+    --     return
+    -- end
+
     local newAction, nodeName, blockedNode, additionalInfo, contextlInfo = GetGameCameraInteractableActionInfo()
     local isHarvesting = (IsPlayerInteractingWithObject() and Harvest.IsPlayerHarvesting())
     if not isHarvesting then
@@ -444,9 +445,8 @@ function Harvest.OnLoad(eventCode, addOnName)
 
     Harvest.nodes = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "nodes", { data = {} } )
     Harvest.defaults = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "defaults", { wideSetting = {["accountWide"] = false,} } )
-    Harvest.IsAccountWideSet = Harvest.defaults.wideSetting.accountWide
 
-    if Harvest.IsAccountWideSet then
+    if Harvest.defaults.wideSetting.accountWide then
         Harvest.settings = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 1, "settings",
             {
                 filters = {
@@ -486,8 +486,6 @@ function Harvest.OnLoad(eventCode, addOnName)
         )
     end
 
-    Harvest.settings.account = Harvest.defaults.wideSetting.accountWide
-
     if (Harvest.nodes.internalVersion or 0) < internalVersion then
         Harvest.updateNodes(Harvest.nodes.internalVersion or 0)
         Harvest.nodes.internalVersion = internalVersion
@@ -506,7 +504,6 @@ function Harvest.Initialize()
 
     Harvest.minDist = 0.000025 -- 0.005^2
     Harvest.isHarvesting = false
-    Harvest.IsAccountWideSet = false
     Harvest.action = nil
     Harvest.NumbersNodesAdded = 0
     Harvest.NumFalseNodes = 0

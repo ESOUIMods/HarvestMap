@@ -373,46 +373,46 @@ Harvest.woodworking = {
 -- 23265 Cleansed Water, Pure Water, TheRift
 Harvest.solvent = {
     ["en"] = {
-        "Bottle",
-        "Bottles",
-        "Cup",
-        "Cups",
-        "Drink",
-        "Goblet",
-        "Jar",
-        "Jug",
-        "Mug",
+        -- "Bottle",
+        -- "Bottles",
+        -- "Cup",
+        -- "Cups",
+        -- "Drink",
+        -- "Goblet",
+        -- "Jar",
+        -- "Jug",
+        -- "Mug",
         "Pure Water",
         "Water Skin",
-        "Wine Rack",
+        -- "Wine Rack",
     },
     ["de"] = {
-        "Flasche",
-        "Flaschen",
-        "Tasse",
-        "Tassen",
-        "Getränk",
-        "Becher",
-        "Gefäß",
-        "Krug",
-        "Becher",
+        -- "Flasche",
+        -- "Flaschen",
+        -- "Tasse",
+        -- "Tassen",
+        -- "Getränk",
+        -- "Becher",
+        -- "Gefäß",
+        -- "Krug",
+        -- "Becher",
         "Reines Wasser",
         "Wasserhaut",
-        "Weinregal",
+        -- "Weinregal",
     },
     ["fr"] = {
-        "Bouteille",
-        "Bouteilles",
-        "Tasse",
-        "Tasses",
-        "Boisson",
-        "Chope",
-        "Jar",
-        "Pichet",
-        "Choppe",
+        -- "Bouteille",
+        -- "Bouteilles",
+        -- "Tasse",
+        -- "Tasses",
+        -- "Boisson",
+        -- "Chope",
+        -- "Jar",
+        -- "Pichet",
+        -- "Choppe",
         "Eau Pure",
         "Outre d'Eau",
-        "Casier ŕ bouteilles",
+        -- "Casier ŕ bouteilles",
     },
 }
 
@@ -684,7 +684,7 @@ end
 
 function Harvest.IsValidSolventOnImport(name)
     local nameMatch = false
-    
+
     for k, v in pairs(Harvest.solvent["en"]) do
         if v == name then
             nameMatch = true
@@ -835,3 +835,9 @@ function Harvest.GetProfessionType(id, name)
 
     return -1
 end
+
+-- local alliance = GetUnitAlliance("player")
+-- valid alliance values are:
+--  ALLIANCE_ALDMERI_DOMINION = 1
+--  ALLIANCE_EBONHEART_PACT = 2
+--  ALLIANCE_DAGGRTFALL_COVENANT = 3
