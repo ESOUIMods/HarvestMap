@@ -26,7 +26,7 @@ function Harvest.importFromEsohead()
 
     -- Additional HarvestMap Catagories
     -- 6 = Chest, 7 = Solvent, 8 = Fish
-    
+
     local professionFound
     d("Import Harvest Nodes:")
     for map, data in pairs(EH.savedVars["harvest"].data) do
@@ -79,7 +79,7 @@ function Harvest.importFromEsohead()
             end
         end
     end
-    
+
     d("Import Fishing Holes:")
     for map, nodes in pairs(EH.savedVars["fish"].data) do
         d("import data from "..map)
