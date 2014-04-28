@@ -352,13 +352,13 @@ function Harvest.alreadyFound( zone, x, y, profession, nodeName )
                         table.insert(entry[3], nodeName)
                     end
                     if Harvest.settings.debug then
-                        d("Node:" .. nodeName .. " on: " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " already found!")
+                        d("Node : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " already found!")
                     end
                     return true
                 else
                     if entry[3][1] == nodeName then
                         if Harvest.settings.debug then
-                            d("Node:" .. nodeName .. " on: " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " already found!")
+                            d("Node : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " already found!")
                         end
                         return true
                     end
@@ -367,7 +367,7 @@ function Harvest.alreadyFound( zone, x, y, profession, nodeName )
         --end
         end
     if Harvest.settings.debug then
-        d("Node:" .. nodeName .. " on: " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " not found!")
+        d("Node : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " not found!")
     end
     return false
 end
@@ -417,6 +417,10 @@ function Harvest.OnUpdate(time)
             end
             if Harvest.settings.verbose and contextlInfo ~= nil then
                 d("Contextual Info : " .. contextlInfo)
+            end
+
+            if Harvest.settings.verbose then
+                d("Map Name : " .. GetMapName() .. " : texture name : " .. Harvest.GetMap() )
             end
 
             -- Track Chest
