@@ -610,10 +610,13 @@ function Harvest.updateNodes(oldVersion)
                                 end
                                 table.insert(Harvest.nodes.oldData[newMapName][profession], node)
                             end
-                        -- node[4] which is the ItemID should not be nil at this point
-                        else
-                            if not Harvest.IsValidContainerOnImport(nodeName) then -- << Not a Container
-                                Harvest.saveData( newMapName, node[1], node[2], Harvest.GetProfessionType(node[4], nodeName), nodeName, node[4] )
+                        else -- node[4] which is the ItemID should not be nil at this point
+                            -- << Not a Container and a valid item i.e not a Bottle
+                            ProfessionOnUpdate = Harvest.GetProfessionTypeOnUpdate(nodeName)
+                            if not Harvest.IsValidContainerOnImport(nodeName) and 
+                                Harvest.CheckProfessionTypeOnImport(node[4], nodeName) and
+                                ( ProfessionOnUpdate >= 1) then
+                                Harvest.saveData( newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, node[4] )
                             else
                                 if not Harvest.nodes.oldData[newMapName] then
                                     Harvest.nodes.oldData[newMapName] = {}
@@ -686,8 +689,11 @@ function Harvest.UpdateNewMapNameNodes(oldVersion)
                         end
                     else -- node[4] which is the ItemID should not be nil at this point
                         -- << Not a Container and a valid item i.e not a Bottle
-                        if not Harvest.IsValidContainerOnImport(nodeName) and Harvest.CheckProfessionTypeOnImport(node[4], nodeName) then
-                            Harvest.saveData( newMapName, node[1], node[2], Harvest.GetProfessionType(node[4], nodeName), nodeName, node[4] )
+                        ProfessionOnUpdate = Harvest.GetProfessionTypeOnUpdate(nodeName)
+                        if not Harvest.IsValidContainerOnImport(nodeName) and 
+                            Harvest.CheckProfessionTypeOnImport(node[4], nodeName) and
+                            ( ProfessionOnUpdate >= 1) then
+                            Harvest.saveData( newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, node[4] )
                         else
                             if not Harvest.nodes.oldMapData[newMapName] then
                                 Harvest.nodes.oldMapData[newMapName] = {}
