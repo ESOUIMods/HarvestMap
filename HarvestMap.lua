@@ -455,7 +455,6 @@ function Harvest.OnLoad(eventCode, addOnName)
 
     Harvest.nodes = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "nodes", { data = {} } )
     Harvest.defaults = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "defaults", { wideSetting = {["accountWide"] = false,} } )
-
     if Harvest.defaults.wideSetting.accountWide then
         Harvest.settings = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 1, "settings",
             {
@@ -499,6 +498,11 @@ function Harvest.OnLoad(eventCode, addOnName)
     if (Harvest.nodes.internalVersion or 0) < internalVersion then
         Harvest.updateNodes(Harvest.nodes.internalVersion or 0)
         Harvest.nodes.internalVersion = internalVersion
+    end
+
+    if (Harvest.nodes.NewProfessionNodes or 0) < internalVersion then
+        Harvest.UpdateNewMapNameNodes(Harvest.nodes.NewProfessionNodes or 0)
+        Harvest.nodes.NewProfessionNodes = internalVersion
     end
 
     Harvest.InitializeMapMarkers()
