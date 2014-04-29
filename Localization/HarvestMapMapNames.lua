@@ -570,7 +570,7 @@ function Harvest.GetNewMapName(mapName)
 end
 
 function Harvest.updateNodes(oldVersion)
-    if oldVersion ~= 0 then
+    if (oldVersion ~= 0) or (oldVersion ~= 1) then
         return
     end
 
@@ -580,6 +580,7 @@ function Harvest.updateNodes(oldVersion)
         Harvest.nodes.oldData = {}
     end
     local newMapName
+    local ProfessionOnUpdate
 
     for map, data in pairs(oldData) do
         newMapName = Harvest.GetNewMapName(map)
@@ -587,7 +588,22 @@ function Harvest.updateNodes(oldVersion)
             for profession, nodes in pairs(data) do
                 for _, node in pairs(nodes) do
                     for _, nodeName in ipairs(node[3]) do
-                        Harvest.saveData( newMapName, node[1], node[2], Harvest.GetProfessionType(node[4], nodeName), nodeName, node[4] )
+                        if string.lower(nodeName) == "chest" then
+                            Harvest.saveData( newMapName, node[1], node[2], 6, "chest", nil )
+                        end
+                        if string.lower(nodeName) == "fish" then
+                            Harvest.saveData( newMapName, node[1], node[2], 8, "fish", nil )
+                        end
+                        if node[4] == nil then
+                            Harvest.saveData( newMapName, node[1], node[2], Harvest.GetProfessionTypeOnUpdate(nodeName), nodeName, nil )
+                        else
+                            ProfessionOnUpdate = Harvest.GetProfessionType(node[4], nodeName)
+                            if ProfessionOnUpdate >= 1 and ProfessionOnUpdate <= 8 then
+                                Harvest.saveData( newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, node[4] )
+                            else
+                                Harvest.saveData( newMapName, node[1], node[2], profession, nodeName, node[4] )
+                            end
+                        end
                     end
                 end
             end

@@ -728,6 +728,144 @@ function Harvest.IsValidContainerOnImport(name)
     return nameMatch
 end
 
+-- (1)Mining
+function Harvest.IsValidMiningOnUpdate(name)
+    local nameMatch = false
+
+    for k, v in pairs(Harvest.mining["en"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.mining["de"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.mining["fr"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+
+    return nameMatch
+end
+
+-- (2)Clothing
+function Harvest.IsValidClothingOnUpdate(name)
+    local nameMatch = false
+
+    for k, v in pairs(Harvest.clothing["en"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.clothing["de"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.clothing["fr"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+
+    return nameMatch
+end
+
+-- (3)Enchanting
+function Harvest.IsValidEnchantingOnUpdate(name)
+    local nameMatch = false
+
+    for k, v in pairs(Harvest.enchanting["en"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.enchanting["de"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.enchanting["fr"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+
+    return nameMatch
+end
+
+-- (4)Alchemy
+function Harvest.IsValidAlchemyOnUpdate(name)
+    local nameMatch = false
+
+    for k, v in pairs(Harvest.alchemy["en"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.alchemy["de"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.alchemy["fr"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+
+    return nameMatch
+end
+
+-- (5)Woodworking
+function Harvest.IsValidWoodworkingOnUpdate(name)
+    local nameMatch = false
+
+    for k, v in pairs(Harvest.woodworking["en"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.woodworking["de"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.woodworking["fr"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+
+    return nameMatch
+end
+
+-- (6)Container - Put Containers in 4 Alchemy just as if it were 2.2
+function Harvest.IsValidContainerOnUpdate(name)
+    local nameMatch = false
+
+    for k, v in pairs(Harvest.container["en"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.container["de"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+    for k, v in pairs(Harvest.container["fr"]) do
+        if v == name then
+            nameMatch = true
+        end
+    end
+
+    return nameMatch
+end
+
 function Harvest.IsValidSolvent(name)
     for k, v in pairs(Harvest.solvent[Harvest.language]) do
         if v == name then
@@ -783,6 +921,52 @@ function Harvest.CheckProfessionTypeOnImport(id, name)
     end
 
     return isOk
+end
+
+-- Arguments Required: NodeName
+-- Returns -1 when Object interacted with is invalid
+-- Valid types: (1)Mining, (2)Clothing, (3)Enchanting
+-- (4)Alchemy, (5)Wood, (7)Solvents
+-- Containers are assigned 4 Alchemy the same as 2.2
+function Harvest.GetProfessionTypeOnUpdate(name)
+    local tsId
+
+    if Harvest.IsValidSolvent(name) then
+        tsId = 7
+        return tsId
+    end
+
+    if Harvest.IsValidMiningOnUpdate(name) then
+        tsId = 1
+        return tsId
+    end
+
+    if Harvest.IsValidClothingOnUpdate(name) then
+        tsId = 2
+        return tsId
+    end
+
+    if Harvest.IsValidEnchantingOnUpdate(name) then
+        tsId = 3
+        return tsId
+    end
+
+    if Harvest.IsValidAlchemyOnUpdate(name) then
+        tsId = 4
+        return tsId
+    end
+
+    if Harvest.IsValidWoodworkingOnUpdate(name) then
+        tsId = 5
+        return tsId
+    end
+
+    if Harvest.IsValidContainerOnUpdate(name) then
+        tsId = 4
+        return tsId
+    end
+
+    return -1
 end
 
 -- Arguments Required ItemID, NodeName
