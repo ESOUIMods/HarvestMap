@@ -598,8 +598,7 @@ function Harvest.updateNodes(oldVersion)
                             -- Get the profession, 7 if solvent and -1 if not found
                             ProfessionOnUpdate = Harvest.GetProfessionTypeOnUpdate(nodeName)
                             if not Harvest.IsValidContainerOnImport(nodeName) and -- << Not a Container
-                                  ( ProfessionOnUpdate >= 1) and -- << greater the -1, so a profession was found
-                                  ( (profession == ProfessionOnUpdate) or (ProfessionOnUpdate == 7) ) then -- << it's not Jute under mining or it's a Solvent
+                                ( ProfessionOnUpdate >= 1) then -- << greater the -1, so a profession was found
                                 Harvest.saveData( newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, nil )
                             else
                                 if not Harvest.nodes.oldData[newMapName] then
@@ -613,7 +612,7 @@ function Harvest.updateNodes(oldVersion)
                         else -- node[4] which is the ItemID should not be nil at this point
                             -- << Not a Container and a valid item i.e not a Bottle
                             ProfessionOnUpdate = Harvest.GetProfessionTypeOnUpdate(nodeName)
-                            if not Harvest.IsValidContainerOnImport(nodeName) and -- << Not a Container 
+                            if not Harvest.IsValidContainerOnImport(nodeName) and -- << Not a Container
                                 -- << a valid item i.e not a Bottle or Crate, or it is a Solvent
                                 ( Harvest.CheckProfessionTypeOnImport(node[4], nodeName) or (ProfessionOnUpdate == 7) ) and
                                 ( ProfessionOnUpdate >= 1) then -- << greater the -1, so a profession was found
@@ -676,8 +675,7 @@ function Harvest.UpdateNewMapNameNodes(oldVersion)
                             -- Get the profession, 7 if solvent and -1 if not found
                             ProfessionOnUpdate = Harvest.GetProfessionTypeOnUpdate(nodeName)
                             if not Harvest.IsValidContainerOnImport(nodeName) and -- << Not a Container
-                                  ( ProfessionOnUpdate >= 1) and -- << greater the -1, so a profession was found
-                                  ( (profession == ProfessionOnUpdate) or (ProfessionOnUpdate == 7) ) then -- << it's not Jute under mining or it's a Solvent
+                                ( ProfessionOnUpdate >= 1) then -- << greater the -1, so a profession was found
                             Harvest.saveData( newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, nil )
                         else
                             if not Harvest.nodes.oldMapData[newMapName] then
@@ -691,7 +689,7 @@ function Harvest.UpdateNewMapNameNodes(oldVersion)
                     else -- node[4] which is the ItemID should not be nil at this point
                         -- << Not a Container and a valid item i.e not a Bottle
                         ProfessionOnUpdate = Harvest.GetProfessionTypeOnUpdate(nodeName)
-                        if not Harvest.IsValidContainerOnImport(nodeName) and -- << Not a Container 
+                        if not Harvest.IsValidContainerOnImport(nodeName) and -- << Not a Container
                             -- << a valid item i.e not a Bottle or Crate, or it is a Solvent
                             ( Harvest.CheckProfessionTypeOnImport(node[4], nodeName) or (ProfessionOnUpdate == 7) ) and
                             ( ProfessionOnUpdate >= 1) then -- << greater the -1, so a profession was found
