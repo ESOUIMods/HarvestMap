@@ -6,7 +6,7 @@ Harvest.defaultMapLayouts = {
         { level = 20, texture = "HarvestMap/Textures/Map/alchemy.dds", size = 20, color = {1, 1, 1} },
         { level = 20, texture = "HarvestMap/Textures/Map/wood.dds", size = 20, color = {1, 1, 1} },
         { level = 20, texture = "HarvestMap/Textures/Map/chest.dds", size = 20, color = {1, 1, 1} },
-        { level = 20, texture = "/esoui/art/icons/crafting_forester_potion_vendor_001.dds", size = 20, color = {1, 1, 1} },
+        { level = 20, texture = "HarvestMap/Textures/Map/solvent.dds", size = 20, color = {1, 1, 1} },
         { level = 20, texture = "HarvestMap/Textures/Map/fish.dds", size = 20, color = {1, 1, 1} },
     }
 
