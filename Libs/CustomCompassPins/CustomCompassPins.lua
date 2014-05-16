@@ -1,9 +1,9 @@
 -- CustomCompassPins by Shinni
-local version = 1.17
+local version = 1.19
 local onlyUpdate = false
 
-if COMPASS_PINS then
-   if COMPASS_PINS.version and COMPASS_PINS.version >= version then
+if COMPASS_PINS and COMPASS_PINS.version then
+   if COMPASS_PINS.version >= version then
       return
    end
    onlyUpdate = true
@@ -41,7 +41,7 @@ function COMPASS_PINS:New(...)
             self:Update()
             lastUpdate = now
             local currentMap = GetMapTileTexture()
-            if currentMap ~= lastMap then
+            if currentMap ~= lastMap and IsPlayerActivated() then
                self:RefreshDistanceCoefficient()
                self:RefreshPins()
                lastMap = currentMap
@@ -49,6 +49,11 @@ function COMPASS_PINS:New(...)
          end
       end)
 
+   EVENT_MANAGER:RegisterForEvent("CustomCompassPins", EVENT_PLAYER_ACTIVATED,
+      function()
+         self:RefreshDistanceCoefficient()
+         EVENT_MANAGER:UnregisterForEvent("CustomCompassPins", EVENT_PLAYER_ACTIVATED)
+      end)
    return result
 end
 
@@ -62,7 +67,7 @@ end
 
 function COMPASS_PINS:Initialize(...)
    --can't create OnUpdate handler on via CreateControl, so i'll have to create somethin else via virtual
-   self.control = WINDOW_MANAGER:CreateControlFromVirtual("CP_Control", GuiRoot, "ZO_MapPin")
+   self.control = WINDOW_MANAGER:CreateControlFromVirtual( nil, GuiRoot, "ZO_MapPin")
    self.pinCallbacks = {}
    self.pinLayouts = {}
    self.pinManager = CompassPinManager:New()
@@ -95,7 +100,7 @@ end
 function COMPASS_PINS:GetDistanceCoefficient()
    local distanceCoefficient = 1
 
-   if ZO_WorldMapContainer1 and ZO_WorldMapContainer1:IsTextureLoaded() then
+   if ZO_WorldMapContainer1 then
       local numTiles = GetMapNumTiles()
       local tileSize = ZO_WorldMapContainer1:GetTextureFileDimensions()
       local mapSize = numTiles * tileSize
@@ -116,6 +121,10 @@ function COMPASS_PINS:Update()
    if not heading then return end
    if heading > math.pi then --normalize heading to [-pi,pi]
       heading = heading - 2 * math.pi
+   end
+
+   if self.distanceCoefficient > 4 then    --fix for invalid map size 
+      self:RefreshDistanceCoefficient()
    end
 
    local x, y = GetMapPlayerPosition("player")
