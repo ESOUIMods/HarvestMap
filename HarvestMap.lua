@@ -278,6 +278,16 @@ function Harvest.GetMap()
     textureName = string.gsub(textureName, "^.*maps/", "")
     textureName = string.gsub(textureName, "_%d+%.dds$", "")
 
+    local mapType = GetMapType()
+    local mapContentType = GetMapContentType()
+    if (mapType == MAPTYPE_SUBZONE) or (mapContentType == MAP_CONTENT_DUNGEON) then
+        Harvest.minDist = 0.00005  -- Larger value for minDist since map is smaller
+    elseif (mapContentType == MAP_CONTENT_AVA) then
+        Harvest.minDist = 0.00001 -- Smaller value for minDist since map is larger
+    else
+        Harvest.minDist = 0.000025 -- This is the default value for minDist
+    end
+
     return textureName
 end
 
