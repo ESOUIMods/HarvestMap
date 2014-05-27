@@ -28,11 +28,11 @@ Harvest.defaultCompassLayouts = {
 }
 
 function Harvest.addCompassCallback( profession, g_mapPinManager )
-    if not Harvest.settings.filters[ profession ] or not Harvest.settings.compass then
+    if not Harvest.savedVars["settings"].filters[ profession ] or not Harvest.savedVars["settings"].compass then
         return
     end
     local zone = Harvest.GetMap()
-    local nodes = Harvest.nodes.data[ zone ]
+    local nodes = Harvest.savedVars["nodes"].data[zone]
     local pinType = Harvest.GetPinType( profession )
 
     if not nodes then
@@ -49,7 +49,7 @@ function Harvest.addCompassCallback( profession, g_mapPinManager )
 end
 
 function Harvest.CreateCompassPin(profession)
-    --if not Harvest.settings.filters[ profession ] then
+    --if not Harvest.savedVars["settings"].filters[ profession ] then
     --    return
     --end
     local pinType = Harvest.GetPinType( profession )
@@ -59,12 +59,12 @@ function Harvest.CreateCompassPin(profession)
         function( g_mapPinManager )
             Harvest.addCompassCallback( profession, g_mapPinManager )
         end,
-        Harvest.settings.compassLayouts[ profession ]
+        Harvest.savedVars["settings"].compassLayouts[ profession ]
     )
 end
 
 function Harvest.InitializeCompassMarkers()
-    for _, layout in pairs(Harvest.settings.compassLayouts) do
+    for _, layout in pairs(Harvest.savedVars["settings"].compassLayouts) do
         layout.additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset}
     end
     -- for profession = 1,6 do
