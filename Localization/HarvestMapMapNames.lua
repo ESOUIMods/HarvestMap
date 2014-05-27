@@ -669,17 +669,11 @@ function Harvest.updateNodes(type)
                                 Harvest.saveData("esonodes", map, node[1], node[2], ProfessionOnUpdate, nodeName, node[4], nil )
                             else
                                 if ProfessionOnUpdate <= 0 then
-                                    ProfessionOnUpdate = Harvest.GetProfessionType(node[4], nodeName)
-                                end
-                                if ProfessionOnUpdate <= 0 then
                                     ProfessionOnUpdate = profession
                                 end
                                 Harvest.saveData("esoinvalid", map, node[1], node[2], ProfessionOnUpdate, nodeName, node[4], nil )
                             end
                         else
-                            if ProfessionOnUpdate <= 0 then
-                                ProfessionOnUpdate = Harvest.GetProfessionType(node[4], nodeName)
-                            end
                             if ProfessionOnUpdate <= 0 then
                                 ProfessionOnUpdate = profession
                             end

@@ -327,6 +327,7 @@ function Harvest.saveData(type, zone, x, y, profession, nodeName, itemID, scale 
     end
 
     table.insert( Harvest.savedVars[type].data[zone][profession], { x, y, { nodeName }, itemID } )
+    Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
 
 end
 
@@ -478,11 +479,12 @@ end
 -----------------------------------------
 --           Slash Command             --
 -----------------------------------------
---[[
+
 Harvest.validCategories = {
-    "chest",
-    "fish",
-    "harvest",
+    "nodes",
+    "mapinvalid",
+    "esonodes",
+    "esoinvalid"
 }
 
 function Harvest.IsValidCategory(name)
@@ -494,7 +496,7 @@ function Harvest.IsValidCategory(name)
 
     return false
 end
-]]--
+
 SLASH_COMMANDS["/harvest"] = function (cmd)
     local commands = {}
     local index = 1
@@ -530,27 +532,26 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
             Harvest.updateNodes("oldMapData")
         end
 
-    --[[
     elseif commands[1] == "reset" then
         if #commands ~= 2 then 
             for type,sv in pairs(Harvest.savedVars) do
-                if type ~= "internal" then
+                if type ~= "settings" or type ~= "defaults" then
                     Harvest.savedVars[type].data = {}
                 end
             end
-            d("HarvestMerge saved data has been completely reset")
+            d("HarvestMap saved data has been completely reset")
         else
-            if commands[2] ~= "internal" then
-                if Harvest.IsValidCategory(commands[2]) then ]]--
-                    -- Harvest.savedVars[commands[2]].data = {}
-                    --[[ This is Messed Up!!!!!!!
-                    d("HarvestMerge saved data : " .. commands[2] .. " has been reset")
+            if commands[2] ~= "settings" or commands[2] ~= "defaults" then
+                if Harvest.IsValidCategory(commands[2]) then
+                    Harvest.savedVars[commands[2]].data = {}
+                    d("HarvestMap saved data : " .. commands[2] .. " has been reset")
                 else
-                    return d("Please enter a valid HarvestMerge category to reset")
+                    return d("Please enter a valid HarvestMap category to reset")
                 end
             end
         end
 
+    --[[
     elseif commands[1] == "datalog" then
         d("---")
         d("Complete list of gathered data:")
