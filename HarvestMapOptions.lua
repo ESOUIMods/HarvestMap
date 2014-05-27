@@ -5,51 +5,51 @@ local newPVECheckboxes = {}
 local newPVPCheckboxes = {}
 
 function Harvest.GetFilter( profession )
-    return Harvest.settings.filters[ profession ]
+    return Harvest.savedVars["settings"].filters[ profession ]
 end
 
 function Harvest.GetImportFilter( profession )
-    return Harvest.settings.importFilters[ profession ]
+    return Harvest.savedVars["settings"].importFilters[ profession ]
 end
 
 function Harvest.GetGatherFilter( profession )
-    return Harvest.settings.gatherFilters[ profession ]
+    return Harvest.savedVars["settings"].gatherFilters[ profession ]
 end
 
 function Harvest.SetFilter( profession, value )
-    Harvest.settings.filters[ profession ] = value
+    Harvest.savedVars["settings"].filters[ profession ] = value
     Harvest.RefreshPins( profession )
 end
 
 function Harvest.SetImportFilter( profession, value )
-    Harvest.settings.importFilters[ profession ] = value
+    Harvest.savedVars["settings"].importFilters[ profession ] = value
     -- No need to refresh pins since it happens on import
     -- Harvest.RefreshPins( profession )
     -- refreshCheckbox()
 end
 
 function Harvest.SetGatherFilter( profession, value )
-    Harvest.settings.gatherFilters[ profession ] = value
+    Harvest.savedVars["settings"].gatherFilters[ profession ] = value
     -- No need to refresh pins since it happens when gathering
     -- Harvest.RefreshPins( profession )
 end
 
 function Harvest.GetSize( profession )
-    return Harvest.settings.mapLayouts[ profession ].size
+    return Harvest.savedVars["settings"].mapLayouts[ profession ].size
 end
 
 function Harvest.SetSize( profession, value )
-    Harvest.settings.mapLayouts[ profession ].size = value
+    Harvest.savedVars["settings"].mapLayouts[ profession ].size = value
     Harvest.RefreshPins( profession )
 end
 
 function Harvest.GetColor( profession )
-    return unpack( Harvest.settings.mapLayouts[ profession ].color )
+    return unpack( Harvest.savedVars["settings"].mapLayouts[ profession ].color )
 end
 
 function Harvest.SetColor( profession, r, g, b )
-    Harvest.settings.mapLayouts[ profession ].color = { r, g, b }
-    Harvest.settings.compassLayouts[ profession ].color = { r, g, b }
+    Harvest.savedVars["settings"].mapLayouts[ profession ].color = { r, g, b }
+    Harvest.savedVars["settings"].compassLayouts[ profession ].color = { r, g, b }
     Harvest.RefreshPins( profession )
 end
 
@@ -127,18 +127,18 @@ function Harvest.InitializeOptions()
 
     LAM:AddCheckbox(panelID, "HarvestMapCompass", Harvest.localization[ "compass" ], Harvest.localization[ "compasstooltip" ],
         function()
-            return Harvest.settings.compass
+            return Harvest.savedVars["settings"].compass
         end,
         function( value )
-            Harvest.settings.compass = value
+            Harvest.savedVars["settings"].compass = value
             COMPASS_PINS:RefreshPins()
         end,
         false, nil)
 
     LAM:AddSlider(panelID, "HarvestMapFOV", Harvest.localization["fov"],Harvest.localization["fovtooltip"], 25, 100, 1,
         function()
-            if Harvest.settings.compassLayouts[1].FOV then
-                return ( 100 * Harvest.settings.compassLayouts[1].FOV / (2 * math.pi) )
+            if Harvest.savedVars["settings"].compassLayouts[1].FOV then
+                return ( 100 * Harvest.savedVars["settings"].compassLayouts[1].FOV / (2 * math.pi) )
             end
 
             return 100 * COMPASS_PINS.defaultFOV / (2 * math.pi)
@@ -146,7 +146,7 @@ function Harvest.InitializeOptions()
         function( value )
             -- for profession = 1,6 do
             for profession = 1,8 do
-                Harvest.settings.compassLayouts[ profession ].FOV = 2 * value * math.pi / 100
+                Harvest.savedVars["settings"].compassLayouts[ profession ].FOV = 2 * value * math.pi / 100
             end
             COMPASS_PINS:RefreshPins()
         end,
@@ -154,12 +154,12 @@ function Harvest.InitializeOptions()
 
     LAM:AddSlider(panelID, "HarvestMapDistance", Harvest.localization["distance"],Harvest.localization["distancetooltip"], 1, 100, 1,
         function()
-            return Harvest.settings.compassLayouts[1].maxDistance * 1000
+            return Harvest.savedVars["settings"].compassLayouts[1].maxDistance * 1000
         end,
         function( value )
             -- for profession = 1,6 do
             for profession = 1,8 do
-                Harvest.settings.compassLayouts[ profession ].maxDistance  = value / 1000
+                Harvest.savedVars["settings"].compassLayouts[ profession ].maxDistance  = value / 1000
             end
             COMPASS_PINS:RefreshPins()
         end,
@@ -179,19 +179,19 @@ function Harvest.InitializeOptions()
 
     LAM:AddCheckbox(panelID, "HarvestMapDebug", "Debug mode", "Enable debug mode",
         function()
-            return Harvest.settings.debug
+            return Harvest.savedVars["defaults"].debug
         end,
         function( value )
-            Harvest.settings.debug = value
+            Harvest.savedVars["defaults"].debug = value
         end,
     false, nil)
 
     LAM:AddCheckbox(panelID, "HarvestMapDebugVerbose", "Verbose debug mode", "Enable verbose debug mode",
         function()
-            return Harvest.settings.verbose
+            return Harvest.savedVars["defaults"].verbose
         end,
         function( value )
-            Harvest.settings.verbose = value
+            Harvest.savedVars["defaults"].verbose = value
         end,
     false, nil)
 
@@ -199,10 +199,10 @@ function Harvest.InitializeOptions()
 
     LAM:AddCheckbox(panelID, "HarvestMapSettings", "Account Wide Settings", "Enable account Wide Settings",
         function()
-            return Harvest.defaults.wideSetting.accountWide
+            return Harvest.savedVars["defaults"].wideSetting
         end,
         function( value )
-            Harvest.defaults.wideSetting.accountWide = value
+            Harvest.savedVars["defaults"].wideSetting = value
             changeAccountWideSettings(value)
         end,
     false, nil)
