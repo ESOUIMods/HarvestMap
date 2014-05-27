@@ -11,12 +11,12 @@ Harvest.defaultMapLayouts = {
     }
 
 function Harvest.addCallback( profession, g_mapPinManager )
-    if not Harvest.settings.filters[ profession ] then
+    if not Harvest.savedVars["settings"].filters[ profession ] then
         return
     end
     --d("Profession : " .. profession )
     local zone = Harvest.GetMap()
-    local nodes = Harvest.nodes.data[ zone ]
+    local nodes = Harvest.savedVars["nodes"].data[zone]
     local pinType = Harvest.GetPinType( profession )
 
     if not nodes then
@@ -51,10 +51,10 @@ end
 
 function Harvest.CreateMapPin(profession)
 
-    if Harvest.settings.verbose then
+    if Harvest.savedVars["defaults"].verbose then
         d(Harvest.settings)
-        d(Harvest.settings.mapLayouts)
-        d(Harvest.settings.mapLayouts[ profession ])
+        d(Harvest.savedVars["settings"].mapLayouts)
+        d(Harvest.savedVars["settings"].mapLayouts[ profession ])
     end
 
     local pinType = Harvest.GetPinType( profession )
@@ -64,7 +64,7 @@ function Harvest.CreateMapPin(profession)
             Harvest.addCallback( profession, g_mapPinManager )
         end,
         nil,
-        Harvest.settings.mapLayouts[ profession ],
+        Harvest.savedVars["settings"].mapLayouts[ profession ],
         Harvest.tooltipCreator
     )
 
@@ -78,7 +78,7 @@ ZO_MapPin.SetData = function( self, pinTypeId, pinTag)
     -- for profession = 1,6 do
     for profession = 1,8 do
         if pinTypeId == _G[Harvest.GetPinType( profession )] then
-            color = Harvest.settings.mapLayouts[ profession ].color
+            color = Harvest.savedVars["settings"].mapLayouts[ profession ].color
             back:SetColor( color[1], color[2], color[3], 1)
             break
         end
