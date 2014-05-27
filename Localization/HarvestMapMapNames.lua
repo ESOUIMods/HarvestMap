@@ -569,62 +569,89 @@ function Harvest.GetNewMapName(mapName)
     return result
 end
 
-function Harvest.updateNodes(oldVersion)
-    if oldVersion ~= 0 then
-        return
+function Harvest.hasNewMapName(mapName)
+    local found = false
+    for newMapName, translations in pairs(Harvest.mapSystem) do
+        if newMapName == mapName then
+            found = true
+            return found
+        end
     end
+    return found
+end
 
-    local oldData = Harvest.nodes.data
-    Harvest.nodes.data = {}
-    if not Harvest.nodes.oldData then
-        Harvest.nodes.oldData = {}
-    end
+function Harvest.updateNodes(type)
+
+    local oldData = Harvest.savedVars["nodes"][type]
+    Harvest.savedVars["nodes"][type] = {}
+    --if not Harvest.savedVars["nodes"].oldData then
+    --    Harvest.savedVars["nodes"].oldData = {}
+    --end
+    --if not Harvest.savedVars["nodes"].oldMapData then
+    --    Harvest.savedVars["nodes"].oldMapData = {}
+    --end
     local newMapName
     local ProfessionOnUpdate
 
     for map, data in pairs(oldData) do
-        newMapName = Harvest.GetNewMapName(map)
+        if Harvest.hasNewMapName(map) then
+            newMapName = map
+        else
+            newMapName = Harvest.GetNewMapName(map)
+        end
         if newMapName then
             for profession, nodes in pairs(data) do
                 for _, node in pairs(nodes) do
                     for _, nodeName in ipairs(node[3]) do
 
                         if (nodeName) == "chest" then
-                            Harvest.saveData( newMapName, node[1], node[2], 6, "chest", nil )
+                            -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
+                            Harvest.saveData("nodes", newMapName, node[1], node[2], Harvest.chestID, "chest", nil, Harvest.minReticleover )
                         elseif (nodeName) == "fish" then
-                            Harvest.saveData( newMapName, node[1], node[2], 8, "fish", nil )
+                            Harvest.saveData("nodes", newMapName, node[1], node[2], Harvest.fishID, "fish", nil, Harvest.minReticleover )
                         -- node[4] when is the ItemID is nil then use only the node name to determine profession
-                        elseif node[4] == nil then
+                        end
+
+                        if node[4] == nil then
                             -- Get the profession, 7 if solvent and -1 if not found
                             ProfessionOnUpdate = Harvest.GetProfessionTypeOnUpdate(nodeName)
-                            if not Harvest.IsValidContainerOnImport(nodeName) and -- << Not a Container
-                                ( ProfessionOnUpdate >= 1) then -- << greater the -1, so a profession was found
-                                Harvest.saveData( newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, nil )
-                            else
-                                if not Harvest.nodes.oldData[newMapName] then
-                                    Harvest.nodes.oldData[newMapName] = {}
+                            if not Harvest.IsValidContainerOnImport(nodeName) then -- << Not a Container
+                                if ProfessionOnUpdate <= 0 then
+                                    ProfessionOnUpdate = profession
                                 end
-                                if not Harvest.nodes.oldData[newMapName][profession] then
-                                    Harvest.nodes.oldData[newMapName][profession] = {}
+                                -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
+                                Harvest.saveData("nodes", newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, nil, nil )
+                            else -- << Container
+                                if ProfessionOnUpdate <= 0 then
+                                    ProfessionOnUpdate = profession
                                 end
-                                table.insert(Harvest.nodes.oldData[newMapName][profession], node)
+                                Harvest.saveData("mapinvalid", newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, nil, nil )
                             end
                         else -- node[4] which is the ItemID should not be nil at this point
                             -- << Not a Container and a valid item i.e not a Bottle
                             ProfessionOnUpdate = Harvest.GetProfessionTypeOnUpdate(nodeName)
-                            if not Harvest.IsValidContainerOnImport(nodeName) and -- << Not a Container
+                            if not Harvest.IsValidContainerOnImport(nodeName) then -- << Not a Container
                                 -- << a valid item i.e not a Bottle or Crate, or it is a Solvent
-                                ( Harvest.CheckProfessionTypeOnImport(node[4], nodeName) or (ProfessionOnUpdate == 7) ) and
-                                ( ProfessionOnUpdate >= 1) then -- << greater the -1, so a profession was found
-                                Harvest.saveData( newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, node[4] )
+                                if Harvest.CheckProfessionTypeOnImport(node[4], nodeName) then
+                                    Harvest.saveData("nodes", newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, node[4], nil )
+                                else
+                                    if ProfessionOnUpdate <= 0 then
+                                        ProfessionOnUpdate = Harvest.GetProfessionType(node[4], nodeName)
+                                    end
+                                    if ProfessionOnUpdate <= 0 then
+                                        ProfessionOnUpdate = profession
+                                    end
+                                    -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
+                                    Harvest.saveData("mapinvalid", newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, node[4], nil )
+                                end
                             else
-                                if not Harvest.nodes.oldData[newMapName] then
-                                    Harvest.nodes.oldData[newMapName] = {}
+                                if ProfessionOnUpdate <= 0 then
+                                    ProfessionOnUpdate = Harvest.GetProfessionType(node[4], nodeName)
                                 end
-                                if not Harvest.nodes.oldData[newMapName][profession] then
-                                    Harvest.nodes.oldData[newMapName][profession] = {}
+                                if ProfessionOnUpdate <= 0 then
+                                    ProfessionOnUpdate = profession
                                 end
-                                table.insert(Harvest.nodes.oldData[newMapName][profession], node)
+                                Harvest.saveData("mapinvalid", newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, node[4], nil )
                             end
                         end
 
@@ -632,79 +659,33 @@ function Harvest.updateNodes(oldVersion)
                 end
             end
         else -- << New Map Name NOT found
-            if not Harvest.nodes.oldData[map] then
-                Harvest.nodes.oldData[map] = {}
-            end
-
             for profession, nodes in pairs(data) do
-                if not Harvest.nodes.oldData[map][profession] then
-                    Harvest.nodes.oldData[map][profession] = {}
-                end
                 for _, node in pairs(nodes) do
-                    table.insert(Harvest.nodes.oldData[map][profession], node)
-                end
-            end
-        end
-    end
-end
-
-function Harvest.UpdateNewMapNameNodes(oldVersion)
-    if oldVersion ~= 0 then
-        return
-    end
-
-    local oldMapData = Harvest.nodes.data
-    Harvest.nodes.data = {}
-    if not Harvest.nodes.oldMapData then
-        Harvest.nodes.oldMapData = {}
-    end
-    local newMapName
-    local ProfessionOnUpdate
-
-    for newMapName, data in pairs(oldMapData) do
-        for profession, nodes in pairs(data) do
-            for _, node in pairs(nodes) do
-                for _, nodeName in ipairs(node[3]) do
-
-                    if (nodeName) == "chest" then
-                        Harvest.saveData( newMapName, node[1], node[2], 6, "chest", nil )
-                    elseif (nodeName) == "fish" then
-                        Harvest.saveData( newMapName, node[1], node[2], 8, "fish", nil )
-                    -- node[4] which is the ItemID is nil then use only the node name to determine profession
-                    elseif node[4] == nil then
-                            -- Get the profession, 7 if solvent and -1 if not found
-                            ProfessionOnUpdate = Harvest.GetProfessionTypeOnUpdate(nodeName)
-                            if not Harvest.IsValidContainerOnImport(nodeName) and -- << Not a Container
-                                ( ProfessionOnUpdate >= 1) then -- << greater the -1, so a profession was found
-                            Harvest.saveData( newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, nil )
-                        else
-                            if not Harvest.nodes.oldMapData[newMapName] then
-                                Harvest.nodes.oldMapData[newMapName] = {}
-                            end
-                            if not Harvest.nodes.oldMapData[newMapName][profession] then
-                                Harvest.nodes.oldMapData[newMapName][profession] = {}
-                            end
-                            table.insert(Harvest.nodes.oldMapData[newMapName][profession], node)
-                        end
-                    else -- node[4] which is the ItemID should not be nil at this point
-                        -- << Not a Container and a valid item i.e not a Bottle
+                    for _, nodeName in ipairs(node[3]) do
                         ProfessionOnUpdate = Harvest.GetProfessionTypeOnUpdate(nodeName)
-                        if not Harvest.IsValidContainerOnImport(nodeName) and -- << Not a Container
-                            -- << a valid item i.e not a Bottle or Crate, or it is a Solvent
-                            ( Harvest.CheckProfessionTypeOnImport(node[4], nodeName) or (ProfessionOnUpdate == 7) ) and
-                            ( ProfessionOnUpdate >= 1) then -- << greater the -1, so a profession was found
-                            Harvest.saveData( newMapName, node[1], node[2], ProfessionOnUpdate, nodeName, node[4] )
+                        if not Harvest.IsValidContainerOnImport(nodeName) then
+                            if Harvest.CheckProfessionTypeOnImport(node[4], nodeName) then
+                                -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
+                                Harvest.saveData("esonodes", map, node[1], node[2], ProfessionOnUpdate, nodeName, node[4], nil )
+                            else
+                                if ProfessionOnUpdate <= 0 then
+                                    ProfessionOnUpdate = Harvest.GetProfessionType(node[4], nodeName)
+                                end
+                                if ProfessionOnUpdate <= 0 then
+                                    ProfessionOnUpdate = profession
+                                end
+                                Harvest.saveData("esoinvalid", map, node[1], node[2], ProfessionOnUpdate, nodeName, node[4], nil )
+                            end
                         else
-                            if not Harvest.nodes.oldMapData[newMapName] then
-                                Harvest.nodes.oldMapData[newMapName] = {}
+                            if ProfessionOnUpdate <= 0 then
+                                ProfessionOnUpdate = Harvest.GetProfessionType(node[4], nodeName)
                             end
-                            if not Harvest.nodes.oldMapData[newMapName][profession] then
-                                Harvest.nodes.oldMapData[newMapName][profession] = {}
+                            if ProfessionOnUpdate <= 0 then
+                                ProfessionOnUpdate = profession
                             end
-                            table.insert(Harvest.nodes.oldMapData[newMapName][profession], node)
+                            Harvest.saveData("esoinvalid", map, node[1], node[2], ProfessionOnUpdate, nodeName, node[4], nil )
                         end
                     end
-
                 end
             end
         end

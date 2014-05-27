@@ -12,9 +12,9 @@ function Harvest.importFromEsohead()
     d("import data from Esohead")
     local profession
     local newMapName
-    if not Harvest.nodes.oldData then
-        Harvest.nodes.oldData = {}
-    end
+    -- if not Harvest.nodes.oldData then
+    --    Harvest.nodes.oldData = {}
+    -- end
 
     -- Esohead "harvest" Profession designations
     -- 1 Mining
@@ -42,7 +42,9 @@ function Harvest.importFromEsohead()
                             if professionFound >= 1 then
                                 -- When import filter is false do NOT import the node
                                 if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
-                                    Harvest.saveData( newMapName, node[1], node[2], professionFound, node[4], node[5] )
+                                    -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
+                                    Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
+                                    Harvest.saveData("nodes", newMapName, node[1], node[2], professionFound, node[4], node[5], nil )
                                 else
                                     -- d("skipping Node : " .. node[4] .. " : ID : " .. tostring(node[5]))
                                     Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
@@ -50,12 +52,45 @@ function Harvest.importFromEsohead()
                             end
                         else -- << If Valid Profession Type
                             Harvest.NumFalseNodes = Harvest.NumFalseNodes + 1
+                            Harvest.saveData("mapinvalid", newMapName, node[1], node[2], professionFound, node[4], node[5], nil )
                             -- d("Node:" .. node[4] .. " ItemID " .. tostring(node[5]) .. " skipped")
                         end -- << If Valid Profession Type
                     else -- << Not a Container
                         Harvest.NumContainerSkipped = Harvest.NumContainerSkipped + 1
+                        Harvest.saveData("mapinvalid", newMapName, node[1], node[2], professionFound, node[4], node[5], nil )
                         -- d("Container :" .. node[4] .. " ItemID " .. tostring(node[5]) .. " skipped")
                     end -- << Not a Container
+                end
+            end
+        else -- << New Map Name NOT found
+            for profession, nodes in pairs(data) do
+                for _, node in pairs(nodes) do
+                    if Harvest.CheckProfessionTypeOnImport(node[5], node[4]) then
+                        professionFound = Harvest.GetProfessionTypeOnUpdate(nodeName)
+                        if professionFound <= 0 then
+                            professionFound = Harvest.GetProfessionType(node[4], nodeName)
+                        end
+                        if professionFound <= 0 then
+                            professionFound = profession
+                        end
+                        -- When import filter is false do NOT import the node
+                        if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
+                            -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
+                            Harvest.saveData("esonodes", map, node[1], node[2], professionFound, node[4], node[5], nil )
+                        end
+                    else
+                        professionFound = Harvest.GetProfessionTypeOnUpdate(nodeName)
+                        if professionFound <= 0 then
+                            professionFound = Harvest.GetProfessionType(node[4], nodeName)
+                        end
+                        if professionFound <= 0 then
+                            professionFound = profession
+                        end
+                        if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
+                            -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
+                            Harvest.saveData("esoinvalid", map, node[1], node[2], professionFound, node[4], node[5], nil )
+                        end
+                    end
                 end
             end
         end
@@ -71,10 +106,22 @@ function Harvest.importFromEsohead()
                 -- Esohead "chest" has nodes only, add appropriate data
                 -- The 6 before "chest" refers to it's Profession ID
                 -- When import filter is false do NOT import the node
-                if not Harvest.savedVars["settings"].importFilters[ 6 ] then
-                    Harvest.saveData( newMapName, node[1], node[2], 6, "chest", nil )
+                if not Harvest.savedVars["settings"].importFilters[ Harvest.chestID ] then
+                    -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
+                    Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
+                    Harvest.saveData("nodes", newMapName, node[1], node[2], Harvest.chestID, "chest", nil, Harvest.minReticleover )
                 else
                     Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
+                end
+            end
+        else
+            for _, node in pairs(nodes) do
+                -- Esohead "chest" has nodes only, add appropriate data
+                -- The 6 before "chest" refers to it's Profession ID
+                -- When import filter is false do NOT import the node
+                if not Harvest.savedVars["settings"].importFilters[ Harvest.chestID ] then
+                    -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
+                    Harvest.saveData("esonodes", map, node[1], node[2], Harvest.chestID, "chest", nil, Harvest.minReticleover )
                 end
             end
         end
@@ -87,13 +134,25 @@ function Harvest.importFromEsohead()
         if newMapName then
             for _, node in pairs(nodes) do
                 Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                -- Esohead "fish" has nodes only, add appropriate data
-                -- The 8 before "fish" refers to it's Profession ID
+                -- Esohead "chest" has nodes only, add appropriate data
+                -- The 6 before "chest" refers to it's Profession ID
                 -- When import filter is false do NOT import the node
-                if not Harvest.savedVars["settings"].importFilters[ 8 ] then
-                    Harvest.saveData( newMapName, node[1], node[2], 8, "fish", nil )
+                if not Harvest.savedVars["settings"].importFilters[ Harvest.chestID ] then
+                    -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
+                    Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
+                    Harvest.saveData("nodes", newMapName, node[1], node[2], Harvest.chestID, "chest", nil, Harvest.minReticleover )
                 else
                     Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
+                end
+            end
+        else
+            for _, node in pairs(nodes) do
+                -- Esohead "chest" has nodes only, add appropriate data
+                -- The 6 before "chest" refers to it's Profession ID
+                -- When import filter is false do NOT import the node
+                if not Harvest.savedVars["settings"].importFilters[ Harvest.chestID ] then
+                    -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
+                    Harvest.saveData("esonodes", map, node[1], node[2], Harvest.chestID, "chest", nil, Harvest.minReticleover )
                 end
             end
         end
@@ -108,7 +167,7 @@ function Harvest.importFromEsohead()
     Harvest.RefreshPins()
 end
 
-function Harvest.importFromHarvester()
+function Harvest.importFromHarvestMerge()
     Harvest.NumNodesProcessed = 0
     Harvest.NumbersNodesAdded = 0
     Harvest.NumContainerSkipped = 0
@@ -116,8 +175,8 @@ function Harvest.importFromHarvester()
     Harvest.NumUnlocalizedFalseNodes = 0
     Harvest.NumbersUnlocalizedNodesAdded = 0
 
-    if not Harvester then
-        d("Please enable the Harvester addon to import data!")
+    if not HarvestMerge then
+        d("Please enable the HarvestMerge addon to import data!")
         return
     end
 
@@ -141,7 +200,7 @@ function Harvest.importFromHarvester()
 
     local professionFound
     d("Import Harvest Nodes:")
-    for map, data in pairs(Harvester.savedVars["harvest"].data) do
+    for map, data in pairs(HarvestMerge.savedVars["harvest"].data) do
         d("import data from "..map)
         newMapName = Harvest.GetNewMapName(map)
         if newMapName then
@@ -154,7 +213,7 @@ function Harvest.importFromHarvester()
                     if not Harvest.IsValidContainerOnImport(node[4]) then -- << Not a Container
                         if Harvest.CheckProfessionTypeOnImport(node[5], node[4]) then -- << Check Profession Type
                             Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
-                            Harvest.saveData("harvest", newMapName, node[1], node[2], professionFound, node[4], node[5], nil )
+                            Harvest.saveData("nodes", newMapName, node[1], node[2], professionFound, node[4], node[5], nil )
                         else -- << Invalid Profession Type
                             Harvest.NumFalseNodes = Harvest.NumFalseNodes + 1
                             Harvest.saveData("mapinvalid", newMapName, node[1], node[2], professionFound, node[4], node[5], nil )
@@ -201,7 +260,7 @@ function Harvest.importFromHarvester()
                 Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
                 -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
-                Harvest.saveData("chest", newMapName, node[1], node[2], Harvest.chestID, "chest", nil, Harvest.minReticleover )
+                Harvest.saveData("nodes", newMapName, node[1], node[2], Harvest.chestID, "chest", nil, Harvest.minReticleover )
             end
         else -- << New Map Name NOT found
             d(map .. " could not be localized.  Saving to oldData!")
@@ -226,7 +285,7 @@ function Harvest.importFromHarvester()
                 Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
                 -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
-                Harvest.saveData("fish", newMapName, node[1], node[2], Harvest.fishID, "fish", nil, Harvest.minReticleover )
+                Harvest.saveData("nodes", newMapName, node[1], node[2], Harvest.fishID, "fish", nil, Harvest.minReticleover )
             end
         else -- << New Map Name NOT found
             d(map .. " could not be localized.  Saving to oldData!")

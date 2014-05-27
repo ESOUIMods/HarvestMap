@@ -115,7 +115,7 @@ local function CreateColorPicker( profession )
 end
 
 local function changeAccountWideSettings(val)
-    Harvest.defaults.wideSetting.accountWide = val
+    Harvest.defaults.wideSetting = val
     ReloadUI()
 end
 
@@ -179,19 +179,19 @@ function Harvest.InitializeOptions()
 
     LAM:AddCheckbox(panelID, "HarvestMapDebug", "Debug mode", "Enable debug mode",
         function()
-            return Harvest.savedVars["defaults"].debug
+            return Harvest.defaults.debug
         end,
         function( value )
-            Harvest.savedVars["defaults"].debug = value
+            Harvest.defaults.debug = value
         end,
     false, nil)
 
     LAM:AddCheckbox(panelID, "HarvestMapDebugVerbose", "Verbose debug mode", "Enable verbose debug mode",
         function()
-            return Harvest.savedVars["defaults"].verbose
+            return Harvest.defaults.verbose
         end,
         function( value )
-            Harvest.savedVars["defaults"].verbose = value
+            Harvest.defaults.verbose = value
         end,
     false, nil)
 
@@ -199,10 +199,10 @@ function Harvest.InitializeOptions()
 
     LAM:AddCheckbox(panelID, "HarvestMapSettings", "Account Wide Settings", "Enable account Wide Settings",
         function()
-            return Harvest.savedVars["defaults"].wideSetting
+            return Harvest.defaults.wideSetting
         end,
         function( value )
-            Harvest.savedVars["defaults"].wideSetting = value
+            Harvest.defaults.wideSetting = value
             changeAccountWideSettings(value)
         end,
     false, nil)

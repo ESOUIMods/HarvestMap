@@ -51,7 +51,7 @@ end
 
 function Harvest.CreateMapPin(profession)
 
-    if Harvest.savedVars["defaults"].verbose then
+    if Harvest.defaults.verbose then
         d(Harvest.settings)
         d(Harvest.savedVars["settings"].mapLayouts)
         d(Harvest.savedVars["settings"].mapLayouts[ profession ])
