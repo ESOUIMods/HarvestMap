@@ -582,6 +582,10 @@ end
 
 function Harvest.updateNodes(type)
 
+    if Harvest.savedVars["nodes"][type] == nil then
+        return
+    end
+
     local oldData = Harvest.savedVars["nodes"][type]
     Harvest.savedVars["nodes"][type] = {}
     --if not Harvest.savedVars["nodes"].oldData then

@@ -514,22 +514,27 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
     if #commands == 2 and commands[1] == "import" then
         if commands[2] == "esohead" then
             Harvest.importFromEsohead()
-        -- elseif commands[2] == "esomerge" then
-        --    Harvest.importFromEsoheadMerge()
-        -- elseif commands[2] == "harvester" then
-        --    Harvest.importFromHarvester()
+        elseif commands[2] == "esomerge" then
+            Harvest.importFromEsoheadMerge()
+        elseif commands[2] == "harvester" then
+            Harvest.importFromHarvester()
         elseif commands[2] == "merger" then
             Harvest.importFromHarvestMerge()
+        else
+            d("Please enter a valid addon to import")
+            d("Valid addons are esohead, esomerge, harvester and")
+            d("merger (HarvestMerge)")
+            return
         end
 
     elseif #commands == 2 and commands[1] == "update" then
-        
-        if commands[2] == "data" then
-            Harvest.updateNodes("data")
-        elseif commands[2] == "oldData" then
-           Harvest.updateNodes("oldData")
-        elseif commands[2] == "oldMapData" then
-            Harvest.updateNodes("oldMapData")
+        if Harvest.IsValidCategory(commands[2]) then
+            Harvest.updateNodes(commands[2])
+        else
+            d("Please enter a valid HarvestMap category to update")
+            d("Valid categories are mapinvalid, esonodes, esoinvalid,")
+            d("and nodes (Not recomended)")
+            return
         end
 
     elseif commands[1] == "reset" then
@@ -546,7 +551,10 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
                     Harvest.savedVars[commands[2]].data = {}
                     d("HarvestMap saved data : " .. commands[2] .. " has been reset")
                 else
-                    return d("Please enter a valid HarvestMap category to reset")
+                    d("Please enter a valid HarvestMap category to reset.")
+                    d("Valid categories are mapinvalid, esonodes, esoinvalid,")
+                    d("and nodes (Not recomended)")
+                    return
                 end
             end
         end
@@ -592,6 +600,7 @@ function Harvest.OnLoad(eventCode, addOnName)
                 debug = false,
                 verbose = false,
                 internalVersion = 0, 
+                dataVersion = 0, 
                 language = ""
         })
 
@@ -657,6 +666,8 @@ function Harvest.OnLoad(eventCode, addOnName)
 
     if Harvest.defaults.internalVersion < internalVersion then
         Harvest.updateNodes("data")
+        Harvest.updateNodes("oldData")
+        Harvest.updateNodes("oldMapData")
         Harvest.defaults.internalVersion = internalVersion
     end
 
@@ -681,11 +692,13 @@ function Harvest.Initialize()
 
     Harvest.isHarvesting = false
     Harvest.action = nil
+
     Harvest.NumbersNodesAdded = 0
     Harvest.NumFalseNodes = 0
     Harvest.NumContainerSkipped = 0
     Harvest.NumbersNodesFiltered = 0
     Harvest.NumNodesProcessed = 0
+    Harvest.NumbersUnlocalizedNodesAdded = 0
 
 end
 
