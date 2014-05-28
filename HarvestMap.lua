@@ -653,6 +653,8 @@ function Harvest.OnLoad(eventCode, addOnName)
             }
         end
 
+    Harvest.defaults.language = Harvest.language
+
     if Harvest.defaults.internalVersion < internalVersion then
         Harvest.updateNodes("data")
         Harvest.defaults.internalVersion = internalVersion
