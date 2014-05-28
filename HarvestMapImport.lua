@@ -87,9 +87,11 @@ function Harvest.oldMapNilItemIDHarvest(oldMapName, x, y, profession, nodeName)
 end
 
 function Harvest.newMapItemIDHarvest(newMapName, x, y, profession, nodeName, itemID)
-    local professionFound
+    local professionFound = 0
     professionFound = Harvest.GetProfessionTypeOnUpdate(nodeName) -- Get Profession by name only
     if professionFound <= 0 then
+        professionFound = Harvest.GetProfessionType(itemID, nodeName)
+    elseif professionFound <= 0 then
         professionFound = profession
     end
 
@@ -102,8 +104,12 @@ function Harvest.newMapItemIDHarvest(newMapName, x, y, profession, nodeName, ite
                 Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
             end
         else
-            Harvest.NumFalseNodes = Harvest.NumFalseNodes + 1
-            Harvest.saveData("mapinvalid", newMapName, x, y, professionFound, nodeName, itemID, nil )
+            if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
+                Harvest.NumFalseNodes = Harvest.NumFalseNodes + 1
+                Harvest.saveData("mapinvalid", newMapName, x, y, professionFound, nodeName, itemID, nil )
+            else
+                Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
+            end
         end
     else
         if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
@@ -116,9 +122,11 @@ function Harvest.newMapItemIDHarvest(newMapName, x, y, profession, nodeName, ite
 end
 
 function Harvest.oldMapItemIDHarvest(oldMapName, x, y, profession, nodeName, itemID)
-    local professionFound
+    local professionFound = 0
     professionFound = Harvest.GetProfessionTypeOnUpdate(nodeName) -- Get Profession by name only
     if professionFound <= 0 then
+        professionFound = Harvest.GetProfessionType(itemID, nodeName)
+    elseif professionFound <= 0 then
         professionFound = profession
     end
 
