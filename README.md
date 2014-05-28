@@ -14,3 +14,13 @@ Features:
 ## Do I still need the Esohead addon? ##
 
 The Esohead addon needs to be active for /import to work. After you imported your old data, you don't need Esohead anymore for this addon.  It would still be great if you continued to use Esohead and upload you data.
+
+## Slash Commands
+```/harvest reset```
+Completely resets all gathered data.
+
+```/harvest reset DATATYPE```
+Resets a specific type of data
+
+```/harvest import addon```
+Imports data from Esohead, EsoheadMerge, Harvester, and HarvestMerge.

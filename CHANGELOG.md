@@ -1,3 +1,18 @@
+## 2.4.7
+- Added importing features for Esohead, EsoheadMerge, Harvester, and HarvestMerge
+- Added advanced slash commands
+- Most of the save file is now part of an array similar to Esohead allowing use of advanced slash commands
+- Updated report when importing data
+- Filter settings apply to importing from the 4 different addons allowing you to minimize the data saved
+- False nodes and containers are places in seperate catagories that can now be reset
+
+Notes:
+
+1) If you had previously activated "AccountWide" settings, you will have to set that again due to save file changes.  I highly recommend checking the filter settings also.
+2) If you leave the data in the backup categories as I make more localization improvements, that data can be updated and placed into the usable data as long as it isn't duplicate information.
+
+Code for slash commands borrowed from Esohead, used with permission
+
 ## 2.4.6
 - Updated TOC
 - Added wmrojer's suggestion for dealing with different map sizes
