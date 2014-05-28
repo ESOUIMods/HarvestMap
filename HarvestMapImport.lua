@@ -259,7 +259,7 @@ function Harvest.importFromEsohead()
     d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
     d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
     d("Number of False nodes skipped : " .. tostring(Harvest.NumFalseNodes) )
-    d("Number of Unlocalized False Nodes skipped : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
+    d("Number of Unlocalized False Nodes skipped : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
     d("Finished.")
     Harvest.RefreshPins()
 end
@@ -371,7 +371,7 @@ function Harvest.importFromEsoheadMerge()
     d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
     d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
     d("Number of False nodes skipped : " .. tostring(Harvest.NumFalseNodes) )
-    d("Number of Unlocalized False Nodes skipped : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
+    d("Number of Unlocalized False Nodes skipped : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
     d("Finished.")
     Harvest.RefreshPins()
 end
@@ -483,17 +483,17 @@ function Harvest.importFromHarvester()
     d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
     d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
     d("Number of False nodes skipped : " .. tostring(Harvest.NumFalseNodes) )
-    d("Number of Unlocalized False Nodes skipped : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
+    d("Number of Unlocalized False Nodes skipped : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
     d("Finished.")
     Harvest.RefreshPins()
 end
 
 function Harvest.importFromHarvestMerge()
-    Harvest.NumNodesProcessed = 0
     Harvest.NumbersNodesAdded = 0
-    Harvest.NumContainerSkipped = 0
     Harvest.NumFalseNodes = 0
-    Harvest.NumUnlocalizedFalseNodes = 0
+    Harvest.NumContainerSkipped = 0
+    Harvest.NumbersNodesFiltered = 0
+    Harvest.NumNodesProcessed = 0
     Harvest.NumbersUnlocalizedNodesAdded = 0
 
     if not HarvestMerge then
@@ -618,7 +618,7 @@ function Harvest.importFromHarvestMerge()
     d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
     d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
     d("Number of False nodes skipped : " .. tostring(Harvest.NumFalseNodes) )
-    d("Number of Unlocalized False Nodes skipped : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
+    d("Number of Unlocalized False Nodes skipped : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
     d("Finished.")
     Harvest.RefreshPins()
 end

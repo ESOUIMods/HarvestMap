@@ -512,6 +512,13 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
     end
 
     if #commands == 2 and commands[1] == "import" then
+        Harvest.NumbersNodesAdded = 0
+        Harvest.NumFalseNodes = 0
+        Harvest.NumContainerSkipped = 0
+        Harvest.NumbersNodesFiltered = 0
+        Harvest.NumNodesProcessed = 0
+        Harvest.NumbersUnlocalizedNodesAdded = 0
+
         if commands[2] == "esohead" then
             Harvest.importFromEsohead()
         elseif commands[2] == "esomerge" then
