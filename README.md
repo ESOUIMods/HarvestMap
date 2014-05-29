@@ -22,5 +22,16 @@ Completely resets all gathered data.
 ```/harvest reset DATATYPE```
 Resets a specific type of data
 
+Valid types are:
+"nodes" - All the valid data used by HarvestMap. It is not recommended to reset this.
+"mapinvalid" - All invalid data from maps that HarvestMap could translate. This can be reset after importing data.
+"esonodes" - All valid data from maps that HarvestMap could not translate. This can be kept for future updates.
+"esoinvalid" - All invalid data from maps that HarvestMap could not translate. This can be reset after importing data.
+
 ```/harvest import addon```
 Imports data from Esohead, EsoheadMerge, Harvester, and HarvestMerge.
+
+"esohead" - Esohead
+"esomerge" - EsoheadMerge
+"harvester" - Harvester
+"merger" - HarvestMerge
