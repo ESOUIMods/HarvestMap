@@ -203,7 +203,7 @@ Harvest.mapSystem = {
     ["glenumbra/minesofkhuras_base"] = {"Mines of Khuras"},
     ["bangkorai/murciensclaim_base"] = {"Torog's Spite"},
     ["alikr/sandblownmine_base"] = {"Sandblown Mine"},
-    ["alikr/aldunz_base"] = {"Aldunz", "Aldunz^N,in", "Aldunz^M",},
+    ["alikr/aldunz_base"] = {"Aldunz", "Aldunz^N,in", "Aldunz^M"},
     ["bangkorai/jaggerjaw_base"] = {"Klathzgar"},
     ["alikr/yldzuun_base"] = {"Yldzuun"},
     ["auridon/saltspray_base"] = {"Saltspray Cave"},
@@ -384,9 +384,9 @@ Harvest.mapSystem = {
     ["bangkorai/nilataruins_base"] = {"Nilata"},
     ["bangkorai/hallofheroes_base"] = {"Hall of Heroes"},
     ["coldharbor/hollowcity_base"] = {"The Hollow City"},
-    ["coldharbor/blackgarrison_base"] = {"Black Garrison"} existed pre 1.1.2
-    ["coldharbor/shroudedplain_base"] = {"The Shrouded Plain"} existed pre 1.1.2
-    ["coldharbor/fistofstone_base"] = {"The Fist of Stone"} existed pre 1.1.2
+    ["coldharbor/blackgarrison_base"] = {"Black Garrison"}, -- existed pre 1.1.2
+    ["coldharbor/shroudedplain_base"] = {"The Shrouded Plain"}, -- existed pre 1.1.2
+    ["coldharbor/fistofstone_base"] = {"The Fist of Stone"}, -- existed pre 1.1.2
     ["bangkorai/thefarshores_base"] = {"The Far Shores"},
     ["grahtwood/boneorchard_base"] = {"Bone Orchard"},
     ["grahtwood/tombofanahbi_base"] = {"Tomb of Anahbi"},
@@ -402,7 +402,7 @@ Harvest.mapSystem = {
     ["grahtwood/longcoast_base"] = {"The Long Coast"},
     ["rivenspire/doomcragtop_base"] = {"Doomcrag"},
     ["shadowfen/mudminesofskulrpahan_base"] = {"Mud Mines of Skulraphan"},
-    ["stonefalls/tormentedspire_base"] = {"Tormented Spire"} existed pre 1.1.2
+    ["stonefalls/tormentedspire_base"] = {"Tormented Spire"}, -- existed pre 1.1.2
     ["grahtwood/eldenrootgroundfloor_base"] = {"Elden Root"},
     ["grahtwood/eldenrootcrafting_base"] = {"Elden Root"},
     ["grahtwood/eldenrootfightersguildup_base"] = {"Elden Root"},
@@ -564,6 +564,7 @@ Harvest.mapSystem = {
 Harvest.langs = { "en", "de", "fr", }
 
 --zones
+--[[
 Harvest.DataStore["zones"] = {
    ["alikr"] = {},      --Alik'r Desert
    ["auridon"] = {},    --Auridon, Khenarthi's Roost
@@ -584,6 +585,7 @@ Harvest.DataStore["zones"] = {
    ["therift"] = {},    --The Rift
    ["craglorn"] = {},    --Craglorn
 }
+]]--
 
 function Harvest.GetNewMapName(mapName)
     local result = nil

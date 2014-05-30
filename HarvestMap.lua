@@ -506,6 +506,7 @@ function Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale )
                 if profession > 0 then
                     if not Harvest.contains(entry[3], nodeName) then
                         table.insert(entry[3], nodeName)
+                        Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
                     end
                     if Harvest.defaults.debug then
                         d("Node : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " already found!")
