@@ -292,7 +292,139 @@ function Harvest.GetMap()
     return textureName
 end
 
+function Harvest.saveMapName(currentMap)
+    local textureNameA = GetMapTileTexture()
+    local textureNameB = GetMapTileTexture()
+    textureNameA = string.lower(textureNameA)
+    textureNameB = string.lower(textureNameB)
+
+    local _,_,_,zone,subzone = string.find(textureNameA, "(maps/)([%w%-]+)/([%w%-]+_%w+)")
+    textureNameB = string.gsub(textureNameB, "^.*maps/", "")
+    textureNameB = string.gsub(textureNameB, "%.dds$", "")
+
+    local mapZone = GetMapName()
+    local unitZone = GetUnitZone("player")
+    local zoneIndex = GetCurrentMapZoneIndex()
+    local mapIndex = GetCurrentMapIndex()
+    local mapType = GetMapType()
+    local mapContentType = GetMapContentType()
+    local mapWidth, mapHeight = GetMapNumTiles()
+    local dimensionsX, dimensionsY = ZO_WorldMapContainer:GetDimensions()
+    local location = GetPlayerLocationName()
+    local categoryName, categoryIndex, mapInfoName, mapInfoIndex = GetMapParentCategories(mapIndex)
+    --d(categoryName .. " : " .. categoryIndex .. " : " .. mapInfoName .. " : " .. mapInfoIndex)
+    --local var1, var2, var3, var4 = GetMapParentCategories(zoneIndex)
+    --d(var1 .. " : " .. var2 .. " : " .. var3 .. " : " .. var4)
+    --d(var1 .. " : " .. var2 .. " : " .. var3 .. " : " .. var4)
+    --d("1 : " .. var1)
+    --d("2 : " .. var2)
+    --d("3 : " .. var3)
+    --d("4 : " .. var4)
+    --d("5 : " .. var5)
+    --d("6 : " .. var6)
+
+    if Harvest.savedVars["mapnames"] == nil then
+        Harvest.savedVars["mapnames"] = {}
+    end
+
+    if Harvest.savedVars["mapnames"].data == nil then
+        Harvest.savedVars["mapnames"].data = {}
+    end
+
+    if textureNameA == nil then
+        textureNameA = "Empty"
+    end
+    if textureNameB == nil then
+        textureNameB = "Empty"
+    end
+    if zone == nil then
+        zone = "Empty"
+    end
+    if subzone == nil then
+        subzone = "Empty"
+    end
+    if location == nil then
+        location = "Empty"
+    end
+    if mapZone == nil then
+        mapZone = "Empty"
+    end
+    if unitZone == nil then
+        unitZone = "Empty"
+    end
+    if zoneIndex == nil then
+        zoneIndex = "Empty"
+    end
+    if mapIndex == nil then
+        mapIndex = "Empty"
+    end
+    if mapType == nil then
+        mapType = "Empty"
+    end
+    if mapContentType == nil then
+        mapContentType = "Empty"
+    end
+    if mapWidth == nil then
+        mapWidth = "Empty"
+    end
+    if mapHeight == nil then
+        mapHeight = "Empty"
+    end
+    if dimensionsX == nil then
+        dimensionsX = "Empty"
+    end
+    if dimensionsY == nil then
+        dimensionsY = "Empty"
+    end
+    if categoryName == nil then
+        categoryName = "Empty"
+    end
+    if categoryIndex == nil then
+        categoryIndex = "Empty"
+    end
+    if mapInfoName == nil then
+        mapInfoName = "Empty"
+    end
+    if mapInfoIndex == nil then
+        mapInfoIndex = "Empty"
+    end
+
+    --d("CurrentMap : " .. currentMap)
+    --d("TextureA : " .. textureNameA)
+    --d("TextureB : " .. textureNameB)
+    --d("Zone : " .. zone .. " : Subzone : " .. subzone .. " : location : " ..  location .. " : mapZone : " .. mapZone .. " : unitZone : " .. unitZone .. " : zoneIndex : " .. zoneIndex .. " : " .. mapIndex .. " : " .. mapType .. " : " .. mapContentType .. " : " .. mapWidth .. " : " .. mapHeight .. " : " .. dimensionsX .. " : " .. dimensionsY)
+    
+    data = { currentMap, textureNameA, zone , subzone, location, mapZone , unitZone , zoneIndex, mapIndex, mapType, mapContentType, mapWidth, mapHeight, dimensionsX, dimensionsY, categoryName, categoryIndex, mapInfoName, mapInfoIndex }
+    
+    local savemapdata = true
+    for index, maps in pairs(Harvest.savedVars["mapnames"].data) do
+        for _, map in pairs(maps) do
+            if textureNameB == index then
+                savemapdata = false
+            end
+            for i = 1, 19 do
+                if textureNameB == index and (data[i] ~= map[i]) then
+                    savemapdata = true
+                end
+            end
+        end
+    end
+    
+    if savemapdata then
+        if Harvest.savedVars["mapnames"].data[textureNameB] == nil then
+            Harvest.savedVars["mapnames"].data[textureNameB] = {}
+
+            if Harvest.savedVars["mapnames"].data[textureNameB] then
+                --d("It was not here")
+                table.insert( Harvest.savedVars["mapnames"].data[textureNameB], data )
+            end
+        end
+    end
+end
+
 function Harvest.saveData(type, zone, x, y, profession, nodeName, itemID, scale )
+
+    --Harvest.saveMapName(zone)
 
     if not profession then
         return
@@ -553,7 +685,7 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
             end
             d("HarvestMap saved data has been completely reset")
         else
-            if commands[2] ~= "settings" or commands[2] ~= "defaults" then
+            if commands[2] ~= "settings" or commands[2] ~= "defaults" or commands[2] ~= "mapnames" then
                 if Harvest.IsValidCategory(commands[2]) then
                     Harvest.savedVars[commands[2]].data = {}
                     d("HarvestMap saved data : " .. commands[2] .. " has been reset")
@@ -621,6 +753,8 @@ function Harvest.OnLoad(eventCode, addOnName)
                 ["esonodes"]        = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "esonodes", Harvest.dataDefault),
                 -- All Invalid Unlocalized Nodes
                 ["esoinvalid"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "esoinvalid", Harvest.dataDefault),
+                -- Map name collection for future versions
+                ["mapnames"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "mapnames", Harvest.dataDefault),
 
                 ["settings"]    = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 1, "settings", {
                     filters = {
@@ -649,6 +783,8 @@ function Harvest.OnLoad(eventCode, addOnName)
                 ["esonodes"]        = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "esonodes", Harvest.dataDefault),
                 -- All Invalid Unlocalized Nodes
                 ["esoinvalid"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "esoinvalid", Harvest.dataDefault),
+                -- Map name collection for future versions
+                ["mapnames"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "mapnames", Harvest.dataDefault),
 
                 ["settings"]    = ZO_SavedVars:New("Harvest_SavedVars", 1, "settings", {
                     filters = {
