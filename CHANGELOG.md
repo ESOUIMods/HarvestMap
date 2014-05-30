@@ -1,3 +1,10 @@
+## 2.4.8
+
+Updates
+- Added craglorn support to localization files
+
+Note: It was reported that craglorn data was made unavailable after 2.4.7.  I need copies of both the HarvestMap.lua and HarvestMerge.lua files in order to resolve and test the issue correctly.  If you can please PM me with a link to a downloadable file from a website I don't have to register for, I would appreciate it.
+
 ## 2.4.7
 - Added importing features for Esohead, EsoheadMerge, Harvester, and HarvestMerge
 - Added advanced slash commands
