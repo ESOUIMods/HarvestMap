@@ -1,7 +1,9 @@
 --subzone
-Harvest.DataStore["fr"]["alikr"] = {
---Alik'r Desert (Daggerfall, lvl 31-37)
-   ["alikr_base"] = {            --Alik'r Desert
+--[[
+
+Harvest.DataStore["alikr"]["alikr_base"] = {
+    --Alik'r Desert (Daggerfall, lvl 31-37)
+    --Alik'r Desert
       --fr
       { "Aldunz^M", 3 },
       { "Alezer Kotu^F", 9 },
@@ -67,7 +69,7 @@ Harvest.DataStore["fr"]["alikr"] = {
    },
 }
 
-Harvest.DataStore["fr"]["auridon"] = {
+Harvest.DataStore["auridon"] = {
 --Auridon (Aldmeri lvl 5-15)
    ["auridon_base"] = { --Auridon
      --fr
@@ -155,7 +157,7 @@ Harvest.DataStore["fr"]["auridon"] = {
    },
 }
 
-Harvest.DataStore["fr"]["bangkorai"] = {
+Harvest.DataStore["bangkorai"] = {
 --Bangkorai (Daggerfall, lvl 37-43)
    ["bangkorai_base"] = {        --Bangkorai
      --fr
@@ -222,7 +224,7 @@ Harvest.DataStore["fr"]["bangkorai"] = {
    },
 }
 
-Harvest.DataStore["fr"]["coldharbor"] = {
+Harvest.DataStore["coldharbor"] = {
 --Coldharbour (all, lvl 45-50)
    ["coldharbour_base"] = {      --Coldharbour
      --fr
@@ -284,7 +286,7 @@ Harvest.DataStore["fr"]["coldharbor"] = {
    },
 }
 
-Harvest.DataStore["fr"]["cyrodiil"] = {
+Harvest.DataStore["cyrodiil"] = {
 --Cyrodiil (all, lvl 10+)
    ["ava_whole"] = {          --Cyrodiil
      --fr
@@ -392,7 +394,7 @@ Harvest.DataStore["fr"]["cyrodiil"] = {
    },
 }
 
-Harvest.DataStore["fr"]["deshaan"] = {
+Harvest.DataStore["deshaan"] = {
 --Deshaan (Ebonheart, lvl 16-23)
    ["deshaan_base"] = {          --"Deshaan"
       --fr
@@ -458,7 +460,7 @@ Harvest.DataStore["fr"]["deshaan"] = {
    },
 }
 
-Harvest.DataStore["fr"]["eastmarch"] = {
+Harvest.DataStore["eastmarch"] = {
 --Eastmarch (Ebonheart, lvl 31-37)
    ["eastmarch_base"] = {        --Eastmarch
       --fr
@@ -523,7 +525,7 @@ Harvest.DataStore["fr"]["eastmarch"] = {
    },
 }
 
-Harvest.DataStore["fr"]["glenumbra"] = {
+Harvest.DataStore["glenumbra"] = {
 --Glenumbra (Daggerfall, lvl 5-15)
    ["glenumbra_base"] = {        --Glenumbra
     --fr
@@ -623,7 +625,7 @@ Harvest.DataStore["fr"]["glenumbra"] = {
    },
 }
 
-Harvest.DataStore["fr"]["grahtwood"] = {
+Harvest.DataStore["grahtwood"] = {
 --Grahtwood (Aldmeri, lvl 16-23)
    ["grahtwood_base"] = {        --Grahtwood
       --fr
@@ -688,7 +690,7 @@ Harvest.DataStore["fr"]["grahtwood"] = {
    },
 }
 
-Harvest.DataStore["fr"]["greenshade"] = {
+Harvest.DataStore["greenshade"] = {
 --Greenshade (Aldmeri lvl 25-30)
    ["greenshade_base"] = {       --Greenshade
       --fr
@@ -752,7 +754,7 @@ Harvest.DataStore["fr"]["greenshade"] = {
    },
 }
 
-Harvest.DataStore["fr"]["malabaltor"] = {
+Harvest.DataStore["malabaltor"] = {
 --Malabal Tor (Aldmeri, lvl 31-37)
    ["malabaltor_base"] = { --Malabal Tor
       --fr
@@ -817,7 +819,7 @@ Harvest.DataStore["fr"]["malabaltor"] = {
    },
 }
 
-Harvest.DataStore["fr"]["reapersmarch"] = {
+Harvest.DataStore["reapersmarch"] = {
 --Reaper's March (Aldmeri, lvl 37-43)
    ["reapersmarch_base"] = {     --Reaper's March
       --fr
@@ -881,7 +883,7 @@ Harvest.DataStore["fr"]["reapersmarch"] = {
    },
 }
 
-Harvest.DataStore["fr"]["rivenspire"] = {
+Harvest.DataStore["rivenspire"] = {
 --Rivenspire (Daggerfall, lvl 25-30)
    ["rivenspire_base"] = {       --Rivenspire
       --fr
@@ -946,7 +948,7 @@ Harvest.DataStore["fr"]["rivenspire"] = {
    },
 }
 
-Harvest.DataStore["fr"]["shadowfen"] = {
+Harvest.DataStore["shadowfen"] = {
 --Shadowfen (Ebonheart, lvl 25-30)
    ["shadowfen_base"] = {        --Shadowfen
       --fr
@@ -1012,7 +1014,7 @@ Harvest.DataStore["fr"]["shadowfen"] = {
    },
 }
 
-Harvest.DataStore["fr"]["stonefalls"] = {
+Harvest.DataStore["stonefalls"] = {
 --Stonefalls (Ebonheart, lvl 5-15)
    ["stonefalls_base"] = {       --Stonefalls
       --fr
@@ -1110,7 +1112,7 @@ Harvest.DataStore["fr"]["stonefalls"] = {
    },
 }
 
-Harvest.DataStore["fr"]["stormhaven"] = {
+Harvest.DataStore["stormhaven"] = {
 --Stormhaven (Daggerfall, lvl 16-23)
    ["stormhaven_base"] = {       --Stormhaven
       --fr
@@ -1177,7 +1179,7 @@ Harvest.DataStore["fr"]["stormhaven"] = {
    },
 }
 
-Harvest.DataStore["fr"]["therift"] = {
+Harvest.DataStore["therift"] = {
 --The Rift (Ebonheart, lvl 37-43)
    ["therift_base"] = {          --The Rift
       --fr
@@ -1245,9 +1247,10 @@ Harvest.DataStore["fr"]["therift"] = {
    },
 }
 
-Harvest.DataStore["fr"]["craglorn"] = {
+Harvest.DataStore["de"]["craglorn"] = {
 --The Rift (Ebonheart, lvl 37-43)
    ["craglorn_base"] = {          --The Rift
-      --fr
+      --en
    },
 }
+]]--

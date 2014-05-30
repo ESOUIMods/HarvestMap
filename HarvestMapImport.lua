@@ -45,7 +45,7 @@ function Harvest.newMapNilItemIDHarvest(newMapName, x, y, profession, nodeName)
     end
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
-    if not Harvest.IsValidContainerOnImport(nodeName) then
+    if not Harvest.IsValidContainerName(nodeName) then
         if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
             Harvest.saveData("nodes", newMapName, x, y, professionFound, nodeName, nil, nil )
         else
@@ -69,7 +69,7 @@ function Harvest.oldMapNilItemIDHarvest(oldMapName, x, y, profession, nodeName)
     end
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
-    if not Harvest.IsValidContainerOnImport(nodeName) then
+    if not Harvest.IsValidContainerName(nodeName) then
         if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
             Harvest.NumbersUnlocalizedNodesAdded = Harvest.NumbersUnlocalizedNodesAdded +1
             Harvest.saveData("esonodes", oldMapName, x, y, professionFound, nodeName, nil, nil )
@@ -96,7 +96,7 @@ function Harvest.newMapItemIDHarvest(newMapName, x, y, profession, nodeName, ite
     end
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
-    if not Harvest.IsValidContainerOnImport(nodeName) then -- returns true or false
+    if not Harvest.IsValidContainerName(nodeName) then -- returns true or false
         if Harvest.CheckProfessionTypeOnImport(itemID, nodeName) then -- returns true or false no item Id number
             if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
                 Harvest.saveData("nodes", newMapName, x, y, professionFound, nodeName, itemID, nil )
@@ -131,7 +131,7 @@ function Harvest.oldMapItemIDHarvest(oldMapName, x, y, profession, nodeName, ite
     end
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
-    if not Harvest.IsValidContainerOnImport(nodeName) then -- returns true or false
+    if not Harvest.IsValidContainerName(nodeName) then -- returns true or false
         if Harvest.CheckProfessionTypeOnImport(itemID, nodeName) then -- returns true or false no item Id number
             if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
                 Harvest.saveData("esonodes", oldMapName, x, y, professionFound, nodeName, itemID, nil )

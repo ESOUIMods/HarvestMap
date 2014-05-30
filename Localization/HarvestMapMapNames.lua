@@ -558,6 +558,51 @@ Harvest.mapSystem = {
     ["craglorn/mtharnaz_base"] = {"Mtharnaz"},
     ["craglorn/cryptoftarishzi2_base"] = {"Tombs of the Na-Totambu"},
     ["craglorn/cryptoftarishzi_base"] = {"Tombs of the Na-Totambu"},
+    ["craglorn/cryptoftarishzizone_base"] = {"Tombs of the Na-Totambu"},
+    ["craglorn/hircineshaunt_base"] = {"Hircine's Haunt"},
+    ["craglorn/belkarth_base"] = {"Belkarth"},
+    ["craglorn/helracitadel_base"] = {"Hel Ra Citadel"},
+    ["craglorn/helracitadelentry_base"] = {"Hel Ra Citadel"},
+    ["craglorn/helracitadelhallofwarrior_base"] = {"Hel Ra Hall of the Warrior"},
+    ["craglorn/rahniza_1"] = {"Rahni'Za, School of Blades"},
+    ["craglorn/rahniza_2"] = {"Rahni'Za School"},
+    ["craglorn/shadahallofworship_base"] = {"Hall of Worship"},
+    ["craglorn/shadamaincity_base"] = {"Shada's Tear"},
+    ["craglorn/rahniza_3"] = {"Rahni'Za School"},
+    ["craglorn/shadacitydistrict_base"] = {"City District"},
+    ["craglorn/shadaburialgrounds_base"] = {"Burial Grounds"},
+    ["craglorn/rkhardahrk"] = {"Rkhardahrk"},
+    ["craglorn/rkundzelft_base"] = {"Rkundzelft"},
+    ["craglorn/elinhirmagevision_base"] = {"Apex Stone Room"},
+    ["craglorn/elinhirsewerworks_base"] = {"Elinhir Sewerworks"},
+    ["craglorn/burriedsands_base"] = {"Buried Sands"},
+    ["craglorn/balamath_base"] = {"Balamath"},
+    ["craglorn/balamathairmonarchcham_base"] = {"Balamath Hall"},
+    ["craglorn/balamathlibrary_base"] = {"Balamath Library"},
+    ["craglorn/themagesstaff_base"] = {"Spellscar"},
+    ["craglorn/stormlair_base"] = {"Storm Lair"},
+    ["craglorn/molavar_base"] = {"Molavar"},
+    ["craglorn/haddock_base"] = {"Haddock's Market"},
+    ["craglorn/chiselshriek_base"] = {"Chiselshriek Mine"},
+    ["craglorn/kardala_base"] = {"Ruins of Kardala"},
+    ["craglorn/seekersarchiveup_base"] = {"Seeker's Archive"},
+    ["craglorn/seekersarchivedown_base"] = {"Seeker's Archive"},
+    ["craglorn/aetherianarchiveend_base"] = {"Aetherian Archive"},
+    ["craglorn/aetherianarchiveislandc_base"] = {"Aetherian Archive"},
+    ["craglorn/aetherianarchiveislanda_base"] = {"Aetherian Archive"},
+    ["craglorn/reinholdsretreatcave_base"] = {"Reinhold's Retreat"},
+    ["craglorn/aetherianarchiveislandb_base"] = {"Aetherian Archive"},
+    ["craglorn/aetherianarchivemiddle_base"] = {"Aetherian Archive"},
+    ["craglorn/aetherianarchivebottom_base"] = {"Aetherian Archive"},
+    ["rivenspire/edraldundercroftdomed_base"] = {"Edrald Undercroft"},
+    ["glenumbra/stonetoothfortress_base"] = {"Stonetooth Fortress"},
+    ["shadowfen/mudshallowcave_base"] = {"Mudshallow Cave"},
+    ["craglorn/frostmonarchlair_base"] = {"Frost Monarch Lair"},
+    ["rivenspire/cryptofheartsheroic_base"] = {"Crypt of Hearts"},
+    ["rivenspire/cryptofheartsheroicboss"] = {"Crypt of Hearts"},
+    ["therift/trolhettasummit_base"] = {"Trolhetta Summit"},
+    ["alikr/eyeschamber_base"] = {"The Eye's Chamber"},
+    ["alikr/guardiansorbit_base"] = {"The Guardian's Orbit"},
 }
 
 --supported localizations
@@ -586,6 +631,76 @@ Harvest.DataStore["zones"] = {
    ["craglorn"] = {},    --Craglorn
 }
 ]]--
+Harvest.DataStore = {
+    ["en"] = {
+        ["auridon"] = { 
+            ["auridon_base"] = {
+                {"Beacon Falls"},
+                {"Bewan"},
+                {"Buraniim Isle"},
+            },
+        },
+        ["bangkorai"] = {
+            ["bangkorai_base"] = {
+                {"Arlimahera's Sanctum"},
+                {"Ash'abahs' Oasis"},
+                {"Bangkorai Garrison"},
+            },
+        },
+        ["coldharbor"] = {
+            ["coldharbour_base"] = {
+                {"Aba-Darre"},
+                {"Aba-Loria"},
+                {"Cadwell's Hovel"},
+            },
+        },
+    },
+    ["de"] = {
+        ["auridon"] = { 
+            ["auridon_base"] = {
+                {"Leuchtfeuersturz^md,an"},
+                {"Bewan^N,in"},
+                {"Buraniim^N,auf"},
+            },
+        },
+        ["bangkorai"] = {
+            ["bangkorai_base"] = {
+                {"Arlimaheras Heiligtum^Ng,in"},
+                {"Ash'abahs Oase^Fg,in"},
+                {"Bangkorai-Garnison^fd,in"},
+            },
+        },
+        ["coldharbor"] = {
+            ["coldharbour_base"] = {
+                {"Aba-Darre^N,in"},
+                {"Aba-Loria^N,in"},
+                {"Cadwells Heim^Ng,in"},
+            },
+        },
+    },
+    ["fr"] = { ["auridon"] = { 
+            ["auridon_base"] = {
+                {"chutes du fanal^fd"},
+                {"Bewan^F"},
+                {"île de Buraniim^fd"},
+            },
+        },
+        ["bangkorai"] = {
+            ["bangkorai_base"] = {
+                {"sanctuaire d'Arlimahéra^md"},
+                {"oasis Ash'abah^fd"},
+                {"garnison de Bangkoraï^fd"},
+            },
+        },
+        ["coldharbor"] = {
+            ["coldharbour_base"] = {
+                {"Aba-Darre^F"},
+                {"Aba-Loria^F"},
+                {"cahute de Cadwell^fd"},
+            },
+        },
+    },
+}
 
 function Harvest.GetNewMapName(mapName)
     local result = nil

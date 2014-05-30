@@ -15,6 +15,9 @@ HarvestMap.lua
 Localization/HarvestMapLoc.lua
 Localization/HarvestMapNodesLoc.lua
 Localization/HarvestMapMapNames.lua
+Localization/HarvestMapData-en.lua
+Localization/HarvestMapData-de.lua
+Localization/HarvestMapData-fr.lua
 
 HarvestMapData.lua
 HarvestMapMarkers.lua

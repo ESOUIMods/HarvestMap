@@ -1,4 +1,4 @@
-Harvest.SolventNodes = {"Pure Water", "Water Skin", "Reines Wasser", "Wasserhaut", "Eau Pure", "Outre d'Eau"}
+Harvest.SolventNodes = { ["en"] = { "Pure Water", "Water Skin", }, ["de"] = { "Reines Wasser", "Wasserhaut", }, ["fr"] = { "Eau Pure", "Outre d'Eau", }, }
 
 Harvest.NodeArray = {
     -- : Mining
@@ -789,8 +789,8 @@ Harvest.books = {
     },
 }
 
-function Harvest.IsValidMining(id, name)
-    local nameMatch = false
+function Harvest.IsValidMiningIDName(id, name)
+    local nameMatch = Harvest.IsValidMiningName(name)
     local itemIDMatch = false
 
     for key1, value in pairs(Harvest.professions[1]) do
@@ -799,22 +799,6 @@ function Harvest.IsValidMining(id, name)
         end
     end
 
-    for k, v in pairs(Harvest.mining["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.mining["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.mining["fr"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-
     if nameMatch and itemIDMatch then
         return true
     end
@@ -822,8 +806,8 @@ function Harvest.IsValidMining(id, name)
     return false
 end
 
-function Harvest.IsValidClothing(id, name)
-    local nameMatch = false
+function Harvest.IsValidClothingIDName(id, name)
+    local nameMatch = Harvest.IsValidClothingName(name)
     local itemIDMatch = false
 
     for key1, value in pairs(Harvest.professions[2]) do
@@ -832,22 +816,6 @@ function Harvest.IsValidClothing(id, name)
         end
     end
 
-    for k, v in pairs(Harvest.clothing["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.clothing["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.clothing["fr"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-
     if nameMatch and itemIDMatch then
         return true
     end
@@ -855,8 +823,8 @@ function Harvest.IsValidClothing(id, name)
     return false
 end
 
-function Harvest.IsValidEnchanting(id, name)
-    local nameMatch = false
+function Harvest.IsValidEnchantingIDName(id, name)
+    local nameMatch = Harvest.IsValidEnchantingName(name)
     local itemIDMatch = false
 
     for key1, value in pairs(Harvest.professions[3]) do
@@ -865,22 +833,6 @@ function Harvest.IsValidEnchanting(id, name)
         end
     end
 
-    for k, v in pairs(Harvest.enchanting["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.enchanting["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.enchanting["fr"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-
     if nameMatch and itemIDMatch then
         return true
     end
@@ -888,8 +840,8 @@ function Harvest.IsValidEnchanting(id, name)
     return false
 end
 
-function Harvest.IsValidAlchemy(id, name)
-    local nameMatch = false
+function Harvest.IsValidAlchemyIDName(id, name)
+    local nameMatch = Harvest.IsValidAlchemyName(name)
     local itemIDMatch = false
 
     for key1, value in pairs(Harvest.professions[4]) do
@@ -898,22 +850,6 @@ function Harvest.IsValidAlchemy(id, name)
         end
     end
 
-    for k, v in pairs(Harvest.alchemy["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.alchemy["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.alchemy["fr"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-
     if nameMatch and itemIDMatch then
         return true
     end
@@ -921,8 +857,8 @@ function Harvest.IsValidAlchemy(id, name)
     return false
 end
 
-function Harvest.IsValidWoodworking(id, name)
-    local nameMatch = false
+function Harvest.IsValidWoodworkingIDName(id, name)
+    local nameMatch = Harvest.IsValidWoodworkingName(name)
     local itemIDMatch = false
 
     for key1, value in pairs(Harvest.professions[5]) do
@@ -931,22 +867,6 @@ function Harvest.IsValidWoodworking(id, name)
         end
     end
 
-    for k, v in pairs(Harvest.woodworking["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.woodworking["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.woodworking["fr"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-
     if nameMatch and itemIDMatch then
         return true
     end
@@ -954,67 +874,14 @@ function Harvest.IsValidWoodworking(id, name)
     return false
 end
 
-function Harvest.IsValidSolventOnImport(name)
-    local nameMatch = false
-
-    for k, v in pairs(Harvest.solvent["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.solvent["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.solvent["fr"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-
-    return nameMatch
-end
-
-function Harvest.IsValidContainerOnImport(name)
-    local nameMatch = false
-
-    for k, v in pairs(Harvest.container["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.container["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.container["fr"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-
-    return nameMatch
-end
-
 -- (1)Mining
-function Harvest.IsValidMiningOnUpdate(name)
+function Harvest.IsValidMiningName(name)
     local nameMatch = false
-
-    for k, v in pairs(Harvest.mining["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.mining["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.mining["fr"]) do
-        if v == name then
-            nameMatch = true
+    for lang, langs in pairs(Harvest.langs) do
+        for k, v in pairs(Harvest.mining[langs]) do
+            if v == name then
+                nameMatch = true
+            end
         end
     end
 
@@ -1022,22 +889,13 @@ function Harvest.IsValidMiningOnUpdate(name)
 end
 
 -- (2)Clothing
-function Harvest.IsValidClothingOnUpdate(name)
+function Harvest.IsValidClothingName(name)
     local nameMatch = false
-
-    for k, v in pairs(Harvest.clothing["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.clothing["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.clothing["fr"]) do
-        if v == name then
-            nameMatch = true
+    for lang, langs in pairs(Harvest.langs) do
+        for k, v in pairs(Harvest.clothing[langs]) do
+            if v == name then
+                nameMatch = true
+            end
         end
     end
 
@@ -1045,22 +903,13 @@ function Harvest.IsValidClothingOnUpdate(name)
 end
 
 -- (3)Enchanting
-function Harvest.IsValidEnchantingOnUpdate(name)
+function Harvest.IsValidEnchantingName(name)
     local nameMatch = false
-
-    for k, v in pairs(Harvest.enchanting["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.enchanting["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.enchanting["fr"]) do
-        if v == name then
-            nameMatch = true
+    for lang, langs in pairs(Harvest.langs) do
+        for k, v in pairs(Harvest.enchanting[langs]) do
+            if v == name then
+                nameMatch = true
+            end
         end
     end
 
@@ -1068,22 +917,13 @@ function Harvest.IsValidEnchantingOnUpdate(name)
 end
 
 -- (4)Alchemy
-function Harvest.IsValidAlchemyOnUpdate(name)
+function Harvest.IsValidAlchemyName(name)
     local nameMatch = false
-
-    for k, v in pairs(Harvest.alchemy["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.alchemy["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.alchemy["fr"]) do
-        if v == name then
-            nameMatch = true
+    for lang, langs in pairs(Harvest.langs) do
+        for k, v in pairs(Harvest.alchemy[langs]) do
+            if v == name then
+                nameMatch = true
+            end
         end
     end
 
@@ -1091,69 +931,43 @@ function Harvest.IsValidAlchemyOnUpdate(name)
 end
 
 -- (5)Woodworking
-function Harvest.IsValidWoodworkingOnUpdate(name)
+function Harvest.IsValidWoodworkingName(name)
     local nameMatch = false
-
-    for k, v in pairs(Harvest.woodworking["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.woodworking["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.woodworking["fr"]) do
-        if v == name then
-            nameMatch = true
+    for lang, langs in pairs(Harvest.langs) do
+        for k, v in pairs(Harvest.woodworking[langs]) do
+            if v == name then
+                nameMatch = true
+            end
         end
     end
 
     return nameMatch
 end
 
--- (6)Container - Put Containers in 4 Alchemy just as if it were 2.2
-function Harvest.IsValidContainerOnUpdate(name)
+function Harvest.IsValidSolventName(name)
     local nameMatch = false
-
-    for k, v in pairs(Harvest.container["en"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.container["de"]) do
-        if v == name then
-            nameMatch = true
-        end
-    end
-    for k, v in pairs(Harvest.container["fr"]) do
-        if v == name then
-            nameMatch = true
+    for lang, langs in pairs(Harvest.langs) do
+        for k, v in pairs(Harvest.solvent[langs]) do
+            if v == name then
+                nameMatch = true
+            end
         end
     end
 
     return nameMatch
 end
 
-function Harvest.IsValidSolvent(name)
-    for k, v in pairs(Harvest.solvent[Harvest.language]) do
-        if v == name then
-            return true
+function Harvest.IsValidContainerName(name)
+    local nameMatch = false
+    for lang, langs in pairs(Harvest.langs) do
+        for k, v in pairs(Harvest.container[langs]) do
+            if v == name then
+                nameMatch = true
+            end
         end
     end
 
-    return false
-end
-
-function Harvest.IsValidContainer(name)
-    for k, v in pairs(Harvest.container[Harvest.language]) do
-        if v == name then
-            return true
-        end
-    end
-
-    return false
+    return nameMatch
 end
 
 -- Arguments Required ItemID, NodeName
@@ -1166,27 +980,27 @@ function Harvest.CheckProfessionTypeOnImport(id, name)
     id = tonumber(id)
 
     -- Set (1)Mining
-    if Harvest.IsValidMining(id, name) then
+    if Harvest.IsValidMiningIDName(id, name) then
         isOk = true
     end
     -- Set (2)Clothing
-     if Harvest.IsValidClothing(id, name) then
+     if Harvest.IsValidClothingIDName(id, name) then
         isOk = true
     end
     -- Set (3)Enchanting
-     if Harvest.IsValidEnchanting(id, name) then
+     if Harvest.IsValidEnchantingIDName(id, name) then
         isOk = true
     end
     -- Set (4)Alchemy
-     if Harvest.IsValidAlchemy(id, name) then
+     if Harvest.IsValidAlchemyIDName(id, name) then
         isOk = true
     end
     -- Set (5)Woodworking
-     if Harvest.IsValidWoodworking(id, name) then
+     if Harvest.IsValidWoodworkingIDName(id, name) then
         isOk = true
     end
     -- Set (7)Solvent
-    if Harvest.IsValidSolventOnImport(name) then
+    if Harvest.IsValidSolventName(name) then
         isOk = true
     end
 
@@ -1201,37 +1015,37 @@ end
 function Harvest.GetProfessionTypeOnUpdate(name)
     local tsId
 
-    if Harvest.IsValidSolvent(name) then
+    if Harvest.IsValidSolventName(name) then
         tsId = 7
         return tsId
     end
 
-    if Harvest.IsValidMiningOnUpdate(name) then
+    if Harvest.IsValidMiningName(name) then
         tsId = 1
         return tsId
     end
 
-    if Harvest.IsValidClothingOnUpdate(name) then
+    if Harvest.IsValidClothingName(name) then
         tsId = 2
         return tsId
     end
 
-    if Harvest.IsValidEnchantingOnUpdate(name) then
+    if Harvest.IsValidEnchantingName(name) then
         tsId = 3
         return tsId
     end
 
-    if Harvest.IsValidAlchemyOnUpdate(name) then
+    if Harvest.IsValidAlchemyName(name) then
         tsId = 4
         return tsId
     end
 
-    if Harvest.IsValidWoodworkingOnUpdate(name) then
+    if Harvest.IsValidWoodworkingName(name) then
         tsId = 5
         return tsId
     end
 
-    if Harvest.IsValidContainerOnUpdate(name) then
+    if Harvest.IsValidContainerName(name) then
         tsId = 4
         return tsId
     end
@@ -1263,7 +1077,7 @@ function Harvest.GetProfessionType(id, name)
 
     -- For this HarvestMap version there are no containers
     -- Set any container found to 0 so that it is not recorded.
-    if Harvest.IsValidContainer(name) then
+    if Harvest.IsValidContainerName(name) then
         tsId = 0
         if Harvest.defaults.verbose then
             d("Container is not used in this version id assigned : " .. tsId)

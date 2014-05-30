@@ -424,7 +424,7 @@ end
 
 function Harvest.saveData(type, zone, x, y, profession, nodeName, itemID, scale )
 
-    --Harvest.saveMapName(zone)
+    -- Harvest.saveMapName(zone)
 
     if not profession then
         return
@@ -523,6 +523,7 @@ function Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale )
             end
         --end
         end
+
     if Harvest.defaults.debug then
         d("Node : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " not found!")
     end
@@ -544,7 +545,9 @@ function Harvest.OnUpdate(time)
     -- end
 
     local newAction, nodeName, blockedNode, additionalInfo, contextlInfo = GetGameCameraInteractableActionInfo()
-    local isHarvesting = (IsPlayerInteractingWithObject() and Harvest.IsPlayerHarvesting())
+    local interactionType = GetInteractionType()
+    local active = IsPlayerInteractingWithObject()
+    local isHarvesting = ( active and (interactionType == INTERACTION_HARVEST) )
     if not isHarvesting then
         -- d("I am NOT busy!")
         if nodeName then
@@ -583,7 +586,7 @@ function Harvest.OnUpdate(time)
             -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
             -- Track Chest
             if not Harvest.savedVars["settings"].gatherFilters[ Harvest.chestID ] then
-                if Harvest.action == GetString(SI_GAMECAMERAACTIONTYPE12) then
+                if interactionType == INTERACTION_NONE and Harvest.action == GetString(SI_GAMECAMERAACTIONTYPE12) then
                     local zone, x, y = Harvest.GetLocation()
                     Harvest.saveData("nodes", zone, x, y, Harvest.chestID, "chest", nil, Harvest.minReticleover )
                     Harvest.RefreshPins( Harvest.chestID )
@@ -592,7 +595,7 @@ function Harvest.OnUpdate(time)
 
             -- Track Fishing Hole
             if not Harvest.savedVars["settings"].gatherFilters[ Harvest.fishID ] then
-                if Harvest.action == GetString(SI_GAMECAMERAACTIONTYPE16) then
+                if interactionType == INTERACTION_NONE and Harvest.action == GetString(SI_GAMECAMERAACTIONTYPE16) then
                     local zone, x, y = Harvest.GetLocation()
                     Harvest.saveData("nodes", zone, x, y, Harvest.fishID, "fish", nil, Harvest.minReticleover )
                     Harvest.RefreshPins( Harvest.fishID )
@@ -698,6 +701,7 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
                 end
             end
         end
+        Harvest.RefreshPins()
 
     --[[
     elseif commands[1] == "datalog" then
@@ -820,7 +824,7 @@ function Harvest.OnLoad(eventCode, addOnName)
     Harvest.InitializeOptions()
 
     EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_LOOT_RECEIVED, Harvest.OnLootReceived)
-    EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_LOOT_UPDATED, Harvest.OnLootUpdate)
+    -- EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_LOOT_UPDATED, Harvest.OnLootUpdate)
 
 end
 
@@ -829,7 +833,9 @@ function Harvest.Initialize()
     Harvest.dataDefault = {
         data = {}
     }
-
+    -- Harvest.DataStore = {}
+    Harvest.langs = { "en", "de", "fr", }
+    
     Harvest.minDefault = 0.000025 -- 0.005^2
     Harvest.minDist = 0.000025 -- 0.005^2
     Harvest.minReticleover = 0.000049 -- 0.007^2
