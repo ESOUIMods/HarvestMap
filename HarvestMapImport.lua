@@ -13,7 +13,7 @@ function Harvest.newMapNameFishChest(type, newMapName, x, y)
                 Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
             end
         else
-            d("unsupported type : " .. type)
+            d("Harvest : newMapName : unsupported type : " .. type)
         end
 end
 function Harvest.oldMapNameFishChest(type, oldMapName, x, y)
@@ -31,7 +31,7 @@ function Harvest.oldMapNameFishChest(type, oldMapName, x, y)
             Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
         end
     else
-        d("unsupported type : " .. type)
+        d("Harvest : oldMapName : unsupported type : " .. type)
     end
 end
 
@@ -165,355 +165,15 @@ function Harvest.importFromEsohead()
     Harvest.NumContainerSkipped = 0
     Harvest.NumbersNodesFiltered = 0
     Harvest.NumNodesProcessed = 0
+    Harvest.NumUnlocalizedFalseNodes = 0
     Harvest.NumbersUnlocalizedNodesAdded = 0
 
     if not EH then
         d("Please enable the Esohead addon to import data!")
         return
     end
+
     d("import data from Esohead")
-    local profession
-    local newMapName
-    -- if not Harvest.nodes.oldData then
-    --    Harvest.nodes.oldData = {}
-    -- end
-
-    -- Esohead "harvest" Profession designations
-    -- 1 Mining
-    -- 2 Clothing
-    -- 3 Enchanting
-    -- 4 Alchemy
-    -- 5 Was Provisioning, moved to separate section in Esohead
-    -- 6 Wood
-
-    -- Additional HarvestMap Catagories
-    -- 6 = Chest, 7 = Solvent, 8 = Fish
-
-    d("Import Harvest Nodes:")
-    for map, data in pairs(EH.savedVars["harvest"].data) do
-        d("import data from "..map)
-        if Harvest.hasNewMapName(map) then
-            newMapName = map
-        else
-            newMapName = Harvest.GetNewMapName(map)
-        end
-        if newMapName then
-            for profession, nodes in pairs(data) do
-                for _, node in pairs(nodes) do
-                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                    -- GetProfessionType(id, name) [5] = 1187, [4] = [[Barrel]] 
-                    Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, node[4], node[5])
-                end
-            end
-        else -- << New Map Name NOT found
-            d(map .. " could not be localized.  Saving to backup location!")
-            for profession, nodes in pairs(data) do
-                for _, node in pairs(nodes) do
-                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                    -- GetProfessionType(id, name) [5] = 1187, [4] = [[Barrel]] 
-                    Harvest.oldMapItemIDHarvest(map, node[1], node[2], profession, node[4], node[5])
-                end
-            end
-        end
-    end
-
-    d("Import Chests:")
-    for map, nodes in pairs(EH.savedVars["chest"].data) do
-        d("import data from "..map)
-        if Harvest.hasNewMapName(map) then
-            newMapName = map
-        else
-            newMapName = Harvest.GetNewMapName(map)
-        end
-        if newMapName then
-            for _, node in pairs(nodes) do
-                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                Harvest.newMapNameFishChest("chest", newMapName, node[1], node[2])
-            end
-        else
-            d(map .. " could not be localized.  Saving to backup location!")
-            for _, node in pairs(nodes) do
-                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                Harvest.oldMapNameFishChest("chest", map, node[1], node[2])
-            end
-        end
-    end
-
-    d("Import Fishing Holes:")
-    for map, nodes in pairs(EH.savedVars["fish"].data) do
-        d("import data from "..map)
-        if Harvest.hasNewMapName(map) then
-            newMapName = map
-        else
-            newMapName = Harvest.GetNewMapName(map)
-        end
-        if newMapName then
-            for _, node in pairs(nodes) do
-                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                Harvest.newMapNameFishChest("fish", newMapName, node[1], node[2])
-            end
-        else
-            d(map .. " could not be localized.  Saving to backup location!")
-            for _, node in pairs(nodes) do
-                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                Harvest.oldMapNameFishChest("fish", map, node[1], node[2])
-            end
-        end
-    end
-
-    d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
-    d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
-    d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
-    d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
-    d("Number of False nodes skipped : " .. tostring(Harvest.NumFalseNodes) )
-    d("Number of Unlocalized False Nodes skipped : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
-    d("Finished.")
-    Harvest.RefreshPins()
-end
-
-function Harvest.importFromEsoheadMerge()
-    Harvest.NumbersNodesAdded = 0
-    Harvest.NumFalseNodes = 0
-    Harvest.NumContainerSkipped = 0
-    Harvest.NumbersNodesFiltered = 0
-    Harvest.NumNodesProcessed = 0
-    Harvest.NumbersUnlocalizedNodesAdded = 0
-
-    if not EHM then
-        d("Please enable the EsoheadMerge addon to import data!")
-        return
-    end
-    d("import data from Esohead")
-    local profession
-    local newMapName
-    -- if not Harvest.nodes.oldData then
-    --    Harvest.nodes.oldData = {}
-    -- end
-
-    -- Esohead "harvest" Profession designations
-    -- 1 Mining
-    -- 2 Clothing
-    -- 3 Enchanting
-    -- 4 Alchemy
-    -- 5 Was Provisioning, moved to separate section in Esohead
-    -- 6 Wood
-
-    -- Additional HarvestMap Catagories
-    -- 6 = Chest, 7 = Solvent, 8 = Fish
-
-    d("Import Harvest Nodes:")
-    for map, data in pairs(EHM.savedVars["harvest"].data) do
-        d("import data from "..map)
-        if Harvest.hasNewMapName(map) then
-            newMapName = map
-        else
-            newMapName = Harvest.GetNewMapName(map)
-        end
-        if newMapName then
-            for profession, nodes in pairs(data) do
-                for _, node in pairs(nodes) do
-                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                    -- GetProfessionType(id, name) [5] = 1187, [4] = [[Barrel]] 
-                    Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, node[4], node[5])
-                end
-            end
-        else -- << New Map Name NOT found
-            d(map .. " could not be localized.  Saving to backup location!")
-            for profession, nodes in pairs(data) do
-                for _, node in pairs(nodes) do
-                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                    -- GetProfessionType(id, name) [5] = 1187, [4] = [[Barrel]] 
-                    Harvest.oldMapItemIDHarvest(map, node[1], node[2], profession, node[4], node[5])
-                end
-            end
-        end
-    end
-
-    d("Import Chests:")
-    for map, nodes in pairs(EHM.savedVars["chest"].data) do
-        d("import data from "..map)
-        if Harvest.hasNewMapName(map) then
-            newMapName = map
-        else
-            newMapName = Harvest.GetNewMapName(map)
-        end
-        if newMapName then
-            for _, node in pairs(nodes) do
-                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                Harvest.newMapNameFishChest("chest", newMapName, node[1], node[2])
-            end
-        else
-            d(map .. " could not be localized.  Saving to backup location!")
-            for _, node in pairs(nodes) do
-                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                Harvest.oldMapNameFishChest("chest", map, node[1], node[2])
-            end
-        end
-    end
-
-    d("Import Fishing Holes:")
-    for map, nodes in pairs(EHM.savedVars["fish"].data) do
-        d("import data from "..map)
-        if Harvest.hasNewMapName(map) then
-            newMapName = map
-        else
-            newMapName = Harvest.GetNewMapName(map)
-        end
-        if newMapName then
-            for _, node in pairs(nodes) do
-                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                Harvest.newMapNameFishChest("fish", newMapName, node[1], node[2])
-            end
-        else
-            d(map .. " could not be localized.  Saving to backup location!")
-            for _, node in pairs(nodes) do
-                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                Harvest.oldMapNameFishChest("fish", map, node[1], node[2])
-            end
-        end
-    end
-
-    d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
-    d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
-    d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
-    d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
-    d("Number of False nodes skipped : " .. tostring(Harvest.NumFalseNodes) )
-    d("Number of Unlocalized False Nodes skipped : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
-    d("Finished.")
-    Harvest.RefreshPins()
-end
-
-function Harvest.importFromHarvester()
-    Harvest.NumbersNodesAdded = 0
-    Harvest.NumFalseNodes = 0
-    Harvest.NumContainerSkipped = 0
-    Harvest.NumbersNodesFiltered = 0
-    Harvest.NumNodesProcessed = 0
-    Harvest.NumbersUnlocalizedNodesAdded = 0
-
-    if not Harvester then
-        d("Please enable the Harvester addon to import data!")
-        return
-    end
-    d("import data from Esohead")
-    local profession
-    local newMapName
-    -- if not Harvest.nodes.oldData then
-    --    Harvest.nodes.oldData = {}
-    -- end
-
-    -- Esohead "harvest" Profession designations
-    -- 1 Mining
-    -- 2 Clothing
-    -- 3 Enchanting
-    -- 4 Alchemy
-    -- 5 Was Provisioning, moved to separate section in Esohead
-    -- 6 Wood
-
-    -- Additional HarvestMap Catagories
-    -- 6 = Chest, 7 = Solvent, 8 = Fish
-
-    d("Import Harvest Nodes:")
-    for map, data in pairs(Harvester.savedVars["harvest"].data) do
-        d("import data from "..map)
-        if Harvest.hasNewMapName(map) then
-            newMapName = map
-        else
-            newMapName = Harvest.GetNewMapName(map)
-        end
-        if newMapName then
-            for profession, nodes in pairs(data) do
-                for _, node in pairs(nodes) do
-                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                    -- GetProfessionType(id, name) [5] = 1187, [4] = [[Barrel]] 
-                    Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, node[4], node[5])
-                end
-            end
-        else -- << New Map Name NOT found
-            d(map .. " could not be localized.  Saving to backup location!")
-            for profession, nodes in pairs(data) do
-                for _, node in pairs(nodes) do
-                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                    -- GetProfessionType(id, name) [5] = 1187, [4] = [[Barrel]] 
-                    Harvest.oldMapItemIDHarvest(map, node[1], node[2], profession, node[4], node[5])
-                end
-            end
-        end
-    end
-
-    d("Import Chests:")
-    for map, nodes in pairs(Harvester.savedVars["chest"].data) do
-        d("import data from "..map)
-        if Harvest.hasNewMapName(map) then
-            newMapName = map
-        else
-            newMapName = Harvest.GetNewMapName(map)
-        end
-        if newMapName then
-            for _, node in pairs(nodes) do
-                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                Harvest.newMapNameFishChest("chest", newMapName, node[1], node[2])
-            end
-        else
-            d(map .. " could not be localized.  Saving to backup location!")
-            for _, node in pairs(nodes) do
-                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                Harvest.oldMapNameFishChest("chest", map, node[1], node[2])
-            end
-        end
-    end
-
-    d("Import Fishing Holes:")
-    for map, nodes in pairs(Harvester.savedVars["fish"].data) do
-        d("import data from "..map)
-        if Harvest.hasNewMapName(map) then
-            newMapName = map
-        else
-            newMapName = Harvest.GetNewMapName(map)
-        end
-        if newMapName then
-            for _, node in pairs(nodes) do
-                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                Harvest.newMapNameFishChest("fish", newMapName, node[1], node[2])
-            end
-        else
-            d(map .. " could not be localized.  Saving to backup location!")
-            for _, node in pairs(nodes) do
-                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                Harvest.oldMapNameFishChest("fish", map, node[1], node[2])
-            end
-        end
-    end
-
-    d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
-    d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
-    d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
-    d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
-    d("Number of False nodes skipped : " .. tostring(Harvest.NumFalseNodes) )
-    d("Number of Unlocalized False Nodes skipped : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
-    d("Finished.")
-    Harvest.RefreshPins()
-end
-
-function Harvest.importFromHarvestMerge()
-    Harvest.NumbersNodesAdded = 0
-    Harvest.NumFalseNodes = 0
-    Harvest.NumContainerSkipped = 0
-    Harvest.NumbersNodesFiltered = 0
-    Harvest.NumNodesProcessed = 0
-    Harvest.NumbersUnlocalizedNodesAdded = 0
-
-    if not HarvestMerge then
-        d("Please enable the HarvestMerge addon to import data!")
-        return
-    end
-
-    if HarvestMerge.internal.internalVersion < 2 then
-        d("Please upgrade to HarvestMerge 0.1.5 to import data!")
-        return
-    end
-
-    d("import data from HarvestMerge")
     local profession
     local newMapName
     -- if not Harvest.oldData then
@@ -533,62 +193,335 @@ function Harvest.importFromHarvestMerge()
 
     local professionFound
     d("Import Harvest Nodes:")
-    for map, data in pairs(HarvestMerge.savedVars["nodes"].data) do
+    for map, data in pairs(EH.savedVars["harvest"].data) do
         d("import data from "..map)
-        if Harvest.hasNewMapName(map) then
-            newMapName = map
-        else
-            newMapName = Harvest.GetNewMapName(map)
-        end
+        newMapName = Harvest.GetNewMapName(map)
         if newMapName then
-            for profession, nodes in pairs(data) do
-                for index, node in pairs(nodes) do
-                    for contents, nodeName in ipairs(node[3]) do
-                        Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-
-                            if (nodeName) == "chest" or (nodeName) == "fish" then
-                                Harvest.newMapNameFishChest(nodeName, newMapName, node[1], node[2])
-                            else
-                                if node[4] == nil then
-                                    Harvest.newMapNilItemIDHarvest(newMapName, node[1], node[2], profession, nodeName)
-                                else -- node[4] which is the ItemID should not be nil at this point
-                                    Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, nodeName, node[4])
-                                end
-                            end
-
-                    end
+            for index, nodes in pairs(data) do
+                for _, node in pairs(nodes) do
+                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                    -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                    Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, node[4], node[5])
                 end
             end
         else -- << New Map Name NOT found
-            d(map .. " could not be localized.  Saving to backup location!")
-            for profession, nodes in pairs(data) do
-                for index, node in pairs(nodes) do
-                    for contents, nodeName in ipairs(node[3]) do
-                        Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-
-                            if (nodeName) == "chest" or (nodeName) == "fish" then
-                                Harvest.newMapNameFishChest(nodeName, newMapName, node[1], node[2])
-                            else
-                                if node[4] == nil then
-                                    Harvest.newMapNilItemIDHarvest(newMapName, node[1], node[2], profession, nodeName)
-                                else -- node[4] which is the ItemID should not be nil at this point
-                                    Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, nodeName, node[4])
-                                end
-                            end
-
-                    end
+            d(map .. " could not be localized.  Saving to oldData!")
+            for index, nodes in pairs(data) do
+                for v1, node in pairs(nodes) do
+                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                    -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                    Harvest.oldMapItemIDHarvest(map, node[1], node[2], profession, node[4], node[5])
                 end
             end
         end
+    end
 
+    d("Import Chests:")
+    for map, nodes in pairs(EH.savedVars["chest"].data) do
+        d("import data from "..map)
+        newMapName = Harvest.GetNewMapName(map)
+        if newMapName then
+            for _, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                Harvest.newMapNameFishChest("chest", newMapName, node[1], node[2])
+            end
+        else -- << New Map Name NOT found
+            d(map .. " could not be localized.  Saving to oldData!")
+            for v1, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                Harvest.oldMapNameFishChest(Harvest.chestID, map, node[1], node[2])
+            end
+        end
+    end
+
+    d("Import Fishing Holes:")
+    for map, nodes in pairs(EH.savedVars["fish"].data) do
+        d("import data from "..map)
+        newMapName = Harvest.GetNewMapName(map)
+        if newMapName then
+            for _, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                Harvest.newMapNameFishChest("fish", newMapName, node[1], node[2])
+            end
+        else -- << New Map Name NOT found
+            d(map .. " could not be localized.  Saving to oldData!")
+            for v1, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                Harvest.oldMapNameFishChest(Harvest.fishID, map, node[1], node[2])
+            end
+        end
     end
 
     d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
     d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
     d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
     d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
-    d("Number of False nodes skipped : " .. tostring(Harvest.NumFalseNodes) )
-    d("Number of Unlocalized False Nodes skipped : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
+    d("Number of False Nodes saved : " .. tostring(Harvest.NumFalseNodes) )
+    d("Number of Unlocalized nodes saved : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
+    d("Number of Unlocalized False Nodes saved : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
     d("Finished.")
-    Harvest.RefreshPins()
+end
+
+function Harvest.importFromEsoheadMerge()
+    Harvest.NumbersNodesAdded = 0
+    Harvest.NumFalseNodes = 0
+    Harvest.NumContainerSkipped = 0
+    Harvest.NumbersNodesFiltered = 0
+    Harvest.NumNodesProcessed = 0
+    Harvest.NumUnlocalizedFalseNodes = 0
+    Harvest.NumbersUnlocalizedNodesAdded = 0
+
+    if not EHM then
+        d("Please enable the EsoheadMerge addon to import data!")
+        return
+    end
+
+    d("import data from EsoheadMerge")
+    local profession
+    local newMapName
+    -- if not Harvest.oldData then
+    --     Harvest.oldData = {}
+    -- end
+
+    -- Esohead "harvest" Profession designations
+    -- 1 Mining
+    -- 2 Clothing
+    -- 3 Enchanting
+    -- 4 Alchemy
+    -- 5 Was Provisioning, moved to separate section in Esohead
+    -- 6 Wood
+
+    -- Additional HarvestMap Catagories
+    -- 6 = Chest, 7 = Solvent, 8 = Fish
+
+    local professionFound
+    d("Import Harvest Nodes:")
+    for map, data in pairs(EHM.savedVars["harvest"].data) do
+        d("import data from "..map)
+        newMapName = Harvest.GetNewMapName(map)
+        if newMapName then
+            for index, nodes in pairs(data) do
+                for _, node in pairs(nodes) do
+                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                    -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                    Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, node[4], node[5])
+                end
+            end
+        else -- << New Map Name NOT found
+            d(map .. " could not be localized.  Saving to oldData!")
+            for index, nodes in pairs(data) do
+                for v1, node in pairs(nodes) do
+                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                    -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                    Harvest.oldMapItemIDHarvest(map, node[1], node[2], profession, node[4], node[5])
+                end
+            end
+        end
+    end
+
+    d("Import Chests:")
+    for map, nodes in pairs(EHM.savedVars["chest"].data) do
+        d("import data from "..map)
+        newMapName = Harvest.GetNewMapName(map)
+        if newMapName then
+            for _, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                Harvest.newMapNameFishChest("chest", newMapName, node[1], node[2])
+            end
+        else -- << New Map Name NOT found
+            d(map .. " could not be localized.  Saving to oldData!")
+            for v1, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                Harvest.oldMapNameFishChest(Harvest.chestID, map, node[1], node[2])
+            end
+        end
+    end
+
+    d("Import Fishing Holes:")
+    for map, nodes in pairs(EHM.savedVars["fish"].data) do
+        d("import data from "..map)
+        newMapName = Harvest.GetNewMapName(map)
+        if newMapName then
+            for _, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                Harvest.newMapNameFishChest("fish", newMapName, node[1], node[2])
+            end
+        else -- << New Map Name NOT found
+            d(map .. " could not be localized.  Saving to oldData!")
+            for v1, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                Harvest.oldMapNameFishChest(Harvest.fishID, map, node[1], node[2])
+            end
+        end
+    end
+
+    d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
+    d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
+    d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
+    d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
+    d("Number of False Nodes saved : " .. tostring(Harvest.NumFalseNodes) )
+    d("Number of Unlocalized nodes saved : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
+    d("Number of Unlocalized False Nodes saved : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
+    d("Finished.")
+end
+
+function Harvest.importFromHarvester()
+    Harvest.NumbersNodesAdded = 0
+    Harvest.NumFalseNodes = 0
+    Harvest.NumContainerSkipped = 0
+    Harvest.NumbersNodesFiltered = 0
+    Harvest.NumNodesProcessed = 0
+    Harvest.NumUnlocalizedFalseNodes = 0
+    Harvest.NumbersUnlocalizedNodesAdded = 0
+
+    if not Harvester then
+        d("Please enable the Harvester addon to import data!")
+        return
+    end
+
+    d("import data from Harvester")
+    local profession
+    local newMapName
+    -- if not Harvest.oldData then
+    --     Harvest.oldData = {}
+    -- end
+
+    -- Esohead "harvest" Profession designations
+    -- 1 Mining
+    -- 2 Clothing
+    -- 3 Enchanting
+    -- 4 Alchemy
+    -- 5 Was Provisioning, moved to separate section in Esohead
+    -- 6 Wood
+
+    -- Additional HarvestMap Catagories
+    -- 6 = Chest, 7 = Solvent, 8 = Fish
+
+    local professionFound
+    d("Import Harvest Nodes:")
+    for map, data in pairs(Harvester.savedVars["harvest"].data) do
+        d("import data from "..map)
+        newMapName = Harvest.GetNewMapName(map)
+        if newMapName then
+            for index, nodes in pairs(data) do
+                for _, node in pairs(nodes) do
+                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                    -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                    Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, node[4], node[5])
+                end
+            end
+        else -- << New Map Name NOT found
+            d(map .. " could not be localized.  Saving to oldData!")
+            for index, nodes in pairs(data) do
+                for v1, node in pairs(nodes) do
+                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                    -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                    Harvest.oldMapItemIDHarvest(map, node[1], node[2], profession, node[4], node[5])
+                end
+            end
+        end
+    end
+
+    d("Import Chests:")
+    for map, nodes in pairs(Harvester.savedVars["chest"].data) do
+        d("import data from "..map)
+        newMapName = Harvest.GetNewMapName(map)
+        if newMapName then
+            for _, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                Harvest.newMapNameFishChest("chest", newMapName, node[1], node[2])
+            end
+        else -- << New Map Name NOT found
+            d(map .. " could not be localized.  Saving to oldData!")
+            for v1, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                Harvest.oldMapNameFishChest(Harvest.chestID, map, node[1], node[2])
+            end
+        end
+    end
+
+    d("Import Fishing Holes:")
+    for map, nodes in pairs(Harvester.savedVars["fish"].data) do
+        d("import data from "..map)
+        newMapName = Harvest.GetNewMapName(map)
+        if newMapName then
+            for _, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                Harvest.newMapNameFishChest("fish", newMapName, node[1], node[2])
+            end
+        else -- << New Map Name NOT found
+            d(map .. " could not be localized.  Saving to oldData!")
+            for v1, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                Harvest.oldMapNameFishChest(Harvest.fishID, map, node[1], node[2])
+            end
+        end
+    end
+
+    d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
+    d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
+    d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
+    d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
+    d("Number of False Nodes saved : " .. tostring(Harvest.NumFalseNodes) )
+    d("Number of Unlocalized nodes saved : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
+    d("Number of Unlocalized False Nodes saved : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
+    d("Finished.")
+end
+
+function Harvest.importFromHarvestMerge()
+    Harvest.NumbersNodesAdded = 0
+    Harvest.NumFalseNodes = 0
+    Harvest.NumContainerSkipped = 0
+    Harvest.NumbersNodesFiltered = 0
+    Harvest.NumNodesProcessed = 0
+    Harvest.NumUnlocalizedFalseNodes = 0
+    Harvest.NumbersUnlocalizedNodesAdded = 0
+
+    if not HarvestMerge then
+        d("Please enable the HarvestMap addon to import data!")
+        return
+    end
+
+    if HarvestMerge.internal.internalVersion < 2 then
+        d("Please upgrade to HarvestMerge 0.1.5 or newer to import data!")
+        return
+    end
+    d("import data from HarvestMap")
+    for newMapName, data in pairs(HarvestMerge.savedVars["nodes"].data) do
+        for profession, nodes in pairs(data) do
+            for index, node in pairs(nodes) do
+                for contents, nodeName in ipairs(node[3]) do
+                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+
+                        if (nodeName) == "chest" or (nodeName) == "fish" then
+                            Harvest.newMapNameFishChest(nodeName, newMapName, node[1], node[2])
+                        else
+                            if node[4] == nil then
+                                Harvest.newMapNilItemIDHarvest(newMapName, node[1], node[2], profession, nodeName)
+                            else -- node[4] which is the ItemID should not be nil at this point
+                                Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, nodeName, node[4])
+                            end
+                        end
+
+                end
+            end
+        end
+    end
+
+    d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
+    d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
+    d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
+    d("Finished.")
 end

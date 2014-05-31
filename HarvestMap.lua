@@ -659,7 +659,7 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
     end
 
     if #commands == 0 then
-        return d("Please enter a valid Harvester command")
+        return d("Please enter a valid HarvestMap command")
     end
 
     if #commands == 2 and commands[1] == "import" then

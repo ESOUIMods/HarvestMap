@@ -717,14 +717,12 @@ function Harvest.GetNewMapName(mapName)
 end
 
 function Harvest.hasNewMapName(mapName)
-    local found = false
     for newMapName, translations in pairs(Harvest.mapSystem) do
         if newMapName == mapName then
-            found = true
-            return found
+            return true
         end
     end
-    return found
+    return false
 end
 
 function Harvest.updateHarvestNodes(type)
@@ -772,8 +770,8 @@ function Harvest.updateHarvestNodes(type)
                 for index, node in pairs(nodes) do
                     for contents, nodeName in ipairs(node[3]) do
 
-                        if (nodeName) == "chest" or (nodeName) == "fish" then
-                            Harvest.oldMapNameFishChest(nodeName, map, node[1], node[2])
+                        if profession == 6 or profession == 8 then
+                            Harvest.oldMapNameFishChest(profession, map, node[1], node[2])
                         else
                             if node[4] == nil then
                                 Harvest.oldMapNilItemIDHarvest(map, node[1], node[2], profession, nodeName)
