@@ -41,6 +41,9 @@ function Harvest.newMapNilItemIDHarvest(newMapName, x, y, profession, nodeName)
     if professionFound <= 0 then
         professionFound = profession
     end
+    if professionFound < 1 or professionFound > 8 then
+        return
+    end
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
     if not Harvest.IsValidContainerName(nodeName) then
@@ -63,6 +66,9 @@ function Harvest.oldMapNilItemIDHarvest(oldMapName, x, y, profession, nodeName)
     professionFound = Harvest.GetProfessionTypeOnUpdate(nodeName) -- Get Profession by name only
     if professionFound <= 0 then
         professionFound = profession
+    end
+    if professionFound < 1 or professionFound > 8 then
+        return
     end
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
@@ -88,6 +94,9 @@ function Harvest.newMapItemIDHarvest(newMapName, x, y, profession, nodeName, ite
         professionFound = Harvest.GetProfessionType(itemID, nodeName)
     elseif professionFound <= 0 then
         professionFound = profession
+    end
+    if professionFound < 1 or professionFound > 8 then
+        return
     end
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
@@ -121,6 +130,9 @@ function Harvest.oldMapItemIDHarvest(oldMapName, x, y, profession, nodeName, ite
         professionFound = Harvest.GetProfessionType(itemID, nodeName)
     elseif professionFound <= 0 then
         professionFound = profession
+    end
+    if professionFound < 1 or professionFound > 8 then
+        return
     end
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale

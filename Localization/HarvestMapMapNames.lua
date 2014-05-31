@@ -727,7 +727,7 @@ function Harvest.hasNewMapName(mapName)
     return found
 end
 
-function Harvest.updateNodes(type)
+function Harvest.updateHarvestNodes(type)
 
     if Harvest.savedVars["nodes"][type] == nil then
         return
@@ -770,9 +770,10 @@ function Harvest.updateNodes(type)
         else -- << New Map Name NOT found
             for profession, nodes in pairs(data) do
                 for index, node in pairs(nodes) do
+                    for contents, nodeName in ipairs(node[3]) do
 
-                        if profession == 6 or profession == 8 then
-                            Harvest.oldMapNameFishChest(profession, map, node[1], node[2])
+                        if (nodeName) == "chest" or (nodeName) == "fish" then
+                            Harvest.oldMapNameFishChest(nodeName, map, node[1], node[2])
                         else
                             if node[4] == nil then
                                 Harvest.oldMapNilItemIDHarvest(map, node[1], node[2], profession, nodeName)
@@ -780,6 +781,52 @@ function Harvest.updateNodes(type)
                                 Harvest.oldMapItemIDHarvest(map, node[1], node[2], profession, nodeName, node[4])
                             end
                         end
+
+                    end
+                end
+            end
+        end
+
+    end
+end
+
+function Harvest.updateEsoheadNodes(type)
+
+    if Harvest.savedVars["nodes"][type] == nil then
+        return
+    end
+
+    local oldData = Harvest.savedVars["nodes"][type]
+    Harvest.savedVars["nodes"][type] = {}
+    -- if not Harvest.savedVars[type] then
+    --     Harvest.savedVars[type] = {}
+    -- end
+    --if not Harvest.savedVars["nodes"].oldMapData then
+    --    Harvest.savedVars["nodes"].oldMapData = {}
+    --end
+    local newMapName
+
+    for map, data in pairs(oldData) do
+        if Harvest.hasNewMapName(map) then
+            newMapName = map
+        else
+            newMapName = Harvest.GetNewMapName(map)
+        end
+        if newMapName then
+            for profession, nodes in pairs(data) do
+                for index, node in pairs(nodes) do
+
+                    -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                    Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, node[4], node[5])
+
+                end
+            end
+        else -- << New Map Name NOT found
+            for profession, nodes in pairs(data) do
+                for index, node in pairs(nodes) do
+
+                    -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
+                    Harvest.oldMapItemIDHarvest(map, node[1], node[2], profession, node[4], node[5])
 
                 end
             end

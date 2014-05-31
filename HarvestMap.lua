@@ -2,7 +2,7 @@ Harvest = {}
 Harvest.chestID = 6
 Harvest.fishID = 8
 
-local internalVersion = 3
+Harvest.internalVersion = 3
 
 -----------------------------------------
 --          String Formatting          --
@@ -422,7 +422,7 @@ function Harvest.saveMapName(currentMap)
     end
 end
 
-function changeCounters(counter)
+function Harvest.changeCounters(counter)
     if counter == "false" then
         Harvest.NumFalseNodes = Harvest.NumFalseNodes + 1
     end
@@ -437,7 +437,7 @@ function changeCounters(counter)
     end
 end
 
-function Harvest.saveData(type, zone, x, y, profession, nodeName, itemID, scale )
+function Harvest.saveData(type, zone, x, y, profession, nodeName, itemID, scale, counter )
 
     -- Harvest.saveMapName(zone)
 
@@ -474,7 +474,7 @@ function Harvest.saveData(type, zone, x, y, profession, nodeName, itemID, scale 
     end
 
     table.insert( Harvest.savedVars[type].data[zone][profession], { x, y, { nodeName }, itemID } )
-    Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
+    Harvest.changeCounters(counter)
 
 end
 
@@ -487,7 +487,7 @@ function Harvest.contains(table, value)
     return nil
 end
 
-function Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale )
+function Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale, counter )
 
     -- If this check is not here the next routine will fail
     -- after the loading screen because for a brief moment
@@ -521,7 +521,7 @@ function Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale )
                 if profession > 0 then
                     if not Harvest.contains(entry[3], nodeName) then
                         table.insert(entry[3], nodeName)
-                        Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
+                        Harvest.changeCounters(counter)
                     end
                     if Harvest.defaults.debug then
                         d("Node : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " already found!")
@@ -668,6 +668,7 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
         Harvest.NumContainerSkipped = 0
         Harvest.NumbersNodesFiltered = 0
         Harvest.NumNodesProcessed = 0
+        Harvest.NumUnlocalizedFalseNodes = 0
         Harvest.NumbersUnlocalizedNodesAdded = 0
 
         if commands[2] == "esohead" then
@@ -827,11 +828,11 @@ function Harvest.OnLoad(eventCode, addOnName)
 
     Harvest.defaults.language = Harvest.language
 
-    if Harvest.defaults.internalVersion < internalVersion then
-        Harvest.updateNodes("data")
-        Harvest.updateNodes("oldData")
-        Harvest.updateNodes("oldMapData")
-        Harvest.defaults.internalVersion = internalVersion
+    if Harvest.defaults.internalVersion < Harvest.internalVersion then
+        Harvest.updateHarvestNodes("data")
+        Harvest.updateHarvestNodes("oldData")
+        Harvest.updateHarvestNodes("oldMapData")
+        Harvest.defaults.internalVersion = Harvest.internalVersion
     end
 
     Harvest.InitializeMapMarkers()
@@ -863,6 +864,7 @@ function Harvest.Initialize()
     Harvest.NumContainerSkipped = 0
     Harvest.NumbersNodesFiltered = 0
     Harvest.NumNodesProcessed = 0
+    Harvest.NumUnlocalizedFalseNodes = 0
     Harvest.NumbersUnlocalizedNodesAdded = 0
 
 end

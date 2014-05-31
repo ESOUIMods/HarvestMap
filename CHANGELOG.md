@@ -1,9 +1,15 @@
+## 2.5.1
+
+Bugfix
+- Fixed importing with all filters on.  Some items were still being imported.
+
+Note: It was reported that craglorn data was made unavailable after 2.4.7.  I need copies of both the HarvestMap.lua and HarvestMerge.lua files in order to resolve and test the issue correctly.  If you can please PM me with a link to a downloadable file from a website I don't have to register for, I would appreciate it.
+
 ## 2.5.0
 
 Updates
 - Updated importing routines.  If you use HarvestMerge you will have to update to 0.1.5 in order to import information.
-
-Note: It was reported that craglorn data was made unavailable after 2.4.7.  I need copies of both the HarvestMap.lua and HarvestMerge.lua files in order to resolve and test the issue correctly.  If you can please PM me with a link to a downloadable file from a website I don't have to register for, I would appreciate it.
+- Attempted to make counters more accurate.
 
 ## 2.4.9
 
