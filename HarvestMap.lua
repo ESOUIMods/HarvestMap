@@ -435,6 +435,9 @@ function Harvest.changeCounters(counter)
     if counter == "nonvalid" then
         Harvest.NumbersUnlocalizedNodesAdded = Harvest.NumbersUnlocalizedNodesAdded + 1
     end
+    if counter == "reject" then
+        Harvest.NumRejectedNodes = Harvest.NumRejectedNodes + 1
+    end
 end
 
 function Harvest.saveData(type, zone, x, y, profession, nodeName, itemID, scale, counter )
@@ -450,7 +453,7 @@ function Harvest.saveData(type, zone, x, y, profession, nodeName, itemID, scale,
         return
     end
 
-    if Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale ) then
+    if Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale, counter ) then
         return
     end
 
@@ -460,7 +463,7 @@ function Harvest.saveData(type, zone, x, y, profession, nodeName, itemID, scale,
     if Harvest.savedVars[type] == nil then
         return
     end
-    
+
     if not Harvest.savedVars[type].data[zone] then
         Harvest.savedVars[type].data[zone] = {}
     end
@@ -538,7 +541,6 @@ function Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale, cou
             end
         --end
         end
-
     if Harvest.defaults.debug then
         d("Node : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " not found!")
     end
@@ -776,6 +778,8 @@ function Harvest.OnLoad(eventCode, addOnName)
                 ["esoinvalid"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "esoinvalid", Harvest.dataDefault),
                 -- Map name collection for future versions
                 ["mapnames"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "mapnames", Harvest.dataDefault),
+                -- All rejected records for debugging
+                -- ["rejected"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "rejected", Harvest.dataDefault),
 
                 ["settings"]    = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 1, "settings", {
                     filters = {
@@ -806,6 +810,8 @@ function Harvest.OnLoad(eventCode, addOnName)
                 ["esoinvalid"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "esoinvalid", Harvest.dataDefault),
                 -- Map name collection for future versions
                 ["mapnames"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "mapnames", Harvest.dataDefault),
+                -- All rejected records for debugging
+                -- ["rejected"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "rejected", Harvest.dataDefault),
 
                 ["settings"]    = ZO_SavedVars:New("Harvest_SavedVars", 1, "settings", {
                     filters = {
@@ -866,6 +872,7 @@ function Harvest.Initialize()
     Harvest.NumNodesProcessed = 0
     Harvest.NumUnlocalizedFalseNodes = 0
     Harvest.NumbersUnlocalizedNodesAdded = 0
+    Harvest.NumRejectedNodes = 0
 
 end
 

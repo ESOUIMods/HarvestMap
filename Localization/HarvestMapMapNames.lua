@@ -605,9 +605,6 @@ Harvest.mapSystem = {
     ["alikr/guardiansorbit_base"] = {"The Guardian's Orbit"},
 }
 
---supported localizations
-Harvest.langs = { "en", "de", "fr", }
-
 --zones
 --[[
 Harvest.DataStore["zones"] = {
