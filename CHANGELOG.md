@@ -1,9 +1,20 @@
+## 2.5.0
+
+Updates
+- Updated importing routines.  If you use HarvestMerge you will have to update to 0.1.5 in order to import information.
+
+Note: It was reported that craglorn data was made unavailable after 2.4.7.  I need copies of both the HarvestMap.lua and HarvestMerge.lua files in order to resolve and test the issue correctly.  If you can please PM me with a link to a downloadable file from a website I don't have to register for, I would appreciate it.
+
+## 2.4.9
+
+Updates
+- Added more craglorn support and other map localization from Esohead
+- Updated node recording routines.  You should not get duplicate fishing and chest nodes.
+
 ## 2.4.8
 
 Updates
 - Added craglorn support to localization files
-
-Note: It was reported that craglorn data was made unavailable after 2.4.7.  I need copies of both the HarvestMap.lua and HarvestMerge.lua files in order to resolve and test the issue correctly.  If you can please PM me with a link to a downloadable file from a website I don't have to register for, I would appreciate it.
 
 ## 2.4.7
 - Added importing features for Esohead, EsoheadMerge, Harvester, and HarvestMerge
@@ -11,7 +22,7 @@ Note: It was reported that craglorn data was made unavailable after 2.4.7.  I ne
 - Most of the save file is now part of an array similar to Esohead allowing use of advanced slash commands
 - Updated report when importing data
 - Filter settings apply to importing from the 4 different addons allowing you to minimize the data saved
-- False nodes and containers are places in seperate catagories that can now be reset
+- False nodes and containers are places in separate categories that can now be reset
 
 Notes:
 

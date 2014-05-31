@@ -876,98 +876,91 @@ end
 
 -- (1)Mining
 function Harvest.IsValidMiningName(name)
-    local nameMatch = false
     for lang, langs in pairs(Harvest.langs) do
         for k, v in pairs(Harvest.mining[langs]) do
             if v == name then
-                nameMatch = true
+                return true
             end
         end
     end
 
-    return nameMatch
+    return false
 end
 
 -- (2)Clothing
 function Harvest.IsValidClothingName(name)
-    local nameMatch = false
     for lang, langs in pairs(Harvest.langs) do
         for k, v in pairs(Harvest.clothing[langs]) do
             if v == name then
-                nameMatch = true
+                return true
             end
         end
     end
 
-    return nameMatch
+    return false
 end
 
 -- (3)Enchanting
 function Harvest.IsValidEnchantingName(name)
-    local nameMatch = false
     for lang, langs in pairs(Harvest.langs) do
         for k, v in pairs(Harvest.enchanting[langs]) do
             if v == name then
-                nameMatch = true
+                return true
             end
         end
     end
 
-    return nameMatch
+    return false
 end
 
 -- (4)Alchemy
 function Harvest.IsValidAlchemyName(name)
-    local nameMatch = false
     for lang, langs in pairs(Harvest.langs) do
         for k, v in pairs(Harvest.alchemy[langs]) do
             if v == name then
-                nameMatch = true
+                return true
             end
         end
     end
 
-    return nameMatch
+    return false
 end
 
 -- (5)Woodworking
 function Harvest.IsValidWoodworkingName(name)
-    local nameMatch = false
     for lang, langs in pairs(Harvest.langs) do
         for k, v in pairs(Harvest.woodworking[langs]) do
             if v == name then
-                nameMatch = true
+                return true
             end
         end
     end
 
-    return nameMatch
+    return false
 end
 
 function Harvest.IsValidSolventName(name)
-    local nameMatch = false
     for lang, langs in pairs(Harvest.langs) do
         for k, v in pairs(Harvest.solvent[langs]) do
             if v == name then
-                nameMatch = true
+                return true
             end
         end
     end
 
-    return nameMatch
+    return false
 end
 
 function Harvest.IsValidContainerName(name)
-    local nameMatch = false
     for lang, langs in pairs(Harvest.langs) do
         for k, v in pairs(Harvest.container[langs]) do
             if v == name then
-                nameMatch = true
+                return true
             end
         end
     end
 
-    return nameMatch
+    return false
 end
 
 -- Arguments Required ItemID, NodeName

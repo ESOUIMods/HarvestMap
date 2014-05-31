@@ -422,6 +422,21 @@ function Harvest.saveMapName(currentMap)
     end
 end
 
+function changeCounters(counter)
+    if counter == "false" then
+        Harvest.NumFalseNodes = Harvest.NumFalseNodes + 1
+    end
+    if counter == "valid" then
+        Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
+    end
+    if counter == "nonfalse" then
+        Harvest.NumUnlocalizedFalseNodes = Harvest.NumUnlocalizedFalseNodes + 1
+    end
+    if counter == "nonvalid" then
+        Harvest.NumbersUnlocalizedNodesAdded = Harvest.NumbersUnlocalizedNodesAdded + 1
+    end
+end
+
 function Harvest.saveData(type, zone, x, y, profession, nodeName, itemID, scale )
 
     -- Harvest.saveMapName(zone)
