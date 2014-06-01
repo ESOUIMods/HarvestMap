@@ -28,6 +28,18 @@ Valid types are:
 "esonodes" - All valid data from maps that HarvestMap could not translate. This can be kept for future updates.
 "esoinvalid" - All invalid data from maps that HarvestMap could not translate. This can be reset after importing data.
 
+```/merger datalog DATATYPE```
+Returns the number of nodes in the database specified in DATATYPE.  
+
+Valid data types are:
+
+nodes - the primary nodes used by HarvestMap
+mapinvalid - the invalid nodes for localized map names
+esonodes - valid nodes for non localized map names
+esoinvalid - invalid nodes for non localized map names
+
+NOTE: When I update the localization HarvestMap automatically moves data from mapinvalid, esonodes, and esoinvalid to nodes.
+
 ```/harvest import addon```
 Imports data from Esohead, EsoheadMerge, Harvester, and HarvestMerge.
 
