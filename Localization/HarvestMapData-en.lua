@@ -1,9 +1,9 @@
 --subzone
 --[[
-Harvest.DataStore["alikr"]["alikr_base"] = {
-    --Alik'r Desert (Daggerfall, lvl 31-37)
-    --Alik'r Desert
-    --en
+Harvest.DataStore["alikr"] = {
+--Alik'r Desert (Daggerfall, lvl 31-37)
+   ["alikr_base"] = {            --Alik'r Desert
+      --en
       { "Aldunz", 3 },
       { "Alezer Kotu", 9 },
       { "Ancestor's Landing", 8 },
@@ -1172,6 +1172,75 @@ Harvest.DataStore["stormhaven"] = {
       { "Windridge Warehouse", 9 },
    },
 }
+
+Harvest.DataStore["therift"] = {
+--The Rift (Ebonheart, lvl 37-43)
+   ["therift_base"] = {          --The Rift
+      --en
+      { "Abandoned Camp", 6 },
+      { "Autumnshade Clearing", 2 },
+      { "Avanchnzel", 3 },
+      { "Boulderfall Pass", 8 },
+      { "Broken Helm Hollow", 3 },
+      { "Dungeon: Blessed Crucible", 7 },
+      { "Eldbjorg's Hideaway", 9 },
+      { "Faldar's Tooth", 3 },
+      { "Fallowstone Hall", 8 },
+      { "Fallowstone Hall Wayshrine", 1 },
+      { "Forelhost", 8 },
+      { "Fort Greenwall", 3 },
+      { "Frostmoon Farmstead", 8 },
+      { "Frozen Ruins", 6 },
+      { "Fullhelm Fort", 8 },
+      { "Fullhelm Fort Wayshrine", 1 },
+      { "Geirmund's Hall", 8 },
+      { "Geirmund's Hall Wayshrine", 1 },
+      { "Giant Camp", 6 },
+      { "Grethel's Vigil", 2 },
+      { "Honeystrand Hill", 2 },
+      { "Honrich Tower", 8 },
+      { "Honrich Tower Wayshrine", 1 },
+      { "Hunter Camp", 6 },
+      { "Ivarstead", 8 },
+      { "Jenedusil's Claw", 2 },
+      { "Linele Skullcarver's Camp", 2 },
+      { "Lion's Den", 3 },
+      { "Lost Prospect", 8 },
+      { "Mammoth Ridge", 2 },
+      { "Nimalten", 8 },
+      { "Nimalten Wayshrine", 1 },
+      { "Northwind Mine", 8 },
+      { "Northwind Mine Wayshrine", 1 },
+      { "Pinepeak Cavern", 8 },
+      { "Ragged Hills Dolmen", 5 },
+      { "Ragged Hills Wayshrine", 1 },
+      { "Riften", 8 },
+      { "Riften Wayshrine", 1 },
+      { "Shor's Stone", 8 },
+      { "Shroud Hearth Barrow", 3 },
+      { "Skald's Retreat", 8 },
+      { "Skald's Retreat Wayshrine", 1 },
+      { "Smokefrost Peaks Dolmen", 5 },
+      { "Smokefrost Vigil", 9 },
+      { "Snapleg Cave", 3 },
+      { "Stony Basin Dolmen", 5 },
+      { "Taarengrav", 8 },
+      { "Taarengrav Wayshrine", 1 },
+      { "The Apprentice", 4 },
+      { "The Steed", 4 },
+      { "Three Tribes Camp", 2 },
+      { "Treva's Farm", 8 },
+      { "Trolhetta", 8 },
+      { "Trolhetta Summit Wayshrine", 1 },
+      { "Trolhetta Wayshrine", 1 },
+      { "Troll Cave", 6 },
+      { "Trollslayer's Gully", 9 },
+      { "Vernim Woods", 8 },
+      { "Wisplight Glen", 6 },
+      
+   },
+}
+
 Harvest.DataStore["craglorn"] = {
 --The Rift (Ebonheart, lvl 37-43)
    ["craglorn_base"] = {          --The Rift

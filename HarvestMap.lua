@@ -3,6 +3,7 @@ Harvest.chestID = 6
 Harvest.fishID = 8
 
 Harvest.internalVersion = 3
+Harvest.dataVersion = 1
 
 -----------------------------------------
 --          String Formatting          --
@@ -98,6 +99,21 @@ function Harvest.IsPlayerBusy()
     end
 
     return false
+end
+
+-- formats a number with commas on thousands
+function Harvest.NumberFormat(num)
+    local formatted = num
+    local k
+
+    while true do
+        formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
+        if k == 0 then
+            break
+        end
+    end
+
+    return formatted
 end
 
 -----------------------------------------
@@ -443,6 +459,11 @@ end
 function Harvest.saveData(type, zone, x, y, profession, nodeName, itemID, scale, counter )
 
     -- Harvest.saveMapName(zone)
+    
+    -- If the map is on the blacklist then don't log it
+    if Harvest.blacklistMap(zone) then
+        return
+    end
 
     if not profession then
         return
@@ -515,32 +536,21 @@ function Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale, cou
     end
 
     for _, entry in pairs( Harvest.savedVars[type].data[zone][profession] ) do
-        --if entry[3] == nodeName then
-            dx = entry[1] - x
-            dy = entry[2] - y
-            -- (x - center_x)2 + (y - center_y)2 = r2, where center is the player
-            dist = math.pow(dx, 2) + math.pow(dy, 2)
-            if dist < distance then
-                if profession > 0 then
-                    if not Harvest.contains(entry[3], nodeName) then
-                        table.insert(entry[3], nodeName)
-                        Harvest.changeCounters(counter)
-                    end
-                    if Harvest.defaults.debug then
-                        d("Node : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " already found!")
-                    end
-                    return true
-                else
-                    if entry[3][1] == nodeName then
-                        if Harvest.defaults.debug then
-                            d("Node : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " already found!")
-                        end
-                        return true
-                    end
-                end
+
+        dx = entry[1] - x
+        dy = entry[2] - y
+        -- (x - center_x)2 + (y - center_y)2 = r2, where center is the player
+        dist = math.pow(dx, 2) + math.pow(dy, 2)
+        if dist < distance then -- near player location
+            if not Harvest.contains(entry[3], nodeName) then
+                table.insert(entry[3], nodeName)
             end
-        --end
+            if Harvest.defaults.debug then
+                d("Node close to its location inserted into : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. "!")
+            end
+            return true
         end
+    end
     if Harvest.defaults.debug then
         d("Node : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " not found!")
     end
@@ -637,7 +647,7 @@ Harvest.validCategories = {
     "nodes",
     "mapinvalid",
     "esonodes",
-    "esoinvalid"
+    "esoinvalid",
 }
 
 function Harvest.IsValidCategory(name)
@@ -721,38 +731,83 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
         end
         Harvest.RefreshPins()
 
-    --[[
     elseif commands[1] == "datalog" then
-        d("---")
-        d("Complete list of gathered data:")
-        d("---")
+        if #commands ~= 2 and not Harvest.IsValidCategory(commands[2]) then
+            d("please enter a valid type")
+        else
+            d("---")
+            d("Complete list of gathered data:")
+            d("---")
 
-        local counter = {
-            ["harvest"] = 0,
-            ["chest"] = 0,
-            ["fish"] = 0,
-        }
+            local counter = {
+                ["mining"] = 0,
+                ["cloth"] = 0,
+                ["rune"] = 0,
+                ["alch"] = 0,
+                ["wood"] = 0,
+                ["chest"] = 0,
+                ["solvent"] = 0,
+                ["fish"] = 0,
+            }
 
-        for type,sv in pairs(Harvest.savedVars) do
-            if type ~= "internal" and (type == "chest" or type == "fish") then
-                for zone, t1 in pairs(Harvest.savedVars[type].data) do
-                    counter[type] = counter[type] + #Harvest.savedVars[type].data[zone]
-                end
-            elseif type ~= "internal" then
-                for zone, t1 in pairs(Harvest.savedVars[type].data) do
-                    for data, t2 in pairs(Harvest.savedVars[type].data[zone]) do
-                        counter[type] = counter[type] + #Harvest.savedVars[type].data[zone][data]
+            for type,sv in pairs(Harvest.savedVars) do
+                --[[
+                if type ~= "internal" and (type == "chest" or type == "fish") then
+                    for zone, t1 in pairs(Harvest.savedVars[type].data) do
+                        counter[type] = counter[type] + #Harvest.savedVars[type].data[zone]
                     end
+                ]]--
+                if type ~= "defaults" and type == commands[2] then
+                    for zone, t1 in pairs(Harvest.savedVars[commands[2]].data) do
+                        for provisions, t2 in pairs(Harvest.savedVars[commands[2]].data[zone]) do
+                            if provisions == 1 then
+                                counter["mining"] = counter["mining"] + #Harvest.savedVars[commands[2]].data[zone][provisions]
+                            end
+                            if provisions == 2 then
+                                counter["cloth"] = counter["cloth"] + #Harvest.savedVars[commands[2]].data[zone][provisions]
+                            end
+                            if provisions == 3 then
+                                counter["rune"] = counter["rune"] + #Harvest.savedVars[commands[2]].data[zone][provisions]
+                            end
+                            if provisions == 4 then
+                                counter["alch"] = counter["alch"] + #Harvest.savedVars[commands[2]].data[zone][provisions]
+                            end
+                            if provisions == 5 then
+                                counter["wood"] = counter["wood"] + #Harvest.savedVars[commands[2]].data[zone][provisions]
+                            end
+                            if provisions == Harvest.chestID then
+                                counter["chest"] = counter["chest"] + #Harvest.savedVars[commands[2]].data[zone][provisions]
+                            end
+                            if provisions == 7 then
+                                counter["solvent"] = counter["solvent"] + #Harvest.savedVars[commands[2]].data[zone][provisions]
+                            end
+                            if provisions == Harvest.fishID then
+                                counter["fish"] = counter["fish"] + #Harvest.savedVars[commands[2]].data[zone][provisions]
+                            end
+                        end
+                    end
+                --[[
+                elseif type ~= "internal" then
+                    for zone, t1 in pairs(Harvest.savedVars[type].data) do
+                        for data, t2 in pairs(Harvest.savedVars[type].data[zone]) do
+                            counter[type] = counter[type] + #Harvest.savedVars[type].data[zone][data]
+                        end
+                    end
+                ]]--
                 end
             end
+
+            d("Mining: "          .. Harvest.NumberFormat(counter["mining"]))
+            d("Clothing: "          .. Harvest.NumberFormat(counter["cloth"]))
+            d("Enchanting: "          .. Harvest.NumberFormat(counter["rune"]))
+            d("Alchemy: "          .. Harvest.NumberFormat(counter["alch"]))
+            d("Woodworking: "          .. Harvest.NumberFormat(counter["wood"]))
+            d("Treasure Chests: "  .. Harvest.NumberFormat(counter["chest"]))
+            d("Solvent: "          .. Harvest.NumberFormat(counter["solvent"]))
+            d("Fishing Pools: "    .. Harvest.NumberFormat(counter["fish"]))
+
+            d("---")
         end
-
-        d("Harvest: "          .. Harvest.NumberFormat(counter["harvest"]))
-        d("Treasure Chests: "  .. Harvest.NumberFormat(counter["chest"]))
-        d("Fishing Pools: "    .. Harvest.NumberFormat(counter["fish"]))
-
-        d("---")
-    ]]--
     end
 end
 
@@ -839,6 +894,14 @@ function Harvest.OnLoad(eventCode, addOnName)
         Harvest.updateHarvestNodes("oldData")
         Harvest.updateHarvestNodes("oldMapData")
         Harvest.defaults.internalVersion = Harvest.internalVersion
+    end
+
+    if Harvest.defaults.dataVersion < Harvest.dataVersion then
+        Harvest.updateHarvestNodes("nodes")
+        Harvest.updateHarvestNodes("mapinvalid")
+        Harvest.updateHarvestNodes("esonodes")
+        Harvest.updateHarvestNodes("esoinvalid")
+        Harvest.defaults.dataVersion = Harvest.dataVersion
     end
 
     Harvest.InitializeMapMarkers()

@@ -5,7 +5,7 @@ Harvest.mapSystem = {
     ["reapersmarch/rawlkhatemple_base"] = {"Rawl'kha Temple"},
     ["worlds/eso/instance_eldengrove/eldengrove_base"] = {"Elden Grove"},
     ["stonefalls/stonefalls_base"] = {"Stonefalls", "Steinfälle^N,in", "Éboulis^pmd"},
-    ["bleakrock/bleakrockvillage_base"] = {"Bleakrock Village"},
+    ["bleakrock/bleakrockvillage_base"] = {"Bleakrock Village", "Ödfels^N,in", "village de Morneroc^md",},
     ["grahtwood/grahtwood_base"] = {"Grahtwood", "Grahtwald^N,in", "bois de Graht^md"},
     ["rivenspire/rivenspire_base"] = {"Rivenspire", "Kluftspitze^N,in", "Fendretour^F"},
     ["stormhaven/stormhaven_base"] = {"Stormhaven", "Sturmhafen^N,in", "Havre-tempête^F"},
@@ -13,7 +13,7 @@ Harvest.mapSystem = {
     ["cyrodiil/ava_whole"] = {"Cyrodiil", "Cyrodiil^N,in", "Cyrodiil^F"},
     ["bangkorai/bangkorai_base"] = {"Bangkorai", "Bangkorai^N,in", "Bangkoraï^F"},
     ["malabaltor/malabaltor_base"] = {"Malabal Tor", "Malabal Tor^N,in", "Malabal Tor^M"},
-    ["stonefalls/davonswatch_base"] = {"Davon's Watch", "Davons Wacht^Fg,in"},
+    ["stonefalls/davonswatch_base"] = {"Davon's Watch", "Davons Wacht^Fg,in", "Guet de Davon^md",},
     ["shadowfen/shadowfen_base"] = {"Shadowfen", "Schattenfenn^N,in", "Fangeombre^F"},
     ["tamriel/tamriel"] = {"Tamriel", "Tamriel^N,in", "Tamriel^F"},
     ["grahtwood/eldenhollow_base"] = {"Elden Hollow"},
@@ -216,7 +216,7 @@ Harvest.mapSystem = {
     ["guildmaps/stonefang_base"] = {"Stonefang Cavern"},
     ["auridon/vafe_base"] = {"Vafe"},
     ["auridon/vulkhelguard_base"] = {"Vulkhel Guard", "Vulkhelwacht^fd,in"},
-    ["rivenspire/hildunessecretrefuge_base"] = {"Hildune's Secret Refuge"},
+    ["rivenspire/hildunessecretrefuge_base"] = {"Hildune's Secret Refuge", "Hildunes geheime Zuflucht^fd,in", "refuge secret d'Hildune^md"},
     ["bangkorai/rubblebutte_base"] = {"Rubble Butte"},
     ["alikr/santaki_base"] = {"Santaki"},
     ["glenumbra/bthzark_base"] = {"Bthzark"},
@@ -265,7 +265,7 @@ Harvest.mapSystem = {
     ["cyrodiil/toadstoolhollowlower_base"] = {"Toadstool Hollow"},
     ["glenumbra/goblinminesstart_base"] = {"Goblin Mines"},
     ["glenumbra/goblinminesend_base"] = {"Goblin Mines"},
-    ["stormhaven/windridgecave_base"] = {"Windridge Cave"},
+    ["stormhaven/windridgecave_base"] = {"Windridge Cave", "Windkammhöhle^fd,in"},
     ["stormhaven/aphrenshold_base"] = {"Aphren's Tomb"},
     ["cyrodiil/vahtacen_base"] = {"Vahtacen"},
     ["greenshade/greenshade_base"] = {"Greenshade", "Grünschatten^N,in", "Prasin^M"},
@@ -481,7 +481,7 @@ Harvest.mapSystem = {
     ["greenshade/hollowlair_base"] = {"Hollow Den"},
     ["greenshade/oldmerchantcaves_base"] = {"Old Merchant Caves"},
     ["reapersmarch/senelana_base"] = {"Senalana", "Senelana"}, -- {"Senelana"} pre 1.1.2
-    ["rivenspire/hoarfrost_base"] = {"Hoarfrost Downs"},
+    ["rivenspire/hoarfrost_base"] = {"Hoarfrost Downs", "Raureiftal^N,in",},
     ["greenshade/woodhearth_base"] = {"Woodhearth"},
     ["glenumbra/porthunding_base"] = {"Port Hunding", "Hundingshafen^N,in"},
     ["glenumbra/aldcroft_base"] = {"Aldcroft"},
@@ -698,6 +698,19 @@ Harvest.DataStore = {
         },
     },
 }
+
+Harvest.mapBlacklist = {
+    "tamriel/tamriel"
+}
+
+function Harvest.blacklistMap(mapName)
+    for _, mapFound in pairs(Harvest.mapBlacklist) do
+        if mapFound == mapName then
+            return true
+        end
+    end
+    return false
+end
 
 function Harvest.GetNewMapName(mapName)
     local result = nil
