@@ -1084,7 +1084,7 @@ function Harvest.GetItemNameFromItemID(id)
     for tsId, tsData in pairs(Harvest.NodeArray[9]) do
         for key, value in pairs(tsData) do
             if value.itemID == id then
-                return = itemName
+                return itemName
             end
         end
     end
