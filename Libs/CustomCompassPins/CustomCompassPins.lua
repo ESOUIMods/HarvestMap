@@ -1,5 +1,5 @@
 -- CustomCompassPins by Shinni
-local version = 1.19
+local version = 1.20
 local onlyUpdate = false
 
 if COMPASS_PINS and COMPASS_PINS.version then
@@ -13,6 +13,7 @@ end
 
 local PARENT = COMPASS.container
 local FOV = math.pi * 0.6
+local coefficients = {0.16, 1.08, 1.32, 1.14, 1.14, 1.23, 1.16, 1.24, 1.33, 1.00, 1.12, 1.00, 1.00, 0.89, 1.00, 1.37, 1.20, 4.27, 2.67, 3.20, 5.00, 8.45, 0.89, 0.10, 1.14}      
 
 --
 -- Base class, can be accessed via COMPASS_PINS
@@ -37,14 +38,16 @@ function COMPASS_PINS:New(...)
    self.control:SetHandler("OnUpdate",
       function()
          local now = GetFrameTimeMilliseconds()
-         if (now - lastUpdate) >= 10 then
+         if (now - lastUpdate) >= 20 then
             self:Update()
             lastUpdate = now
             local currentMap = GetMapTileTexture()
             if currentMap ~= lastMap and IsPlayerActivated() then
+               local _,_,_,zone,subzone = (currentMap):lower():find("(maps/)([%w%-]+)/([%w%-]+_%w+)")
+               lastMap = currentMap
                self:RefreshDistanceCoefficient()
                self:RefreshPins()
-               lastMap = currentMap
+               CALLBACK_MANAGER:FireCallbacks("CustomCompassPins_MapChanged", zone, subzone)
             end
          end
       end)
@@ -54,6 +57,7 @@ function COMPASS_PINS:New(...)
          self:RefreshDistanceCoefficient()
          EVENT_MANAGER:UnregisterForEvent("CustomCompassPins", EVENT_PLAYER_ACTIVATED)
       end)
+
    return result
 end
 
@@ -97,18 +101,20 @@ function COMPASS_PINS:RefreshPins(pinType)
    end
 end
 
-function COMPASS_PINS:GetDistanceCoefficient()
-   local distanceCoefficient = 1
+function COMPASS_PINS:GetDistanceCoefficient()     --coefficient = Auridon size / current map size
+   local coefficient = 1                           
+   local mapId = GetCurrentMapIndex()
+   if mapId then
+      coefficient = coefficients[mapId] or 1       --zones and starting isles
+   else
+      if GetMapContentType() == MAP_CONTENT_DUNGEON then
+         coefficient = 16                          --all dungeons, value between 8 - 47, usually 16 
+      elseif GetMapType() == MAPTYPE_SUBZONE then     
+         coefficient = 6                           --all subzones, value between 5 - 8, usually 6 
+      end
+   end 
 
-   if ZO_WorldMapContainer1 then
-      local numTiles = GetMapNumTiles()
-      local tileSize = ZO_WorldMapContainer1:GetTextureFileDimensions()
-      local mapSize = numTiles * tileSize
-
-      distanceCoefficient = 2048 / mapSize
-   end
-
-   return distanceCoefficient
+   return math.sqrt(coefficient)                   --as we do not want that big difference, lets make it smaller...   
 end
 
 function COMPASS_PINS:RefreshDistanceCoefficient()
@@ -121,10 +127,6 @@ function COMPASS_PINS:Update()
    if not heading then return end
    if heading > math.pi then --normalize heading to [-pi,pi]
       heading = heading - 2 * math.pi
-   end
-
-   if self.distanceCoefficient > 4 then    --fix for invalid map size 
-      self:RefreshDistanceCoefficient()
    end
 
    local x, y = GetMapPlayerPosition("player")
