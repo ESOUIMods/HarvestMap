@@ -152,16 +152,16 @@ Harvest.NodeArray = {
     [8] = {
     },
     -- :Provisioning
-    -- "Agave", "Aged meat", "Altmer rye", "Altmer wheat", "Amber malt", "Ash millet", "Asp juice", "Baker's flour", "Ballom", "Bamphor", "Barley mash", "Battaglir Weeds", "Bear haunch", "Beef", "Beets", "Bervez fruit", "Black tea", "Blackbirds", "Blood nut", "Blue crawdad", "Breton potatoes", "Broth", "Brown malt", "Bug Parts", "Buttermilk", "Cake flour", "Camaralet Grapes", "Canis root", "Capon meat", "Caramalt", "Carrots", "Chaurus", "Chaurus Eggs", "Comberries", "Comberry", "Combwort", "Concord Grapes", "Cooking fat", "Corn mash", "Crawdad", "Crystal berry", "Dagoth root", "Dark bile", "Desert heather", "Distilled gore", "Dragon fruit", "Dragon's-tongue sap", "Dragon-tongue sap", "Drippings", "Dusk beetle", "Emperor Grapes", "Fatback", "Flank steak", "Frog Legs", "Frog meat", "Frost berry", "Frosted Grapes", "Garlic", "Glace viande", "Glenumbra peach", "Glitter rock", "Goat Bits", "Goat Chunks", "Goat meat", "Golden Grapes", "Golden malt", "Grasa Grapes", "Green mash", "Green snowberry", "Groose berry", "Ground squirrel", "Guar breast", "Guar Eggs", "Guar Legs", "Hallertau Hops", "Hard Berries", "Harpy meat", "Hegathe tangerine", "Honey comb", "Hops", "Horker meat", "Imperial flour", "Imperial mash", "Imperial stock", "Jazbay Grapes", "Juniper berry", "Jus", "Kaveh Beans", "Kvatch Sweet Grapes", "Kwama Eggs", "Lard", "Liver", "Mammoth meat", "Meal", "Meat slurry", "Meaty Paws", "Medium dhufish", "Medium longfin", "Medium river betty", "Medium salmon", "Medium silverside perch", "Medium slaughterfish", "Medium spadetail", "Medium trodh", "Milled flour", "Milled wheat", "Minced horker", "Misty morn berry", "Molasses", "Moon berry", "Moon sugar", "Mountain Berries", "Mountain Grapes", "Mountain Oysters", "Mudcrab meat", "Mutton flank", "Mutton Scraps", "Nord potato", "Oak root", "Oats", "Offal", "Onion", "Ooze", "Orc fruit", "Orc Hops", "Peat Berries", "Pepper", "Pig's milk", "Pinguis", "Plump Crawlers", "Plump maggot", "Plump Maggots", "Plump Rodent Toes", "Plump Worms", "Pomegranate", "Pork", "Potato", "Rabbit Guts", "Rabbit meat", "Rasberry", "Red mushroom", "Red wheat", "Ribier Grapes", "Rice", "Ripe apple", "Rice mash", "Ripe Snowberries", "Rye", "Saaz Hops", "Salt", "Saltrice", "Saltrice bran", "Scuttle meat", "Shadow Grapes", "Shalk", "Shank", "Shein Grapes", "Shornhelm Grains", "Sifted flour", "Slime", "Slough bear meat", "Slug slime", "Small dhufish", "Small longfin", "Small river betty", "Small salmon", "Small silverside perch", "Small slaughterfish", "Small spadetail", "Small trodh", "Snake slime", "Snake venom", "Snowberry", "Soup stone", "Spalt Hops", "Spring essence", "Sugar cane", "Sugar loaf", "Sujamma Berries", "Sweetmeats", "Tangerine", "Thin broth", "Thorn apples", "Thyme", "Tomato", "Tubers", "Ungorth root", "Venison", "Viper meat", "Wasp squeezings", "Wheat mash", "White Grapes", "White malt", "Wild honey", "Wine Grapes", Wisp floss
+    -- Node name left empty because the container varies
     [9] = {
-        { itemID = 26802, nodeName = {}, itemName = {} },
-        { itemID = 26954, nodeName = {}, itemName = {} },
-        { itemID = 26962, nodeName = {}, itemName = {} },
-        { itemID = 26966, nodeName = {}, itemName = {} },
-        { itemID = 26974, nodeName = {}, itemName = {} },
+        { itemID = 26802, nodeName = {}, itemName = {"Tomato"} },
+        { itemID = 26954, nodeName = {}, itemName = {"Salt"} },
+        { itemID = 26962, nodeName = {}, itemName = {"Pepper"} },
+        { itemID = 26966, nodeName = {}, itemName = {"Drippings"} },
+        { itemID = 26974, nodeName = {}, itemName = {"Cooking Fat"} },
         { itemID = 26975, nodeName = {}, itemName = {"Suet"} },
-        { itemID = 26976, nodeName = {}, itemName = {} },
-        { itemID = 26977, nodeName = {}, itemName = {} },
+        { itemID = 26976, nodeName = {}, itemName = {"Lard"} },
+        { itemID = 26977, nodeName = {}, itemName = {"Fatback"} },
         { itemID = 26978, nodeName = {}, itemName = {} },
         { itemID = 26986, nodeName = {}, itemName = {} },
         { itemID = 26987, nodeName = {}, itemName = {} },
@@ -406,13 +406,7 @@ Harvest.professions = {
         23137,
         23138,
     },
--- These additional elements in the array are here for consistency in how
--- the arrays are already handled.  It is also appended in this way for
--- compatibility with the data already collected by users.  Chests are already
--- handled separately.
---
 -- 6 = Chest, 7 = Solvent, 8 = Fish
--- 45036, -- This is a Chest you unlock
     [6] = {
     },
     [7] = {
@@ -427,16 +421,7 @@ Harvest.professions = {
     [8] = {
     },
 }
--- Books is the exception such that there may be a way to record lore books
--- that are always in the same location and usable only once like Skyshards.
---
--- Esohead uses the same ItemID for multiple items.  Therefore maintaining
--- a list based on the item number would become useless bloat in a file.
--- All items looted in ESO are containers.  Such that Jute is a container
--- it just gives you Jute.  a Crate is a container that gives you food items.
--- Therefore the name of the item collected will dictate it's category
--- rather than the Item's ID number.
---
+-- Node Names
 -- (1) Mining
 Harvest.mining = {
     ["en"] = {
@@ -637,12 +622,7 @@ Harvest.woodworking = {
     },
 }
 
--- 7 = Solvent: These need verification to see
--- if all of them have Solvents in then
--- 1187 Clear Water, Pure Water, Deshaan
--- 23265 Cleansed Water, Pure Water, TheRift
--- Bottles Give Beverages, but can give a Solvent like Clear Water
--- Wine Racks can give Solvent like Clear Water, needs more research
+-- 7 = Solvent
 Harvest.solvent = {
     ["en"] = {
         -- "Bottle",
@@ -939,6 +919,7 @@ function Harvest.IsValidWoodworkingName(name)
     return false
 end
 
+-- (7)Woodworking
 function Harvest.IsValidSolventName(name)
     for lang, langs in pairs(Harvest.langs) do
         for k, v in pairs(Harvest.solvent[langs]) do
@@ -1097,6 +1078,17 @@ function Harvest.GetProfessionType(id, name)
     end
 
     return -1
+end
+
+function Harvest.GetItemNameFromItemID(id)
+    for tsId, tsData in pairs(Harvest.NodeArray[9]) do
+        for key, value in pairs(tsData) do
+            if value.itemID == id then
+                return = itemName
+            end
+        end
+    end
+    return nil
 end
 
 -- local alliance = GetUnitAlliance("player")
