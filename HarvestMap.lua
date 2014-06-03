@@ -660,6 +660,14 @@ function Harvest.IsValidCategory(name)
     return false
 end
 
+function Harvest.getTotals(counter)
+    local totalNodes = 0 
+    for counterName, counterValue in pairs(counter) do
+        totalNodes = totalNodes + counterValue
+    end
+    return totalNodes
+end
+
 SLASH_COMMANDS["/harvest"] = function (cmd)
     local commands = {}
     local index = 1
@@ -797,6 +805,7 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
                 end
             end
 
+            local totals = Harvest.getTotals(counter)
             d("Mining: "          .. Harvest.NumberFormat(counter["mining"]))
             d("Clothing: "          .. Harvest.NumberFormat(counter["cloth"]))
             d("Enchanting: "          .. Harvest.NumberFormat(counter["rune"]))
@@ -805,6 +814,7 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
             d("Treasure Chests: "  .. Harvest.NumberFormat(counter["chest"]))
             d("Solvent: "          .. Harvest.NumberFormat(counter["solvent"]))
             d("Fishing Pools: "    .. Harvest.NumberFormat(counter["fish"]))
+            d("Total: "    .. Harvest.NumberFormat(totals))
 
             d("---")
         end

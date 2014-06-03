@@ -487,7 +487,7 @@ function Harvest.importFromHarvestMerge()
     Harvest.NumRejectedNodes = 0
 
     if not HarvestMerge then
-        d("Please enable the HarvestMap addon to import data!")
+        d("Please enable the HarvestMerge addon to import data!")
         return
     end
 
@@ -495,22 +495,22 @@ function Harvest.importFromHarvestMerge()
         d("Please upgrade to HarvestMerge 0.1.5 or newer to import data!")
         return
     end
-    d("import data from HarvestMap")
+    d("import data from HarvestMerge")
     for newMapName, data in pairs(HarvestMerge.savedVars["nodes"].data) do
         for profession, nodes in pairs(data) do
             for index, node in pairs(nodes) do
+                Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 for contents, nodeName in ipairs(node[3]) do
-                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
 
-                        if (nodeName) == "chest" or (nodeName) == "fish" then
-                            Harvest.newMapNameFishChest(nodeName, newMapName, node[1], node[2])
-                        else
-                            if node[4] == nil then
-                                Harvest.newMapNilItemIDHarvest(newMapName, node[1], node[2], profession, nodeName)
-                            else -- node[4] which is the ItemID should not be nil at this point
-                                Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, nodeName, node[4])
-                            end
-                        end
+                    if (nodeName) == "chest" or (nodeName) == "fish" then
+                        Harvest.newMapNameFishChest(nodeName, newMapName, node[1], node[2])
+                    elseif node[4] == nil then
+                        Harvest.newMapNilItemIDHarvest(newMapName, node[1], node[2], profession, nodeName)
+                    elseif node[4] ~= nil then -- node[4] which is the ItemID should not be nil at this point
+                        Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, nodeName, node[4])
+                    else
+                        d("I didn't know what to do with the node")
+                    end
 
                 end
             end

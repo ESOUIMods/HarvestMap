@@ -605,6 +605,14 @@ Harvest.mapSystem = {
     ["alikr/guardiansorbit_base"] = {"The Guardian's Orbit"},
 }
 
+-- Harvest.DataStore.en.auridon.base
+-- Code:
+-- Harvest = {}
+-- Harvest["DataStore"] = {}
+-- Harvest["DataStore"]["en"] = {}
+-- Harvest["DataStore"]["en"]["auridon"] = {}
+-- Harvest["DataStore"]["en"]["auridon"]["base"] = {}
+
 Harvest.mapBlacklist = {
     "tamriel/tamriel"
 }
