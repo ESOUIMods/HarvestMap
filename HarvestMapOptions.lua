@@ -24,14 +24,11 @@ end
 function Harvest.SetImportFilter( profession, value )
     Harvest.savedVars["settings"].importFilters[ profession ] = value
     -- No need to refresh pins since it happens on import
-    -- Harvest.RefreshPins( profession )
-    -- refreshCheckbox()
 end
 
 function Harvest.SetGatherFilter( profession, value )
     Harvest.savedVars["settings"].gatherFilters[ profession ] = value
     -- No need to refresh pins since it happens when gathering
-    -- Harvest.RefreshPins( profession )
 end
 
 function Harvest.GetSize( profession )
@@ -210,20 +207,24 @@ function Harvest.InitializeOptions()
     --pvepanel has no mode if the character starts his session on a pvp map
     WORLD_MAP_FILTERS.pvePanel:SetMapMode(2) -- prevents crashing on GetPinFilter in above case
 
-    local refreshCheckbox = function()
-        -- for i=1,6 do
-        for i=1,8 do
-            local profession = i
-            newPVECheckboxes[ profession ]:SetState(Harvest.GetFilter( profession ) and 1 or 0)
-            newPVECheckboxes[ profession ]:toggleFunction(Harvest.GetFilter( profession ))
-
-            newPVPCheckboxes[ profession ]:SetState(Harvest.GetFilter( profession ) and 1 or 0)
-            newPVPCheckboxes[ profession ]:toggleFunction(Harvest.GetFilter( profession ))
-        end
+    local lastContext
+    function Harvest.RefreshFilterCheckboxes()
+       --check which checkboxes will be shown, so you do not need to update everything
+       local context = GetMapContentType() == MAP_CONTENT_AVA --true if pvp context
+       local checkboxes = context and newPVPCheckboxes or newPVECheckboxes 
+       --do not refresh checkboxes if map context is not changed
+       if context ~= lastContext then
+          lastContext = context
+          for profession = 1, 8 do
+             ZO_CheckButton_SetCheckState(checkboxes[profession], Harvest.GetFilter(profession))
+          end
+       end
     end
+    CALLBACK_MANAGER:RegisterCallback("OnWorldMapChanged", Harvest.RefreshFilterCheckboxes)
+
     local oldHidden = WORLD_MAP_FILTERS.control.SetHidden
     WORLD_MAP_FILTERS.control.SetHidden = function (self, value)
-        refreshCheckbox()
+        Harvest.RefreshFilterCheckboxes()
         oldHidden(self, value)
     end
 
@@ -231,11 +232,11 @@ function Harvest.InitializeOptions()
     local oldpvpHidden = WORLD_MAP_FILTERS.pvpPanel.SetHidden
 
     WORLD_MAP_FILTERS.pvePanel.SetHidden = function( self, value )
-        refreshCheckbox()
+        Harvest.RefreshFilterCheckboxes()
         oldpveHidden(self, value)
     end
     WORLD_MAP_FILTERS.pvpPanel.SetHidden = function( self, value )
-        refreshCheckbox()
+        Harvest.RefreshFilterCheckboxes()
         oldpvpHidden(self, value)
     end
 end

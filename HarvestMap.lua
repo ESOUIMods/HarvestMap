@@ -458,8 +458,6 @@ end
 
 function Harvest.saveData(type, zone, x, y, profession, nodeName, itemID, scale, counter )
 
-    -- Harvest.saveMapName(zone)
-    
     -- If the map is on the blacklist then don't log it
     if Harvest.blacklistMap(zone) then
         return
@@ -605,10 +603,13 @@ function Harvest.OnUpdate(time)
             if Harvest.defaults.verbose and contextlInfo ~= nil then
                 d("Contextual Info : " .. contextlInfo)
             end
-
+            
+            local myLocation = Harvest.GetMap()
             if Harvest.defaults.verbose then
-                d("Map Name : " .. GetMapName() .. " : texture name : " .. Harvest.GetMap() )
+                d("Map Name : " .. GetMapName() .. " : texture name : " .. myLocation )
             end
+            
+            --Harvest.saveMapName(myLocation)
 
             -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
             -- Track Chest
@@ -842,7 +843,7 @@ function Harvest.OnLoad(eventCode, addOnName)
                 -- All Invalid Unlocalized Nodes
                 ["esoinvalid"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "esoinvalid", Harvest.dataDefault),
                 -- Map name collection for future versions
-                ["mapnames"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "mapnames", Harvest.dataDefault),
+                --["mapnames"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "mapnames", Harvest.dataDefault),
                 -- All rejected records for debugging
                 -- ["rejected"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "rejected", Harvest.dataDefault),
 
@@ -874,7 +875,7 @@ function Harvest.OnLoad(eventCode, addOnName)
                 -- All Invalid Unlocalized Nodes
                 ["esoinvalid"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "esoinvalid", Harvest.dataDefault),
                 -- Map name collection for future versions
-                ["mapnames"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "mapnames", Harvest.dataDefault),
+                --["mapnames"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "mapnames", Harvest.dataDefault),
                 -- All rejected records for debugging
                 -- ["rejected"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "rejected", Harvest.dataDefault),
 
@@ -916,7 +917,11 @@ function Harvest.OnLoad(eventCode, addOnName)
 
     Harvest.InitializeMapMarkers()
     Harvest.InitializeCompassMarkers()
-    Harvest.InitializeOptions()
+    EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_PLAYER_ACTIVATED,
+    function()
+        Harvest.InitializeOptions()
+        EVENT_MANAGER:UnregisterForEvent("HarvestMap", EVENT_PLAYER_ACTIVATED)
+    end)
 
     EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_LOOT_RECEIVED, Harvest.OnLootReceived)
     -- EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_LOOT_UPDATED, Harvest.OnLootUpdate)

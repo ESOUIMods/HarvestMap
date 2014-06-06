@@ -5,7 +5,7 @@ Harvest.mapSystem = {
     ["reapersmarch/rawlkhatemple_base"] = {"Rawl'kha Temple"},
     ["worlds/eso/instance_eldengrove/eldengrove_base"] = {"Elden Grove"},
     ["stonefalls/stonefalls_base"] = {"Stonefalls", "Steinfälle^N,in", "Éboulis^pmd"},
-    ["bleakrock/bleakrockvillage_base"] = {"Bleakrock Village", "Ödfels^N,in", "village de Morneroc^md",},
+    ["bleakrock/bleakrockvillage_base"] = {"Bleakrock Village", "Ödfels^N,in", "\214dfels^N,auf", "\239\191\189dfels^N,auf", "village de Morneroc^md",},
     ["grahtwood/grahtwood_base"] = {"Grahtwood", "Grahtwald^N,in", "bois de Graht^md"},
     ["rivenspire/rivenspire_base"] = {"Rivenspire", "Kluftspitze^N,in", "Fendretour^F"},
     ["stormhaven/stormhaven_base"] = {"Stormhaven", "Sturmhafen^N,in", "Havre-tempête^F"},
@@ -627,17 +627,21 @@ function Harvest.blacklistMap(mapName)
 end
 
 function Harvest.GetNewMapName(mapName)
-    local result = nil
-    for newMapName, translations in pairs(Harvest.mapSystem) do
-        if Harvest.contains(translations, mapName) then
-            if result then
-                return nil --there are more than one possible maps, skip to prevent wrong data
+    local result = nil  -- No map found yet
+
+    for newMapName, translations in pairs(Harvest.mapSystem) do -- starts with ["greenshade/shroudedhollowarea1_base"] = {"Shrouded Hollow"},
+        if newMapName == mapName then  -- The mapName is already a valid texture name no need to look for one
+            return mapName
+        elseif Harvest.contains(translations, mapName) then -- {"Shrouded Hollow"} was a match
+            if result then -- We FOUND some Esohead map name in "{}" so result equals a texturename already, result is no longer nil, result is a string
+                return nil -- result was a string above so return nil and halt looking at the rest of the 600 maps
             else
-                result = newMapName
+                result = newMapName -- We FOUND an Esohead style map name in "{}" so make result equal the texturename, it wasn't a texturename already
             end
         end
     end
-    return result
+    return result -- 1) Return newMapName because only one Esohead map name matched, there were no duplicates
+                  -- 2) return nil because nothing was found, and the mapName was NOT a texturename already
 end
 
 function Harvest.hasNewMapName(mapName)
@@ -666,11 +670,7 @@ function Harvest.updateHarvestNodes(type)
     local newMapName
 
     for map, data in pairs(oldData) do
-        if Harvest.hasNewMapName(map) then
-            newMapName = map
-        else
-            newMapName = Harvest.GetNewMapName(map)
-        end
+        newMapName = Harvest.GetNewMapName(map)
         if newMapName then
             for profession, nodes in pairs(data) do
                 for index, node in pairs(nodes) do
@@ -729,30 +729,23 @@ function Harvest.updateEsoheadNodes(type)
     local newMapName
 
     for map, data in pairs(oldData) do
-        if Harvest.hasNewMapName(map) then
-            newMapName = map
-        else
-            newMapName = Harvest.GetNewMapName(map)
-        end
+        newMapName = Harvest.GetNewMapName(map)
         if newMapName then
             for profession, nodes in pairs(data) do
+                -- [1] = X, [2] = Y, [3] = StackCount, [4] = NodeName, [5] = ItemID
                 for index, node in pairs(nodes) do
-
                     -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
                     Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, node[4], node[5])
-
                 end
             end
         else -- << New Map Name NOT found
             for profession, nodes in pairs(data) do
+                -- [1] = X, [2] = Y, [3] = StackCount, [4] = NodeName, [5] = ItemID
                 for index, node in pairs(nodes) do
-
                     -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
                     Harvest.oldMapItemIDHarvest(map, node[1], node[2], profession, node[4], node[5])
-
                 end
             end
         end
-
     end
 end
