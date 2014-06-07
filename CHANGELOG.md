@@ -1,9 +1,20 @@
+## 2.5.4
+
+Bugfixes
+- Updates to resolve HarvstMap refreshing pins too frequently [Garkin]
+- Updated Custom Map Pins using data for maps other then the current one [Garkin]
+- changed "Violet Copninus" to correct spelling of "Violet Coprinus"
+
+Updates
+- Verified some Craglorn map names.[1]
+- Updated localization info
+
+[1] It was reported that Craglorn data was made unavailable after 2.4.7.  I would still like copies of HarvestMap.lua and HarvestMerge.lua files in order to further verify my fix.  However, I now have Craglorn data in my save file and have verified that Craglorn nodes will not become unavailable.  If the user did not delete the data, HarvestMap will automatically move Craglorn data to the pool of usable data for map pins.
+
 ## 2.5.3
 
 Bugfix
 - Duplicate node verification was too strict
-
-Note: It was reported that craglorn data was made unavailable after 2.4.7.  I need copies of both the HarvestMap.lua and HarvestMerge.lua files in order to resolve and test the issue correctly.  If you can please PM me with a link to a downloadable file from a website I don't have to register for, I would appreciate it.
 
 ## 2.5.2
 
