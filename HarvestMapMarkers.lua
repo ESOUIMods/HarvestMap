@@ -71,29 +71,28 @@ function Harvest.CreateMapPin(profession)
     ZO_WorldMap_SetCustomPinEnabled( _G[pinType], true )
 end
 
-local oldData = ZO_MapPin.SetData
-ZO_MapPin.SetData = function( self, pinTypeId, pinTag)
-    local back = GetControl(self.m_Control, "Background")
-    local color
-    -- for profession = 1,6 do
-    for profession = 1,8 do
-        if pinTypeId == _G[Harvest.GetPinType( profession )] then
-            color = Harvest.savedVars["settings"].mapLayouts[ profession ].color
-            back:SetColor( color[1], color[2], color[3], 1)
-            break
-        end
-    end
-
-    if not color then
-        back:SetColor( 1, 1, 1, 1 )
-    end
-
-    oldData(self, pinTypeId, pinTag)
-end
-
 function Harvest.InitializeMapMarkers()
     -- for profession = 1,6 do
     for profession = 1,8 do
         Harvest.CreateMapPin( profession )
+    end
+
+    --add hooks only if LibMapPins-1.0 is not present:
+    if not LibStub("LibMapPins-1.0", true) then
+        --support for color key in pinLayoutData table
+        ZO_PreHook(ZO_MapPin, "SetData",
+            function(self, pinTypeId)
+                local control = GetControl(self:GetControl(), "Background")
+                local color = ZO_MapPin.PIN_DATA[pinTypeId].color
+                if type(color) == "table" then
+                    control:SetColor(unpack(color))
+                end
+            end)
+        --clear color changes to the pin background texture
+        ZO_PreHook(ZO_MapPin, "ClearData",
+            function(self, ...)
+                local control = GetControl(self:GetControl(), "Background")
+                control:SetColor(1, 1, 1, 1)
+            end)
     end
 end

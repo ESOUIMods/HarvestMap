@@ -206,40 +206,22 @@ function Harvest.InitializeOptions()
 
     --pvepanel has no mode if the character starts his session on a pvp map
     WORLD_MAP_FILTERS.pvePanel:SetMapMode(2) -- prevents crashing on GetPinFilter in above case
-
-    local lastContext
-    function Harvest.RefreshFilterCheckboxes()
-       --check which checkboxes will be shown, so you do not need to update everything
-       local context = GetMapContentType() == MAP_CONTENT_AVA --true if pvp context
-       local checkboxes = context and newPVPCheckboxes or newPVECheckboxes 
-       --do not refresh checkboxes if map context is not changed
-       if context ~= lastContext then
-          lastContext = context
-          for profession = 1, 8 do
-             ZO_CheckButton_SetCheckState(checkboxes[profession], Harvest.GetFilter(profession))
-          end
-       end
-    end
-    CALLBACK_MANAGER:RegisterCallback("OnWorldMapChanged", Harvest.RefreshFilterCheckboxes)
-
-    local oldHidden = WORLD_MAP_FILTERS.control.SetHidden
-    WORLD_MAP_FILTERS.control.SetHidden = function (self, value)
-        Harvest.RefreshFilterCheckboxes()
-        oldHidden(self, value)
-    end
-
-    local oldpveHidden = WORLD_MAP_FILTERS.pvePanel.SetHidden
-    local oldpvpHidden = WORLD_MAP_FILTERS.pvpPanel.SetHidden
-
-    WORLD_MAP_FILTERS.pvePanel.SetHidden = function( self, value )
-        Harvest.RefreshFilterCheckboxes()
-        oldpveHidden(self, value)
-    end
-    WORLD_MAP_FILTERS.pvpPanel.SetHidden = function( self, value )
-        Harvest.RefreshFilterCheckboxes()
-        oldpvpHidden(self, value)
-    end
 end
+
+local lastContext
+function Harvest.RefreshFilterCheckboxes()
+   --check which checkboxes will be shown, so you do not need to update everything
+   local context = GetMapContentType() == MAP_CONTENT_AVA --true if pvp context
+   local checkboxes = context and newPVPCheckboxes or newPVECheckboxes 
+   --do not refresh checkboxes if map context is not changed
+   if context ~= lastContext then
+      lastContext = context
+      for profession = 1, 8 do
+         ZO_CheckButton_SetCheckState(checkboxes[profession], Harvest.GetFilter(profession))
+      end
+   end
+end
+CALLBACK_MANAGER:RegisterCallback("OnWorldMapChanged", Harvest.RefreshFilterCheckboxes)
 
 function Harvest.GetNumberAfter( str, start )
     if string.sub(str,1,string.len(start)) == start then

@@ -1,5 +1,5 @@
 -- CustomCompassPins by Shinni
-local version = 1.20
+local version = 1.22
 local onlyUpdate = false
 
 if COMPASS_PINS and COMPASS_PINS.version then
@@ -13,7 +13,7 @@ end
 
 local PARENT = COMPASS.container
 local FOV = math.pi * 0.6
-local coefficients = {0.16, 1.08, 1.32, 1.14, 1.14, 1.23, 1.16, 1.24, 1.33, 1.00, 1.12, 1.00, 1.00, 0.89, 1.00, 1.37, 1.20, 4.27, 2.67, 3.20, 5.00, 8.45, 0.89, 0.10, 1.14}      
+local coefficients = {0.16, 1.08, 1.32, 1.14, 1.14, 1.23, 1.16, 1.24, 1.33, 1.00, 1.12, 1.00, 1.00, 0.89, 1.00, 1.37, 1.20, 4.27, 2.67, 3.20, 5.00, 8.45, 0.89, 0.10, 1.14}
 
 --
 -- Base class, can be accessed via COMPASS_PINS
@@ -34,29 +34,42 @@ function COMPASS_PINS:New(...)
    self:RefreshDistanceCoefficient()
 
    local lastUpdate = 0
-   local lastMap = GetMapTileTexture()
    self.control:SetHandler("OnUpdate",
       function()
          local now = GetFrameTimeMilliseconds()
          if (now - lastUpdate) >= 20 then
             self:Update()
             lastUpdate = now
-            local currentMap = GetMapTileTexture()
-            if currentMap ~= lastMap and IsPlayerActivated() then
-               local _,_,_,zone,subzone = (currentMap):lower():find("(maps/)([%w%-]+)/([%w%-]+_%w+)")
-               lastMap = currentMap
-               self:RefreshDistanceCoefficient()
-               self:RefreshPins()
-               CALLBACK_MANAGER:FireCallbacks("CustomCompassPins_MapChanged", zone, subzone)
-            end
          end
       end)
 
-   EVENT_MANAGER:RegisterForEvent("CustomCompassPins", EVENT_PLAYER_ACTIVATED,
-      function()
-         self:RefreshDistanceCoefficient()
-         EVENT_MANAGER:UnregisterForEvent("CustomCompassPins", EVENT_PLAYER_ACTIVATED)
-      end)
+   if _G["CustomCompassPins_MapChangeDetector"] == nil then
+      ZO_WorldMap_AddCustomPin("CustomCompassPins_MapChangeDetector",
+         function()
+            local currentMap = select(3,(GetMapTileTexture()):lower():find("maps/([%w%-]+/[%w%-]+_%w+)"))
+            CALLBACK_MANAGER:FireCallbacks("CustomCompassPins_MapChanged", currentMap)
+         end)
+      ZO_WorldMap_SetCustomPinEnabled(_G["CustomCompassPins_MapChangeDetector"], true)
+
+      local function OnMapChanged(currentMap)
+         if self.map ~= currentMap then
+            self:RefreshDistanceCoefficient()
+            self:RefreshPins()
+            self.map = currentMap
+         end
+      end
+
+      CALLBACK_MANAGER:RegisterCallback("CustomCompassPins_MapChanged", OnMapChanged)
+
+      WORLD_MAP_SCENE:RegisterCallback("StateChange",
+         function(oldState, newState)
+            if newState == SCENE_HIDDEN then
+               SetMapToPlayerLocation()
+               local currentMap = select(3,(GetMapTileTexture()):lower():find("maps/([%w%-]+/[%w%-]+_%w+)"))
+               OnMapChanged(currentMap)
+            end
+         end)
+   end
 
    return result
 end
@@ -81,6 +94,10 @@ end
 -- pinCallbacks should be a function, it receives the pinManager as argument
 -- layout should be table, currently only the key texture is used (which should return a string)
 function COMPASS_PINS:AddCustomPin(pinType, pinCallback, layout)
+   if type(pinType) ~= "string" or self.pinLayouts[pinType] ~= nil or type(pinCallback) ~= "function" or type(layout) ~= "table" then return end
+   layout.maxDistance = layout.maxDistance or 0.02
+   layout.texture = layout.texture or "EsoUI/Art/MapPins/hostile_pin.dds"
+
    self.pinCallbacks[pinType] = pinCallback
    self.pinLayouts[pinType] = layout
 end
@@ -102,19 +119,19 @@ function COMPASS_PINS:RefreshPins(pinType)
 end
 
 function COMPASS_PINS:GetDistanceCoefficient()     --coefficient = Auridon size / current map size
-   local coefficient = 1                           
+   local coefficient = 1
    local mapId = GetCurrentMapIndex()
    if mapId then
       coefficient = coefficients[mapId] or 1       --zones and starting isles
    else
       if GetMapContentType() == MAP_CONTENT_DUNGEON then
-         coefficient = 16                          --all dungeons, value between 8 - 47, usually 16 
-      elseif GetMapType() == MAPTYPE_SUBZONE then     
-         coefficient = 6                           --all subzones, value between 5 - 8, usually 6 
+         coefficient = 16                          --all dungeons, value between 8 - 47, usually 16
+      elseif GetMapType() == MAPTYPE_SUBZONE then
+         coefficient = 6                           --all subzones, value between 5 - 8, usually 6
       end
-   end 
+   end
 
-   return math.sqrt(coefficient)                   --as we do not want that big difference, lets make it smaller...   
+   return math.sqrt(coefficient)                   --as we do not want that big difference, lets make it smaller...
 end
 
 function COMPASS_PINS:RefreshDistanceCoefficient()
