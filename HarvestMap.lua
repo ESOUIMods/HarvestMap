@@ -3,7 +3,58 @@ Harvest.chestID = 6
 Harvest.fishID = 8
 
 Harvest.internalVersion = 3
-Harvest.dataVersion = 2
+Harvest.dataVersion = 3
+
+-----------------------------------------
+--           Debug Logger              --
+-----------------------------------------
+
+local function EmitMessage(text)
+    if(CHAT_SYSTEM)
+    then
+        if(text == "")
+        then
+            text = "[Empty String]"
+        end
+
+        CHAT_SYSTEM:AddMessage(text)
+    end
+end
+
+local function EmitTable(t, indent, tableHistory)
+    indent          = indent or "."
+    tableHistory    = tableHistory or {}
+
+    for k, v in pairs(t)
+    do
+        local vType = type(v)
+
+        EmitMessage(indent.."("..vType.."): "..tostring(k).." = "..tostring(v))
+
+        if(vType == "table")
+        then
+            if(tableHistory[v])
+            then
+                EmitMessage(indent.."Avoiding cycle on table...")
+            else
+                tableHistory[v] = true
+                EmitTable(v, indent.."  ", tableHistory)
+            end
+        end
+    end
+end
+
+function Harvest.Debug(...)
+    for i = 1, select("#", ...) do
+        local value = select(i, ...)
+        if(type(value) == "table")
+        then
+            EmitTable(value)
+        else
+            EmitMessage(tostring (value))
+        end
+    end
+end
 
 -----------------------------------------
 --          String Formatting          --
@@ -409,9 +460,9 @@ function Harvest.saveMapName(currentMap)
     --d("TextureA : " .. textureNameA)
     --d("TextureB : " .. textureNameB)
     --d("Zone : " .. zone .. " : Subzone : " .. subzone .. " : location : " ..  location .. " : mapZone : " .. mapZone .. " : unitZone : " .. unitZone .. " : zoneIndex : " .. zoneIndex .. " : " .. mapIndex .. " : " .. mapType .. " : " .. mapContentType .. " : " .. mapWidth .. " : " .. mapHeight .. " : " .. dimensionsX .. " : " .. dimensionsY)
-    
+
     data = { currentMap, textureNameA, zone , subzone, location, mapZone , unitZone , zoneIndex, mapIndex, mapType, mapContentType, mapWidth, mapHeight, dimensionsX, dimensionsY, categoryName, categoryIndex, mapInfoName, mapInfoIndex }
-    
+
     local savemapdata = true
     for index, maps in pairs(Harvest.savedVars["mapnames"].data) do
         for _, map in pairs(maps) do
@@ -425,7 +476,7 @@ function Harvest.saveMapName(currentMap)
             end
         end
     end
-    
+
     if savemapdata then
         if Harvest.savedVars["mapnames"].data[textureNameB] == nil then
             Harvest.savedVars["mapnames"].data[textureNameB] = {}
@@ -603,12 +654,12 @@ function Harvest.OnUpdate(time)
             if Harvest.defaults.verbose and contextlInfo ~= nil then
                 d("Contextual Info : " .. contextlInfo)
             end
-            
+
             local myLocation = Harvest.GetMap()
             if Harvest.defaults.verbose then
                 d("Map Name : " .. GetMapName() .. " : texture name : " .. myLocation )
             end
-            
+
             --Harvest.saveMapName(myLocation)
 
             -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
@@ -662,7 +713,7 @@ function Harvest.IsValidCategory(name)
 end
 
 function Harvest.getTotals(counter)
-    local totalNodes = 0 
+    local totalNodes = 0
     for counterName, counterValue in pairs(counter) do
         totalNodes = totalNodes + counterValue
     end
@@ -709,7 +760,7 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
 
     elseif #commands == 2 and commands[1] == "update" then
         if Harvest.IsValidCategory(commands[2]) then
-            Harvest.updateNodes(commands[2])
+            Harvest.updateHarvestNodes(commands[2])
         else
             d("Please enter a valid HarvestMap category to update")
             d("Valid categories are mapinvalid, esonodes, esoinvalid,")
@@ -718,7 +769,7 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
         end
 
     elseif commands[1] == "reset" then
-        if #commands ~= 2 then 
+        if #commands ~= 2 then
             for type,sv in pairs(Harvest.savedVars) do
                 if type ~= "settings" or type ~= "defaults" then
                     Harvest.savedVars[type].data = {}
@@ -823,16 +874,16 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
 end
 
 function Harvest.OnLoad(eventCode, addOnName)
-        Harvest.defaults = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "defaults", { 
-                wideSetting = false, 
+        Harvest.defaults = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "defaults", {
+                wideSetting = false,
                 debug = false,
                 verbose = false,
-                internalVersion = 0, 
-                dataVersion = 0, 
+                internalVersion = 0,
+                dataVersion = 0,
                 language = ""
         })
 
-        if Harvest.defaults.wideSetting then 
+        if Harvest.defaults.wideSetting then
             Harvest.savedVars = {
                 -- All Localized Nodes
                 ["nodes"]           = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "nodes", Harvest.dataDefault),
@@ -901,9 +952,9 @@ function Harvest.OnLoad(eventCode, addOnName)
     Harvest.defaults.language = Harvest.language
 
     if Harvest.defaults.internalVersion < Harvest.internalVersion then
-        Harvest.updateHarvestNodes("data")
-        Harvest.updateHarvestNodes("oldData")
-        Harvest.updateHarvestNodes("oldMapData")
+        Harvest.updateOldHarvestMapNodes("data")
+        Harvest.updateOldHarvestMapNodes("oldData")
+        Harvest.updateOldHarvestMapNodes("oldMapData")
         Harvest.defaults.internalVersion = Harvest.internalVersion
     end
 
@@ -935,7 +986,7 @@ function Harvest.Initialize()
     }
     -- Harvest.DataStore = {}
     Harvest.langs = { "en", "de", "fr", }
-    
+
     Harvest.minDefault = 0.000025 -- 0.005^2
     Harvest.minDist = 0.000025 -- 0.005^2
     Harvest.minReticleover = 0.000049 -- 0.007^2

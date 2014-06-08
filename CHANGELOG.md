@@ -1,3 +1,12 @@
+## 2.5.5
+
+Updates
+- Updated localization routines[1][2]
+- Updated auto update routines for when localization has changed
+
+[1] Upon further investigation versions 2.4.7, 2.4.8, and 2.4.9 would not have handled Cgarlorn data correctly due to lack of localization information from Esohead.com.  This has been resolved.  All versions of harvestMap 2.5.0 or newer handle Craglorn data.  HarvestMap will automatically move Craglorn data to the pool of usable data for map pins.
+[2] Upon further investigation HarvestMerge version 0.1.4 had some Craglorn support.  HarvestMerge versions 0.1.5 or newer handle Craglorn data.  HarvestMerge will automatically move Craglorn data to the pool of usable data for importing into HarvestMap.
+
 ## 2.5.4
 
 Bugfixes
@@ -9,7 +18,7 @@ Updates
 - Verified some Craglorn map names.[1]
 - Updated localization info
 
-[1] It was reported that Craglorn data was made unavailable after 2.4.7.  I would still like copies of HarvestMap.lua and HarvestMerge.lua files in order to further verify my fix.  However, I now have Craglorn data in my save file and have verified that Craglorn nodes will not become unavailable.  If the user did not delete the data, HarvestMap will automatically move Craglorn data to the pool of usable data for map pins.
+[1] It was reported that Craglorn data was made unavailable after 2.4.7.  I could still use backups of HarvestMap.lua from 2.4.0 to 2.4.6 and 2.5.0 or higher.  All versions of HarvestMpa 2.5.0 or higher have proper Craglorn support.  HarvestMap will automatically move Craglorn data to the pool of usable data for map pins.
 
 ## 2.5.3
 
@@ -31,6 +40,9 @@ Bugfix
 Updates
 - Updated importing routines.  If you use HarvestMerge you will have to update to 0.1.5 in order to import information.
 - Attempted to make counters more accurate.
+- Updated Craglorn Support[1]
+
+[1] It was reported that Craglorn data was made unavailable after 2.4.7.  I could still use backups of HarvestMap.lua from 2.4.0 to 2.4.6 and 2.5.0 or higher.  All versions of HarvestMpa 2.5.0 or higher have proper Craglorn support.  HarvestMap will automatically move Craglorn data to the pool of usable data for map pins.
 
 ## 2.4.9
 

@@ -19,22 +19,22 @@ function Harvest.newMapNameFishChest(type, newMapName, x, y)
 end
 function Harvest.oldMapNameFishChest(type, oldMapName, x, y)
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
-    if type == Harvest.chestID then
-        if not Harvest.savedVars["settings"].importFilters[ Harvest.chestID ] then
-            Harvest.saveData("esonodes", oldMapName, x, y, Harvest.chestID, "chest", nil, Harvest.minReticleover, "nonvalid" )
+        if type == "fish" then
+            if not Harvest.savedVars["settings"].importFilters[ Harvest.fishID ] then
+                Harvest.saveData("esonodes", oldMapName, x, y, Harvest.fishID, type, nil, Harvest.minReticleover, "valid" )
+            else
+                Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
+            end
+        elseif type == "chest" then
+            if not Harvest.savedVars["settings"].importFilters[ Harvest.chestID ] then
+                Harvest.saveData("esonodes", oldMapName, x, y, Harvest.chestID, type, nil, Harvest.minReticleover, "valid" )
+            else
+                Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
+            end
         else
-            Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
+            -- Harvest.saveData("rejected", oldMapName, x, y, -1, type, nil, Harvest.minReticleover, "reject" )
+            d("Harvest : oldMapName : unsupported type : " .. type)
         end
-    elseif type == Harvest.fishID then
-        if not Harvest.savedVars["settings"].importFilters[ Harvest.fishID ] then
-            Harvest.saveData("esonodes", oldMapName, x, y, Harvest.fishID, "fish", nil, Harvest.minReticleover, "nonvalid" )
-        else
-            Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
-        end
-    else
-        -- Harvest.saveData("rejected", oldMapName, x, y, -1, type, nil, Harvest.minReticleover, "reject" )
-        d("Harvest : oldMapName : unsupported type : " .. type)
-    end
 end
 
 function Harvest.newMapNilItemIDHarvest(newMapName, x, y, profession, nodeName)
