@@ -3,7 +3,7 @@ Harvest.chestID = 6
 Harvest.fishID = 8
 
 Harvest.internalVersion = 3
-Harvest.dataVersion = 3
+Harvest.dataVersion = 4
 
 -----------------------------------------
 --           Debug Logger              --
