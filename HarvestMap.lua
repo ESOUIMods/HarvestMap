@@ -560,6 +560,15 @@ function Harvest.contains(table, value)
     return nil
 end
 
+function Harvest.duplicateName(table, value)
+    for key, v in pairs(table) do
+        if v == value then
+            return true
+        end
+    end
+    return false
+end
+
 function Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale, counter )
 
     -- If this check is not here the next routine will fail
@@ -590,12 +599,20 @@ function Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale, cou
         dy = entry[2] - y
         -- (x - center_x)2 + (y - center_y)2 = r2, where center is the player
         dist = math.pow(dx, 2) + math.pow(dy, 2)
+        local duplicate
         if dist < distance then -- near player location
-            if not Harvest.contains(entry[3], nodeName) then
+            duplicate = Harvest.duplicateName(entry[3], nodeName)
+            if not duplicate then
                 table.insert(entry[3], nodeName)
-            end
-            if Harvest.defaults.debug then
-                d("Node close to its location inserted into : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. "!")
+                if Harvest.defaults.debug then
+                    d("Node close to this location inserted into : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. "!")
+                end
+            elseif duplicate then
+                if Harvest.defaults.debug then
+                    d("Node at this location : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. "!")
+                end
+            else
+                Harvest.Debug("Didn't know what to do with the node")
             end
             return true
         end
@@ -777,7 +794,11 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
             end
             d("HarvestMap saved data has been completely reset")
         else
-            if commands[2] ~= "settings" or commands[2] ~= "defaults" or commands[2] ~= "mapnames" then
+            if commands[2] == "defaults" then
+                Harvest.savedVars.settings = Harvest.DefaultConfiguration
+                Harvest.defaults = Harvest.DefaultSettings
+                ReloadUI()
+            elseif commands[2] ~= "settings" or commands[2] ~= "mapnames" then
                 if Harvest.IsValidCategory(commands[2]) then
                     Harvest.savedVars[commands[2]].data = {}
                     d("HarvestMap saved data : " .. commands[2] .. " has been reset")
@@ -873,16 +894,21 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
     end
 end
 
-function Harvest.OnLoad(eventCode, addOnName)
-        Harvest.defaults = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "defaults", {
-                wideSetting = false,
-                debug = false,
-                verbose = false,
-                internalVersion = 0,
-                dataVersion = 0,
-                language = ""
-        })
+function Harvest.calculateValueOnLoad(input)
+    local value = 0
+    for inc = 1, input do
+        value = value + 0.00001
+    end
+    return value
+end
 
+function Harvest.OnLoad(eventCode, addOnName)
+        Harvest.defaults = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "defaults", Harvest.DefaultSettings )
+        
+        Harvest.minDefault = Harvest.calculateValueOnLoad(Harvest.defaults.minDefault)
+        Harvest.minReticleover = Harvest.calculateValueOnLoad(Harvest.defaults.minReticleover)
+
+        
         if Harvest.defaults.wideSetting then
             Harvest.savedVars = {
                 -- All Localized Nodes
@@ -898,22 +924,7 @@ function Harvest.OnLoad(eventCode, addOnName)
                 -- All rejected records for debugging
                 -- ["rejected"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "rejected", Harvest.dataDefault),
 
-                ["settings"]    = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 1, "settings", {
-                    filters = {
-                        -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
-                        [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
-                    },
-                    -- Import filters false by default so they are imported
-                    importFilters = {
-                        [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
-                    },
-                    -- Gather filters true by default so they are gathered
-                    gatherFilters = {
-                        [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
-                    },
-                    mapLayouts = Harvest.defaultMapLayouts,
-                    compassLayouts = Harvest.defaultCompassLayouts
-                })
+                ["settings"]    = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 1, "settings", Harvest.DefaultConfiguration )
             }
         else
             Harvest.savedVars = {
@@ -930,22 +941,7 @@ function Harvest.OnLoad(eventCode, addOnName)
                 -- All rejected records for debugging
                 -- ["rejected"]      = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "rejected", Harvest.dataDefault),
 
-                ["settings"]    = ZO_SavedVars:New("Harvest_SavedVars", 1, "settings", {
-                    filters = {
-                        -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
-                        [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
-                    },
-                    -- Import filters false by default so they are imported
-                    importFilters = {
-                        [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
-                    },
-                    -- Gather filters true by default so they are gathered
-                    gatherFilters = {
-                        [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
-                    },
-                    mapLayouts = Harvest.defaultMapLayouts,
-                    compassLayouts = Harvest.defaultCompassLayouts
-                })
+                ["settings"]    = ZO_SavedVars:New("Harvest_SavedVars", 1, "settings", Harvest.DefaultConfiguration )
             }
         end
 
@@ -984,7 +980,35 @@ function Harvest.Initialize()
     Harvest.dataDefault = {
         data = {}
     }
-    -- Harvest.DataStore = {}
+    Harvest.DefaultSettings = {
+        wideSetting = false,
+        debug = false,
+        verbose = false,
+        internalVersion = 0,
+        dataVersion = 0,
+        language = "",
+        minDefault = 25, -- 0.000025 or 0.005^2
+        minReticleover = 49 -- 0.000049 or 0.007^2
+    }
+    
+    Harvest.DefaultConfiguration = {
+        compass = true,
+        filters = {
+            -- [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true
+            [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true
+        },
+        -- Import filters false by default so they are imported
+        importFilters = {
+            [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
+        },
+        -- Gather filters true by default so they are gathered
+        gatherFilters = {
+        [0] = false, [1] = false, [2] = false, [3] = false, [4] = false, [5] = false, [6] = false, [7] = false, [8] = false
+        },
+        mapLayouts = Harvest.defaultMapLayouts,
+        compassLayouts = Harvest.defaultCompassLayouts
+    }
+
     Harvest.langs = { "en", "de", "fr", }
 
     Harvest.minDefault = 0.000025 -- 0.005^2

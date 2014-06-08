@@ -89,6 +89,10 @@ Harvest.allLocalizations = {
         ["distancetooltip"] = "The maximum distance for pins to appear on the compass.",
         ["compass"] = "Enable compass",
         ["compasstooltip"] = "Enable the display of close pins on the compass.",
+        ["minnodedist"] = "Minimum Node Distance",
+        ["nodedisttooltip"] = "The minimum distance before a duplicate Harvest node is ignored.",
+        ["minreticledist"] = "Minimum Reticleover Distance",
+        ["reticledisttooltip"] = "The minimum distance before a duplicate Chest or Fishing Hole is ignored.",
     },
     ["de"] = {
         ["filter1"] = "Schmied Pins",
@@ -180,6 +184,10 @@ Harvest.allLocalizations = {
         ["distancetooltip"] = "Die maximale Distanz für Pins, um auf dem Kompass zu erscheinen.",
         ["compass"] = "Aktiviere Kompass",
         ["compasstooltip"] = "Aktiviere das Anzeigen von nahen Pins auf dem Kompass.",
+        ["minnodedist"] = "Minimum Node Distance",
+        ["nodedisttooltip"] = "The minimum distance before a duplicate Harvest node is ignored.",
+        ["minreticledist"] = "Minimum Reticleover Distance",
+        ["reticledisttooltip"] = "The minimum distance before a duplicate Chest or Fishing Hole is ignored.",
     },
     ["fr"] = { --translation by wookiefrag
         ["filter1"] = "Forge : Gisements Pins",
@@ -271,6 +279,10 @@ Harvest.allLocalizations = {
         ["distancetooltip"] = "Distance maximale a laquelle les différents repères apparaissent sur la boussole.",
         ["compass"] = "Activer la boussole",
         ["compasstooltip"] = "Activer l'affichage des repères a proximité sur la boussole.",
+        ["minnodedist"] = "Minimum Node Distance",
+        ["nodedisttooltip"] = "The minimum distance before a duplicate Harvest node is ignored.",
+        ["minreticledist"] = "Minimum Reticleover Distance",
+        ["reticledisttooltip"] = "The minimum distance before a duplicate Chest or Fishing Hole is ignored.",
     }
 }
 

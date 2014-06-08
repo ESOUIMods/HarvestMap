@@ -50,6 +50,23 @@ function Harvest.SetColor( profession, r, g, b )
     Harvest.RefreshPins( profession )
 end
 
+-- Harvest DuplicateNode Range Checking
+function Harvest.GetMinDist()
+    return Harvest.defaults.minDefault
+end
+
+function Harvest.SetMinDist(value)
+    Harvest.defaults.minDefault = value
+end
+
+function Harvest.GetMinReticle()
+    return Harvest.defaults.minReticleover
+end
+
+function Harvest.SetMinReticle(value)
+    Harvest.defaults.minReticleover = value
+end
+
 local function CreateFilter( profession )
 
     LAM:AddCheckbox(panelID, "HarvestMapFilter"..profession, Harvest.localization[ "filter"..profession ], Harvest.localization[ "filtertooltip"..profession ],
@@ -149,7 +166,7 @@ function Harvest.InitializeOptions()
         end,
         false, nil)
 
-    LAM:AddSlider(panelID, "HarvestMapDistance", Harvest.localization["distance"],Harvest.localization["distancetooltip"], 1, 100, 1,
+    LAM:AddSlider(panelID, "HarvestMapDistance", Harvest.localization["distance"], Harvest.localization["distancetooltip"], 1, 100, 1,
         function()
             return Harvest.savedVars["settings"].compassLayouts[1].maxDistance * 1000
         end,
@@ -159,6 +176,33 @@ function Harvest.InitializeOptions()
                 Harvest.savedVars["settings"].compassLayouts[ profession ].maxDistance  = value / 1000
             end
             COMPASS_PINS:RefreshPins()
+        end,
+        false, nil)
+
+    -- New Duplicate Node Range Check Sliders
+    LAM:AddSlider(panelID, "MinimumNodeDifference", Harvest.localization["minnodedist"], Harvest.localization["nodedisttooltip"], 25, 100, 1,
+        function()
+            return Harvest.GetMinDist()
+        end,
+        function( value )
+            Harvest.defaults.minDefault = 0
+            for inc = 1, value do
+                Harvest.defaults.minDefault = Harvest.defaults.minDefault + 0.00001
+            end
+            Harvest.SetMinDist( value )
+        end,
+        false, nil)
+
+    LAM:AddSlider(panelID, "MinimumReticleDifference", Harvest.localization["minreticledist"], Harvest.localization["reticledisttooltip"], 49, 100, 1,
+        function()
+            return Harvest.GetMinReticle()
+        end,
+        function( value )
+            Harvest.defaults.minReticleover = 0
+            for inc = 1, value do
+                Harvest.defaults.minReticleover = Harvest.defaults.minReticleover + 0.00001
+            end
+            Harvest.SetMinReticle( value )
         end,
         false, nil)
 

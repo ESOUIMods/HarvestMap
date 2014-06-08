@@ -1,3 +1,12 @@
+## 2.5.6
+
+Feature
+- Added slider options so users can fine tune the range at which the nodes are considered duplicate nodes
+This will let users adjust the setting without manually editing files or waiting for me to release a new version with different values.
+
+- Added new slash command "/harvest reset defaults"
+Allows users to reset their settings to the original defaults.  This does not reset nodes or collected data.  If you had AccountWide settings ON you will need to toggle it ON again.
+
 ## 2.5.5
 
 Updates
