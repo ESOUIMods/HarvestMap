@@ -185,11 +185,8 @@ function Harvest.InitializeOptions()
             return Harvest.GetMinDist()
         end,
         function( value )
-            Harvest.defaults.minDefault = 0
-            for inc = 1, value do
-                Harvest.defaults.minDefault = Harvest.defaults.minDefault + 0.00001
-            end
             Harvest.SetMinDist( value )
+            Harvest.minDefault = 0.000001 * Harvest.defaults.minDefault
         end,
         false, nil)
 
@@ -198,11 +195,8 @@ function Harvest.InitializeOptions()
             return Harvest.GetMinReticle()
         end,
         function( value )
-            Harvest.defaults.minReticleover = 0
-            for inc = 1, value do
-                Harvest.defaults.minReticleover = Harvest.defaults.minReticleover + 0.00001
-            end
             Harvest.SetMinReticle( value )
+            Harvest.minReticleover = 0.000001 * Harvest.defaults.minReticleover
         end,
         false, nil)
 

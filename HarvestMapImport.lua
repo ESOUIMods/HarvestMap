@@ -1,40 +1,41 @@
 function Harvest.newMapNameFishChest(type, newMapName, x, y)
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
-        if type == "fish" then
-            if not Harvest.savedVars["settings"].importFilters[ Harvest.fishID ] then
-                Harvest.saveData("nodes", newMapName, x, y, Harvest.fishID, type, nil, Harvest.minReticleover, "valid" )
-            else
-                Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
-            end
-        elseif type == "chest" then
-            if not Harvest.savedVars["settings"].importFilters[ Harvest.chestID ] then
-                Harvest.saveData("nodes", newMapName, x, y, Harvest.chestID, type, nil, Harvest.minReticleover, "valid" )
-            else
-                Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
-            end
+    if type == "fish" then
+        if not Harvest.savedVars["settings"].importFilters[ Harvest.fishID ] then
+            Harvest.saveData("nodes", newMapName, x, y, Harvest.fishID, type, nil, Harvest.minReticleover, "valid" )
         else
-            -- Harvest.saveData("rejected", newMapName, x, y, -1, type, nil, Harvest.minReticleover, "reject" )
-            d("Harvest : newMapName : unsupported type : " .. type)
+            Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
         end
+    elseif type == "chest" then
+        if not Harvest.savedVars["settings"].importFilters[ Harvest.chestID ] then
+            Harvest.saveData("nodes", newMapName, x, y, Harvest.chestID, type, nil, Harvest.minReticleover, "valid" )
+        else
+            Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
+        end
+    else
+        d("Harvest : newMapName : unsupported type : " .. type)
+        -- Harvest.saveData("rejected", newMapName, x, y, -1, type, nil, Harvest.minReticleover, "reject" )
+    end
 end
+
 function Harvest.oldMapNameFishChest(type, oldMapName, x, y)
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
-        if type == "fish" then
-            if not Harvest.savedVars["settings"].importFilters[ Harvest.fishID ] then
-                Harvest.saveData("esonodes", oldMapName, x, y, Harvest.fishID, type, nil, Harvest.minReticleover, "valid" )
-            else
-                Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
-            end
-        elseif type == "chest" then
-            if not Harvest.savedVars["settings"].importFilters[ Harvest.chestID ] then
-                Harvest.saveData("esonodes", oldMapName, x, y, Harvest.chestID, type, nil, Harvest.minReticleover, "valid" )
-            else
-                Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
-            end
+    if type == "fish" then
+        if not Harvest.savedVars["settings"].importFilters[ Harvest.fishID ] then
+            Harvest.saveData("esonodes", oldMapName, x, y, Harvest.fishID, type, nil, Harvest.minReticleover, "nonvalid" )
         else
-            -- Harvest.saveData("rejected", oldMapName, x, y, -1, type, nil, Harvest.minReticleover, "reject" )
-            d("Harvest : oldMapName : unsupported type : " .. type)
+            Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
         end
+    elseif type == "chest" then
+        if not Harvest.savedVars["settings"].importFilters[ Harvest.chestID ] then
+            Harvest.saveData("esonodes", oldMapName, x, y, Harvest.chestID, type, nil, Harvest.minReticleover, "nonvalid" )
+        else
+            Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
+        end
+    else
+        d("Harvest : oldMapName : unsupported type : " .. type)
+        -- Harvest.saveData("rejected", oldMapName, x, y, -1, type, nil, Harvest.minReticleover, "reject" )
+    end
 end
 
 function Harvest.newMapNilItemIDHarvest(newMapName, x, y, profession, nodeName)
@@ -125,7 +126,7 @@ function Harvest.oldMapItemIDHarvest(oldMapName, x, y, profession, nodeName, ite
         professionFound = profession
     end
     if professionFound < 1 or professionFound > 8 then
-        -- Harvest.saveData("rejected", newMapName, x, y, professionFound, nodeName, itemID, nil, "reject" )
+        -- Harvest.saveData("rejected", oldMapName, x, y, professionFound, nodeName, itemID, nil, "reject" )
         return
     end
 
@@ -222,7 +223,7 @@ function Harvest.importFromEsohead()
             for v1, node in pairs(nodes) do
                 Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
-                Harvest.oldMapNameFishChest(Harvest.chestID, map, node[1], node[2])
+                Harvest.oldMapNameFishChest("chest", map, node[1], node[2])
             end
         end
     end
@@ -242,7 +243,7 @@ function Harvest.importFromEsohead()
             for v1, node in pairs(nodes) do
                 Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
-                Harvest.oldMapNameFishChest(Harvest.fishID, map, node[1], node[2])
+                Harvest.oldMapNameFishChest("fish", map, node[1], node[2])
             end
         end
     end
@@ -256,6 +257,7 @@ function Harvest.importFromEsohead()
     d("Number of Unlocalized False Nodes saved : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
     -- d("Number of Rejected Nodes saved : " .. tostring(Harvest.NumRejectedNodes) )
     d("Finished.")
+    Harvest.RefreshPins()
 end
 
 function Harvest.importFromEsoheadMerge()
@@ -331,7 +333,7 @@ function Harvest.importFromEsoheadMerge()
             for v1, node in pairs(nodes) do
                 Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
-                Harvest.oldMapNameFishChest(Harvest.chestID, map, node[1], node[2])
+                Harvest.oldMapNameFishChest("chest", map, node[1], node[2])
             end
         end
     end
@@ -351,7 +353,7 @@ function Harvest.importFromEsoheadMerge()
             for v1, node in pairs(nodes) do
                 Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
-                Harvest.oldMapNameFishChest(Harvest.fishID, map, node[1], node[2])
+                Harvest.oldMapNameFishChest("fish", map, node[1], node[2])
             end
         end
     end
@@ -365,6 +367,7 @@ function Harvest.importFromEsoheadMerge()
     d("Number of Unlocalized False Nodes saved : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
     -- d("Number of Rejected Nodes saved : " .. tostring(Harvest.NumRejectedNodes) )
     d("Finished.")
+    Harvest.RefreshPins()
 end
 
 function Harvest.importFromHarvester()
@@ -440,7 +443,7 @@ function Harvest.importFromHarvester()
             for v1, node in pairs(nodes) do
                 Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
-                Harvest.oldMapNameFishChest(Harvest.chestID, map, node[1], node[2])
+                Harvest.oldMapNameFishChest("chest", map, node[1], node[2])
             end
         end
     end
@@ -460,7 +463,7 @@ function Harvest.importFromHarvester()
             for v1, node in pairs(nodes) do
                 Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
                 -- 1) map name 2) x 3) y 4) profession 5) nodeName 6) itemID
-                Harvest.oldMapNameFishChest(Harvest.fishID, map, node[1], node[2])
+                Harvest.oldMapNameFishChest("fish", map, node[1], node[2])
             end
         end
     end
@@ -474,6 +477,7 @@ function Harvest.importFromHarvester()
     d("Number of Unlocalized False Nodes saved : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
     -- d("Number of Rejected Nodes saved : " .. tostring(Harvest.NumRejectedNodes) )
     d("Finished.")
+    Harvest.RefreshPins()
 end
 
 function Harvest.importFromHarvestMerge()
@@ -491,8 +495,8 @@ function Harvest.importFromHarvestMerge()
         return
     end
 
-    if HarvestMerge.internal.internalVersion < 2 then
-        d("Please upgrade to HarvestMerge 0.1.5 or newer to import data!")
+    if HarvestMerge.internal.internalVersion < 3 then
+        d("Please upgrade to HarvestMerge 0.2.2 or newer to import data!")
         return
     end
     d("import data from HarvestMerge")
@@ -522,4 +526,5 @@ function Harvest.importFromHarvestMerge()
     d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
     -- d("Number of Rejected Nodes saved : " .. tostring(Harvest.NumRejectedNodes) )
     d("Finished.")
+    Harvest.RefreshPins()
 end

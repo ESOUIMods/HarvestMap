@@ -894,20 +894,12 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
     end
 end
 
-function Harvest.calculateValueOnLoad(input)
-    local value = 0
-    for inc = 1, input do
-        value = value + 0.00001
-    end
-    return value
-end
-
 function Harvest.OnLoad(eventCode, addOnName)
+
         Harvest.defaults = ZO_SavedVars:NewAccountWide("Harvest_SavedVars", 2, "defaults", Harvest.DefaultSettings )
         
-        Harvest.minDefault = Harvest.calculateValueOnLoad(Harvest.defaults.minDefault)
-        Harvest.minReticleover = Harvest.calculateValueOnLoad(Harvest.defaults.minReticleover)
-
+        Harvest.minDefault = 0.000001 * Harvest.defaults.minDefault
+        Harvest.minReticleover = 0.000001 * Harvest.defaults.minReticleover
         
         if Harvest.defaults.wideSetting then
             Harvest.savedVars = {

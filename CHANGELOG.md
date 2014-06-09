@@ -1,3 +1,10 @@
+## 2.5.7
+
+Bugfix
+- Changed the coefficient from the incorrect value of 0.00001 to 0.000001
+
+With the old value the result would have been 0.00025 and it should be 0.000025.  This would have made some nodes insert into other nodes when they shouldn't have.  I am sorry for the mistake and any nodes lost.  Please restore and import backups using HarvestMerge.  HarvestMerge was unaffected since it did not get the update to have a slider to adjust the range of duplicate nodes.
+
 ## 2.5.6
 
 Feature
