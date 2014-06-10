@@ -282,6 +282,11 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
         end
         return
     end
+    
+    local testName = Harvest.GetItemNameFromItemID(link.id)
+    local testItemID = Harvest.GetItemIDFromItemName(Harvest.nodeName)
+    d("The test node name was" .. testName)
+    d("The test node itemID was" .. testItemID)
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
     Harvest.saveData("nodes", zone, x, y, profession, Harvest.nodeName, link.id, nil )
@@ -494,13 +499,13 @@ function Harvest.changeCounters(counter)
         Harvest.NumFalseNodes = Harvest.NumFalseNodes + 1
     end
     if counter == "valid" then
-        Harvest.NumbersNodesAdded = Harvest.NumbersNodesAdded + 1
+        Harvest.NumNodesAdded = Harvest.NumNodesAdded + 1
     end
     if counter == "nonfalse" then
         Harvest.NumUnlocalizedFalseNodes = Harvest.NumUnlocalizedFalseNodes + 1
     end
     if counter == "nonvalid" then
-        Harvest.NumbersUnlocalizedNodesAdded = Harvest.NumbersUnlocalizedNodesAdded + 1
+        Harvest.NumUnlocalizedNodesAdded = Harvest.NumUnlocalizedNodesAdded + 1
     end
     if counter == "reject" then
         Harvest.NumRejectedNodes = Harvest.NumRejectedNodes + 1
@@ -752,13 +757,13 @@ SLASH_COMMANDS["/harvest"] = function (cmd)
     end
 
     if #commands == 2 and commands[1] == "import" then
-        Harvest.NumbersNodesAdded = 0
+        Harvest.NumNodesAdded = 0
         Harvest.NumFalseNodes = 0
         Harvest.NumContainerSkipped = 0
-        Harvest.NumbersNodesFiltered = 0
+        Harvest.NumNodesFiltered = 0
         Harvest.NumNodesProcessed = 0
         Harvest.NumUnlocalizedFalseNodes = 0
-        Harvest.NumbersUnlocalizedNodesAdded = 0
+        Harvest.NumUnlocalizedFalseNodes = 0
 
         if commands[2] == "esohead" then
             Harvest.importFromEsohead()
@@ -1010,13 +1015,13 @@ function Harvest.Initialize()
     Harvest.isHarvesting = false
     Harvest.action = nil
 
-    Harvest.NumbersNodesAdded = 0
+    Harvest.NumNodesAdded = 0
     Harvest.NumFalseNodes = 0
     Harvest.NumContainerSkipped = 0
-    Harvest.NumbersNodesFiltered = 0
+    Harvest.NumNodesFiltered = 0
     Harvest.NumNodesProcessed = 0
     Harvest.NumUnlocalizedFalseNodes = 0
-    Harvest.NumbersUnlocalizedNodesAdded = 0
+    Harvest.NumUnlocalizedNodesAdded = 0
     Harvest.NumRejectedNodes = 0
 
 end

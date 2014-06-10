@@ -1,3 +1,8 @@
+## 2.5.8
+
+Minor Update
+- Updated Custom Compass Pins only
+
 ## 2.5.7
 
 Bugfix
