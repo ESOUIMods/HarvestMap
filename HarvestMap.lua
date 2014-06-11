@@ -3,7 +3,7 @@ Harvest.chestID = 6
 Harvest.fishID = 8
 
 Harvest.internalVersion = 3
-Harvest.dataVersion = 4
+Harvest.dataVersion = 5
 
 -----------------------------------------
 --           Debug Logger              --
@@ -283,10 +283,12 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
         return
     end
     
+    --[[
     local testName = Harvest.GetItemNameFromItemID(link.id)
     local testItemID = Harvest.GetItemIDFromItemName(Harvest.nodeName)
-    d("The test node name was" .. testName)
-    d("The test node itemID was" .. testItemID)
+    d("The test node name was : " .. testName)
+    d("The test node itemID was : " .. testItemID)
+    ]]--
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
     Harvest.saveData("nodes", zone, x, y, profession, Harvest.nodeName, link.id, nil )
@@ -565,6 +567,15 @@ function Harvest.contains(table, value)
     return nil
 end
 
+function Harvest.returnNameFound(table, value)
+    for key, name in pairs(table) do
+        if name == value then
+            return name
+        end
+    end
+    return nil
+end
+
 function Harvest.duplicateName(table, value)
     for key, v in pairs(table) do
         if v == value then
@@ -575,13 +586,6 @@ function Harvest.duplicateName(table, value)
 end
 
 function Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale, counter )
-
-    -- If this check is not here the next routine will fail
-    -- after the loading screen because for a brief moment
-    -- the information is not available.
-    if Harvest.savedVars[type] == nil then
-        return
-    end
 
     if not Harvest.savedVars[type].data[zone] then
         return false
@@ -598,32 +602,30 @@ function Harvest.alreadyFound(type, zone, x, y, profession, nodeName, scale, cou
         distance = scale
     end
 
+    local dx, dy
     for _, entry in pairs( Harvest.savedVars[type].data[zone][profession] ) do
-
         dx = entry[1] - x
         dy = entry[2] - y
         -- (x - center_x)2 + (y - center_y)2 = r2, where center is the player
         dist = math.pow(dx, 2) + math.pow(dy, 2)
-        local duplicate
+        dist2 = dx * dx + dy * dy
+        Harvest.Debug(dist .. " : " .. dist2)
         if dist < distance then -- near player location
-            duplicate = Harvest.duplicateName(entry[3], nodeName)
-            if not duplicate then
+            if not Harvest.duplicateName(entry[3], nodeName) then
+                local nodeFound = Harvest.returnNameFound(entry[3], nodeName)
+                if nodeFound ~= nil and Harvest.defaults.debug then
+                    d("Insterted into Node: " .. nodeFound)
+                end
                 table.insert(entry[3], nodeName)
-                if Harvest.defaults.debug then
-                    d("Node close to this location inserted into : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. "!")
-                end
-            elseif duplicate then
-                if Harvest.defaults.debug then
-                    d("Node at this location : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. "!")
-                end
-            else
-                Harvest.Debug("Didn't know what to do with the node")
+            end
+            if Harvest.defaults.debug then
+                d("Node:" .. nodeName .. " on: " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " already found!")
             end
             return true
         end
     end
     if Harvest.defaults.debug then
-        d("Node : " .. nodeName .. " on : " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " not found!")
+        d("Node:" .. nodeName .. " on: " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " not found!")
     end
     return false
 end
