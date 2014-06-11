@@ -179,6 +179,8 @@ Harvest.poiData["auridon"] = {
    },
 }
 
+
+
 Harvest.poiData["bangkorai"] = {
 --Bangkorai (Daggerfall, lvl 37-43)
    ["bangkorai_base"] = {        --Bangkorai
@@ -416,6 +418,9 @@ Harvest.poiData["cyrodiil"] = {
    },
 }
 
+
+
+
 Harvest.poiData["deshaan"] = {
 --Deshaan (Ebonheart, lvl 16-23)
    ["deshaan_base"] = {          --"Deshaan"
@@ -481,6 +486,7 @@ Harvest.poiData["deshaan"] = {
       { "oratoire de Narsis Ouest^md", 1}
    },
 }
+
 
 Harvest.poiData["eastmarch"] = {
 --Eastmarch (Ebonheart, lvl 31-37)
@@ -841,6 +847,8 @@ Harvest.poiData["malabaltor"] = {
    },
 }
 
+
+
 Harvest.poiData["reapersmarch"] = {
 --Reaper's March (Aldmeri, lvl 37-43)
    ["reapersmarch_base"] = {     --Reaper's March
@@ -1036,6 +1044,7 @@ Harvest.poiData["shadowfen"] = {
    },
 }
 
+
 Harvest.poiData["stonefalls"] = {
 --Stonefalls (Ebonheart, lvl 5-15)
    ["stonefalls_base"] = {       --Stonefalls
@@ -1117,7 +1126,14 @@ Harvest.poiData["stonefalls"] = {
       { "site d'accostage de la dague dissimulée^md", 2 },
       { "surplomb de la pointe de la plantation^md", 2 },
    },
---Bleakrock Isle (Ebonheart, lvl 1-5)
+
+   
+   
+   --Bleakrock Isle (Ebonheart, lvl 1-5)
+   
+   
+   
+   
    ["bleakrock_base"] = {  --Bleakrock Isle
       --fr      
       { "village de Morneroc^md", 8 },
@@ -1133,6 +1149,10 @@ Harvest.poiData["stonefalls"] = {
       { "Tertre des Nimbes^md", 8 },
    },
 }
+
+
+
+
 
 Harvest.poiData["stormhaven"] = {
 --Stormhaven (Daggerfall, lvl 16-23)
@@ -1200,6 +1220,7 @@ Harvest.poiData["stormhaven"] = {
       { "entrepôt de Ventecrête^md", 9 },
    },
 }
+
 
 Harvest.poiData["therift"] = {
 --The Rift (Ebonheart, lvl 37-43)

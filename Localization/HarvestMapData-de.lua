@@ -177,6 +177,10 @@ Harvest.poiData["auridon"] = {
    },
 }
 
+
+
+
+
 Harvest.poiData["bangkorai"] = {
 --Bangkorai (Daggerfall, lvl 37-43)
    ["bangkorai_base"] = {        --Bangkorai
@@ -415,6 +419,8 @@ Harvest.poiData["cyrodiil"] = {
    },
 }
 
+
+
 Harvest.poiData["deshaan"] = {
 --Deshaan (Ebonheart, lvl 16-23)
    ["deshaan_base"] = {          --"Deshaan"
@@ -481,6 +487,7 @@ Harvest.poiData["deshaan"] = {
    },
 }
 
+
 Harvest.poiData["eastmarch"] = {
 --Eastmarch (Ebonheart, lvl 31-37)
    ["eastmarch_base"] = {        --Eastmarch
@@ -544,6 +551,8 @@ Harvest.poiData["eastmarch"] = {
       { "Wegschrein von Wittestadr^md,an", 1 },
    },
 }
+
+
 
 Harvest.poiData["glenumbra"] = {
 --Glenumbra (Daggerfall, lvl 5-15)
@@ -643,6 +652,7 @@ Harvest.poiData["glenumbra"] = {
    },
 }
 
+
 Harvest.poiData["grahtwood"] = {
 --Grahtwood (Aldmeri, lvl 16-23)
    ["grahtwood_base"] = {        --Grahtwood
@@ -706,6 +716,7 @@ Harvest.poiData["grahtwood"] = {
       { "Wurmwurztiefen^pd,in", 3 },
    },
 }
+
 
 Harvest.poiData["greenshade"] = {
 --Greenshade (Aldmeri lvl 25-30)
@@ -771,6 +782,7 @@ Harvest.poiData["greenshade"] = {
    },
 }
 
+
 Harvest.poiData["malabaltor"] = {
 --Malabal Tor (Aldmeri, lvl 31-37)
    ["malabaltor_base"] = { --Malabal Tor
@@ -835,6 +847,7 @@ Harvest.poiData["malabaltor"] = {
       { "Dolmen des Xylotals^md,an", 5 },
    },
 }
+
 
 Harvest.poiData["reapersmarch"] = {
 --Reaper's March (Aldmeri, lvl 37-43)
@@ -1028,6 +1041,10 @@ Harvest.poiData["shadowfen"] = {
    },
 }
 
+
+
+
+
 Harvest.poiData["stonefalls"] = {
 --Stonefalls (Ebonheart, lvl 5-15)
    ["stonefalls_base"] = {       --Stonefalls
@@ -1108,7 +1125,15 @@ Harvest.poiData["stonefalls"] = {
       { "verborgener Landungspunkt der Dolche^m,an", 2 },
       { "Plantagen-Ausblick^md,an", 2 },
   },
---Bleakrock Isle (Ebonheart, lvl 1-5)
+
+  
+  
+  
+  
+  
+  
+  
+  --Bleakrock Isle (Ebonheart, lvl 1-5)
    ["bleakrock_base"] = {  --Bleakrock Isle
       --de
       { "Ödfels^N,in", 8 },
@@ -1191,6 +1216,7 @@ Harvest.poiData["stormhaven"] = {
       { "Windkammlagerhaus^nd,in", 9 },
    },
 }
+
 
 Harvest.poiData["therift"] = {
 --The Rift (Ebonheart, lvl 37-43)

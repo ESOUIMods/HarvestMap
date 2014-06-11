@@ -4,16 +4,17 @@ function Harvest.newMapNameFishChest(type, newMapName, x, y)
         if not Harvest.savedVars["settings"].importFilters[ Harvest.fishID ] then
             Harvest.saveData("nodes", newMapName, x, y, Harvest.fishID, type, nil, Harvest.minReticleover, "valid" )
         else
-            Harvest.NumNodesFiltered = Harvest.NumNodesFiltered + 1
+            Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
         end
     elseif type == "chest" then
         if not Harvest.savedVars["settings"].importFilters[ Harvest.chestID ] then
             Harvest.saveData("nodes", newMapName, x, y, Harvest.chestID, type, nil, Harvest.minReticleover, "valid" )
         else
-            Harvest.NumNodesFiltered = Harvest.NumNodesFiltered + 1
+            Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
         end
     else
         d("Harvest : newMapName : unsupported type : " .. type)
+        -- Harvest.saveData("rejected", newMapName, x, y, -1, type, nil, Harvest.minReticleover, "reject" )
     end
 end
 
@@ -23,57 +24,37 @@ function Harvest.oldMapNameFishChest(type, oldMapName, x, y)
         if not Harvest.savedVars["settings"].importFilters[ Harvest.fishID ] then
             Harvest.saveData("esonodes", oldMapName, x, y, Harvest.fishID, type, nil, Harvest.minReticleover, "nonvalid" )
         else
-            Harvest.NumNodesFiltered = Harvest.NumNodesFiltered + 1
+            Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
         end
     elseif type == "chest" then
         if not Harvest.savedVars["settings"].importFilters[ Harvest.chestID ] then
             Harvest.saveData("esonodes", oldMapName, x, y, Harvest.chestID, type, nil, Harvest.minReticleover, "nonvalid" )
         else
-            Harvest.NumNodesFiltered = Harvest.NumNodesFiltered + 1
+            Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
         end
     else
         d("Harvest : oldMapName : unsupported type : " .. type)
+        -- Harvest.saveData("rejected", oldMapName, x, y, -1, type, nil, Harvest.minReticleover, "reject" )
     end
 end
 
 function Harvest.newMapNilItemIDHarvest(newMapName, x, y, profession, nodeName)
-    local itemIDFound
-    local nameFound
-    if not Harvest.IsValidContainerName(nodeName) then -- returns true or false
-        if nodeName ~= nil then 
-            itemIDFound = Harvest.GetItemIDFromItemName(nodeName)
-        end
-
-        nameFound = Harvest.GetItemNameFromItemID(itemID)
-        if nodeName == nil and nameFound ~= nil then
-            nodeName = nameFound
-        elseif nodeName ~= nil and nameFound ~= nil then
-            if nodeName ~= nameFound then
-                nodeName = nameFound
-            end
-        end
-    end
-
-    local itemID
-    if itemIDFound ~= nil then
-        itemID = itemIDFound
-    end
-
     local professionFound
     professionFound = Harvest.GetProfessionTypeOnUpdate(nodeName) -- Get Profession by name only
     if professionFound <= 0 then
         professionFound = profession
     end
     if professionFound < 1 or professionFound > 8 then
+        -- Harvest.saveData("rejected", newMapName, x, y, professionFound, nodeName, nil, nil, "reject" )
         return
     end
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
     if not Harvest.IsValidContainerName(nodeName) then
         if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
-            Harvest.saveData("nodes", newMapName, x, y, professionFound, nodeName, itemID, nil, "valid" )
+            Harvest.saveData("nodes", newMapName, x, y, professionFound, nodeName, nil, nil, "valid" )
         else
-            Harvest.NumNodesFiltered = Harvest.NumNodesFiltered + 1
+            Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
         end
     else
         Harvest.NumContainerSkipped = Harvest.NumContainerSkipped +1
@@ -81,43 +62,22 @@ function Harvest.newMapNilItemIDHarvest(newMapName, x, y, profession, nodeName)
 end
 
 function Harvest.oldMapNilItemIDHarvest(oldMapName, x, y, profession, nodeName)
-    local itemIDFound
-    local nameFound
-    if not Harvest.IsValidContainerName(nodeName) then -- returns true or false
-        if nodeName ~= nil then 
-            itemIDFound = Harvest.GetItemIDFromItemName(nodeName)
-        end
-
-        nameFound = Harvest.GetItemNameFromItemID(itemID)
-        if nodeName == nil and nameFound ~= nil then
-            nodeName = nameFound
-        elseif nodeName ~= nil and nameFound ~= nil then
-            if nodeName ~= nameFound then
-                nodeName = nameFound
-            end
-        end
-    end
-
-    local itemID
-    if itemIDFound ~= nil then
-        itemID = itemIDFound
-    end
-
     local professionFound
     professionFound = Harvest.GetProfessionTypeOnUpdate(nodeName) -- Get Profession by name only
     if professionFound <= 0 then
         professionFound = profession
     end
     if professionFound < 1 or professionFound > 8 then
+        -- Harvest.saveData("rejected", oldMapName, x, y, professionFound, nodeName, nil, nil, "reject" )
         return
     end
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
     if not Harvest.IsValidContainerName(nodeName) then
         if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
-            Harvest.saveData("esonodes", oldMapName, x, y, professionFound, nodeName, itemID, nil, "nonvalid" )
+            Harvest.saveData("esonodes", oldMapName, x, y, professionFound, nodeName, nil, nil, "nonvalid" )
         else
-            Harvest.NumNodesFiltered = Harvest.NumNodesFiltered + 1
+            Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
         end
     else
         Harvest.NumContainerSkipped = Harvest.NumContainerSkipped +1
@@ -125,23 +85,6 @@ function Harvest.oldMapNilItemIDHarvest(oldMapName, x, y, profession, nodeName)
 end
 
 function Harvest.newMapItemIDHarvest(newMapName, x, y, profession, nodeName, itemID)
-    local itemIDFound
-    local nameFound
-    if not Harvest.IsValidContainerName(nodeName) then -- returns true or false
-        if nodeName ~= nil then 
-            itemIDFound = Harvest.GetItemIDFromItemName(nodeName)
-        end
-
-        nameFound = Harvest.GetItemNameFromItemID(itemID)
-        if nodeName == nil and nameFound ~= nil then
-            nodeName = nameFound
-        elseif nodeName ~= nil and nameFound ~= nil then
-            if nodeName ~= nameFound then
-                nodeName = nameFound
-            end
-        end
-    end
-
     local professionFound = 0
     professionFound = Harvest.GetProfessionTypeOnUpdate(nodeName) -- Get Profession by name only
     if professionFound <= 0 then
@@ -150,6 +93,7 @@ function Harvest.newMapItemIDHarvest(newMapName, x, y, profession, nodeName, ite
         professionFound = profession
     end
     if professionFound < 1 or professionFound > 8 then
+        -- Harvest.saveData("rejected", newMapName, x, y, professionFound, nodeName, itemID, nil, "reject" )
         return
     end
 
@@ -159,13 +103,13 @@ function Harvest.newMapItemIDHarvest(newMapName, x, y, profession, nodeName, ite
             if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
                 Harvest.saveData("nodes", newMapName, x, y, professionFound, nodeName, itemID, nil, "valid" )
             else
-                Harvest.NumNodesFiltered = Harvest.NumNodesFiltered + 1
+                Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
             end
         else
             if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
                 Harvest.saveData("mapinvalid", newMapName, x, y, professionFound, nodeName, itemID, nil, "false" )
             else
-                Harvest.NumNodesFiltered = Harvest.NumNodesFiltered + 1
+                Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
             end
         end
     else
@@ -174,23 +118,6 @@ function Harvest.newMapItemIDHarvest(newMapName, x, y, profession, nodeName, ite
 end
 
 function Harvest.oldMapItemIDHarvest(oldMapName, x, y, profession, nodeName, itemID)
-    local itemIDFound
-    local nameFound
-    if not Harvest.IsValidContainerName(nodeName) then -- returns true or false
-        if nodeName ~= nil then 
-            itemIDFound = Harvest.GetItemIDFromItemName(nodeName)
-        end
-
-        nameFound = Harvest.GetItemNameFromItemID(itemID)
-        if nodeName == nil and nameFound ~= nil then
-            nodeName = nameFound
-        elseif nodeName ~= nil and nameFound ~= nil then
-            if nodeName ~= nameFound then
-                nodeName = nameFound
-            end
-        end
-    end
-
     local professionFound = 0
     professionFound = Harvest.GetProfessionTypeOnUpdate(nodeName) -- Get Profession by name only
     if professionFound <= 0 then
@@ -199,6 +126,7 @@ function Harvest.oldMapItemIDHarvest(oldMapName, x, y, profession, nodeName, ite
         professionFound = profession
     end
     if professionFound < 1 or professionFound > 8 then
+        -- Harvest.saveData("rejected", oldMapName, x, y, professionFound, nodeName, itemID, nil, "reject" )
         return
     end
 
@@ -208,13 +136,13 @@ function Harvest.oldMapItemIDHarvest(oldMapName, x, y, profession, nodeName, ite
             if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
                 Harvest.saveData("esonodes", oldMapName, x, y, professionFound, nodeName, itemID, nil, "nonvalid" )
             else
-                Harvest.NumNodesFiltered = Harvest.NumNodesFiltered + 1
+                Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
             end
         else
             if not Harvest.savedVars["settings"].importFilters[ professionFound ] then
                 Harvest.saveData("esoinvalid", oldMapName, x, y, professionFound, nodeName, itemID, nil, "nonfalse" )
             else
-                Harvest.NumNodesFiltered = Harvest.NumNodesFiltered + 1
+                Harvest.NumbersNodesFiltered = Harvest.NumbersNodesFiltered + 1
             end
         end
     else
@@ -223,13 +151,13 @@ function Harvest.oldMapItemIDHarvest(oldMapName, x, y, profession, nodeName, ite
 end
 
 function Harvest.importFromEsohead()
-    Harvest.NumNodesAdded = 0
+    Harvest.NumbersNodesAdded = 0
     Harvest.NumFalseNodes = 0
     Harvest.NumContainerSkipped = 0
-    Harvest.NumNodesFiltered = 0
+    Harvest.NumbersNodesFiltered = 0
     Harvest.NumNodesProcessed = 0
     Harvest.NumUnlocalizedFalseNodes = 0
-    Harvest.NumUnlocalizedNodesAdded = 0
+    Harvest.NumbersUnlocalizedNodesAdded = 0
     Harvest.NumRejectedNodes = 0
 
     if not EH then
@@ -321,11 +249,11 @@ function Harvest.importFromEsohead()
     end
 
     d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
-    d("Number of nodes added : " .. tostring(Harvest.NumNodesAdded) )
-    d("Number of nodes filtered : " .. tostring(Harvest.NumNodesFiltered) )
+    d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
+    d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
     d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
     d("Number of False Nodes saved : " .. tostring(Harvest.NumFalseNodes) )
-    d("Number of Unlocalized nodes saved : " .. tostring(Harvest.NumUnlocalizedNodesAdded) )
+    d("Number of Unlocalized nodes saved : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
     d("Number of Unlocalized False Nodes saved : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
     -- d("Number of Rejected Nodes saved : " .. tostring(Harvest.NumRejectedNodes) )
     d("Finished.")
@@ -333,13 +261,13 @@ function Harvest.importFromEsohead()
 end
 
 function Harvest.importFromEsoheadMerge()
-    Harvest.NumNodesAdded = 0
+    Harvest.NumbersNodesAdded = 0
     Harvest.NumFalseNodes = 0
     Harvest.NumContainerSkipped = 0
-    Harvest.NumNodesFiltered = 0
+    Harvest.NumbersNodesFiltered = 0
     Harvest.NumNodesProcessed = 0
     Harvest.NumUnlocalizedFalseNodes = 0
-    Harvest.NumUnlocalizedNodesAdded = 0
+    Harvest.NumbersUnlocalizedNodesAdded = 0
     Harvest.NumRejectedNodes = 0
 
     if not EHM then
@@ -431,11 +359,11 @@ function Harvest.importFromEsoheadMerge()
     end
 
     d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
-    d("Number of nodes added : " .. tostring(Harvest.NumNodesAdded) )
-    d("Number of nodes filtered : " .. tostring(Harvest.NumNodesFiltered) )
+    d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
+    d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
     d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
     d("Number of False Nodes saved : " .. tostring(Harvest.NumFalseNodes) )
-    d("Number of Unlocalized nodes saved : " .. tostring(Harvest.NumUnlocalizedNodesAdded) )
+    d("Number of Unlocalized nodes saved : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
     d("Number of Unlocalized False Nodes saved : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
     -- d("Number of Rejected Nodes saved : " .. tostring(Harvest.NumRejectedNodes) )
     d("Finished.")
@@ -443,13 +371,13 @@ function Harvest.importFromEsoheadMerge()
 end
 
 function Harvest.importFromHarvester()
-    Harvest.NumNodesAdded = 0
+    Harvest.NumbersNodesAdded = 0
     Harvest.NumFalseNodes = 0
     Harvest.NumContainerSkipped = 0
-    Harvest.NumNodesFiltered = 0
+    Harvest.NumbersNodesFiltered = 0
     Harvest.NumNodesProcessed = 0
     Harvest.NumUnlocalizedFalseNodes = 0
-    Harvest.NumUnlocalizedNodesAdded = 0
+    Harvest.NumbersUnlocalizedNodesAdded = 0
     Harvest.NumRejectedNodes = 0
 
     if not Harvester then
@@ -541,11 +469,11 @@ function Harvest.importFromHarvester()
     end
 
     d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
-    d("Number of nodes added : " .. tostring(Harvest.NumNodesAdded) )
-    d("Number of nodes filtered : " .. tostring(Harvest.NumNodesFiltered) )
+    d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
+    d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
     d("Number of Containers skipped : " .. tostring(Harvest.NumContainerSkipped) )
     d("Number of False Nodes saved : " .. tostring(Harvest.NumFalseNodes) )
-    d("Number of Unlocalized nodes saved : " .. tostring(Harvest.NumUnlocalizedNodesAdded) )
+    d("Number of Unlocalized nodes saved : " .. tostring(Harvest.NumbersUnlocalizedNodesAdded) )
     d("Number of Unlocalized False Nodes saved : " .. tostring(Harvest.NumUnlocalizedFalseNodes) )
     -- d("Number of Rejected Nodes saved : " .. tostring(Harvest.NumRejectedNodes) )
     d("Finished.")
@@ -553,13 +481,13 @@ function Harvest.importFromHarvester()
 end
 
 function Harvest.importFromHarvestMerge()
-    Harvest.NumNodesAdded = 0
+    Harvest.NumbersNodesAdded = 0
     Harvest.NumFalseNodes = 0
     Harvest.NumContainerSkipped = 0
-    Harvest.NumNodesFiltered = 0
+    Harvest.NumbersNodesFiltered = 0
     Harvest.NumNodesProcessed = 0
     Harvest.NumUnlocalizedFalseNodes = 0
-    Harvest.NumUnlocalizedNodesAdded = 0
+    Harvest.NumbersUnlocalizedNodesAdded = 0
     Harvest.NumRejectedNodes = 0
 
     if not HarvestMerge then
@@ -594,8 +522,8 @@ function Harvest.importFromHarvestMerge()
     end
 
     d("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
-    d("Number of nodes added : " .. tostring(Harvest.NumNodesAdded) )
-    d("Number of nodes filtered : " .. tostring(Harvest.NumNodesFiltered) )
+    d("Number of nodes added : " .. tostring(Harvest.NumbersNodesAdded) )
+    d("Number of nodes filtered : " .. tostring(Harvest.NumbersNodesFiltered) )
     -- d("Number of Rejected Nodes saved : " .. tostring(Harvest.NumRejectedNodes) )
     d("Finished.")
     Harvest.RefreshPins()

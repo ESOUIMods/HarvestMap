@@ -23,6 +23,7 @@ Harvest.poiData = {
 }
 
 --subzone
+--Entered
 Harvest.poiData["alikr"] = {
 --Alik'r Desert (Daggerfall, lvl 31-37)
    ["alikr_base"] = {            --Alik'r Desert
@@ -91,6 +92,7 @@ Harvest.poiData["alikr"] = {
    },
 }
 
+--Entered
 Harvest.poiData["auridon"] = {
 --Auridon (Aldmeri lvl 5-15)
    ["auridon_base"] = { --Auridon
@@ -179,6 +181,7 @@ Harvest.poiData["auridon"] = {
    },
 }
 
+--Entered
 Harvest.poiData["bangkorai"] = {
 --Bangkorai (Daggerfall, lvl 37-43)
    ["bangkorai_base"] = {        --Bangkorai
@@ -246,6 +249,7 @@ Harvest.poiData["bangkorai"] = {
    },
 }
 
+--Entered
 Harvest.poiData["coldharbor"] = {
 --Coldharbour (all, lvl 45-50)
    ["coldharbour_base"] = {      --Coldharbour
@@ -416,6 +420,7 @@ Harvest.poiData["cyrodiil"] = {
    },
 }
 
+--Entered
 Harvest.poiData["deshaan"] = {
 --Deshaan (Ebonheart, lvl 16-23)
    ["deshaan_base"] = {          --"Deshaan"
@@ -483,6 +488,7 @@ Harvest.poiData["deshaan"] = {
    },
 }
 
+--Entered
 Harvest.poiData["eastmarch"] = {
 --Eastmarch (Ebonheart, lvl 31-37)
    ["eastmarch_base"] = {        --Eastmarch
@@ -547,6 +553,7 @@ Harvest.poiData["eastmarch"] = {
    },
 }
 
+--Entered
 Harvest.poiData["glenumbra"] = {
 --Glenumbra (Daggerfall, lvl 5-15)
    ["glenumbra_base"] = {        --Glenumbra
@@ -645,6 +652,8 @@ Harvest.poiData["glenumbra"] = {
    },
 }
 
+
+--Entered
 Harvest.poiData["grahtwood"] = {
 --Grahtwood (Aldmeri, lvl 16-23)
    ["grahtwood_base"] = {        --Grahtwood
@@ -838,6 +847,8 @@ Harvest.poiData["malabaltor"] = {
    },
 }
 
+
+
 Harvest.poiData["reapersmarch"] = {
 --Reaper's March (Aldmeri, lvl 37-43)
    ["reapersmarch_base"] = {     --Reaper's March
@@ -900,6 +911,7 @@ Harvest.poiData["reapersmarch"] = {
       { "Willowgrove Wayshrine", 1 },
    },
 }
+
 
 Harvest.poiData["rivenspire"] = {
 --Rivenspire (Daggerfall, lvl 25-30)
@@ -1031,6 +1043,9 @@ Harvest.poiData["shadowfen"] = {
    },
 }
 
+
+
+
 Harvest.poiData["stonefalls"] = {
 --Stonefalls (Ebonheart, lvl 5-15)
    ["stonefalls_base"] = {       --Stonefalls
@@ -1100,6 +1115,8 @@ Harvest.poiData["stonefalls"] = {
       { "Zabamat Dolmen", 5 },
       
    },
+
+--Entered
 --Bal Foyen (Ebonheart lvl 1-5)
    ["balfoyen_base"] = {      --Bal Foyen
       --en
@@ -1112,7 +1129,11 @@ Harvest.poiData["stonefalls"] = {
       { "Hidden Dagger Landing Site", 2 },
       { "Plantation Point Overlook", 2 },
    },
+
+--Entered
 --Bleakrock Isle (Ebonheart, lvl 1-5)
+
+
    ["bleakrock_base"] = {  --Bleakrock Isle
       --en      
       { "Bleakrock Village", 8 },
@@ -1128,6 +1149,9 @@ Harvest.poiData["stonefalls"] = {
       { "Skyshroud Barrow", 8 },
    },
 }
+
+
+
 
 Harvest.poiData["stormhaven"] = {
 --Stormhaven (Daggerfall, lvl 16-23)
