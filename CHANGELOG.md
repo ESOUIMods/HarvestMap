@@ -1,3 +1,8 @@
+## 2.5.9
+
+Minor Update
+- Simplified duplicate node detection routine
+
 ## 2.5.8
 
 Minor Update
