@@ -130,7 +130,7 @@ end
 
 local function changeAccountWideSettings(val)
     Harvest.defaults.wideSetting = val
-    ReloadUI()
+    ReloadUI("ingame")
 end
 
 function Harvest.InitializeOptions()
@@ -141,10 +141,10 @@ function Harvest.InitializeOptions()
 
     LAM:AddCheckbox(panelID, "HarvestMapCompass", Harvest.localization[ "compass" ], Harvest.localization[ "compasstooltip" ],
         function()
-            return Harvest.savedVars["settings"].compass
+            return Harvest.defaults.compass
         end,
         function( value )
-            Harvest.savedVars["settings"].compass = value
+            Harvest.defaults.compass = value
             COMPASS_PINS:RefreshPins()
         end,
         false, nil)
@@ -210,6 +210,167 @@ function Harvest.InitializeOptions()
         CreateColorPicker( profession )
     end
 
+    LAM:AddHeader(panelID, "HarvestMapFilterAldmeri", "Aldmeri Dominion Map Filters")
+    LAM:AddCheckbox(panelID, "AuridonMapFilter", "Auridon Map Filter", "Enable filtering for Auridon",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "auridon" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "auridon" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "GrahtwoodMapFilter", "Grahtwood Map Filter", "Enable filtering for Grahtwood",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "grahtwood" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "grahtwood" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "GreenshadeMapFilter", "Greenshade Map Filter", "Enable filtering for Greenshade",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "greenshade" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "greenshade" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "MalabalTorMapFilter", "Malabal Tor Map Filter", "Enable filtering for Malabal Tor",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "malabaltor" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "malabaltor" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "ReapersMarchMapFilter", "Reaper's March Tor Map Filter", "Enable filtering for Reaper's March",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "reapersmarch" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "reapersmarch" ] = value
+        end,
+    false, nil)
+
+    LAM:AddHeader(panelID, "HarvestMapFilterDaggerfall", "Daggerfall Covenant Map Filters")
+    LAM:AddCheckbox(panelID, "AlikrDesertFilter", "Alik'r Desert Filter", "Enable filtering for Alik'r Desert",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "alikr" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "alikr" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "BangkoraiDesertFilter", "Bangkorai Map Filter", "Enable filtering for Bangkorai",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "bangkorai" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "bangkorai" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "GlenumbraMapFilter", "Glenumbra Map Filter", "Enable filtering for Glenumbra",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "glenumbra" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "glenumbra" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "RivenspireMapFilter", "Rivenspire Map Filter", "Enable filtering for Rivenspire",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "rivenspire" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "rivenspire" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "StormhavenMapFilter", "Stormhaven Map Filter", "Enable filtering for Stormhaven",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "stormhaven" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "stormhaven" ] = value
+        end,
+    false, nil)
+
+    LAM:AddHeader(panelID, "HarvestMapFilterEbonheart", "Ebonheart Pact Map Filters")
+    LAM:AddCheckbox(panelID, "DeshaanMapFilter", "Deshaan Map Filter", "Enable filtering for Deshaan",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "deshaan" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "deshaan" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "EastmarchMapFilter", "Eastmarch Map Filter", "Enable filtering for Eastmarch",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "eastmarch" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "eastmarch" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "ShadowfenMapFilter", "Shadowfen Map Filter", "Enable filtering for Shadowfen",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "shadowfen" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "shadowfen" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "StonefallsMapFilter", "Stonefalls Map Filter", "Enable filtering for Stonefalls",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "stonefalls" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "stonefalls" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "TheRiftMapFilter", "The Rift Map Filter", "Enable filtering for The Rift",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "therift" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "therift" ] = value
+        end,
+    false, nil)
+
+    LAM:AddHeader(panelID, "HarvestMapFilterOther", "Other Map Filters")
+
+    LAM:AddCheckbox(panelID, "CraglornMapFilter", "Craglorn Map Filter", "Enable filtering for Craglorn",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "craglorn" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "craglorn" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "ColdharborMapFilter", "Coldharbor Map Filter", "Enable filtering for Coldharbor",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "coldharbor" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "coldharbor" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "CyrodiilMapFilter", "Cyrodiil Map Filter", "Enable filtering for Cyrodiil",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "cyrodiil" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "cyrodiil" ] = value
+        end,
+    false, nil)
+    LAM:AddCheckbox(panelID, "CitiesFilter", "Cities Map Filters", "Enable filtering for City Maps",
+        function()
+            return Harvest.savedVars["settings"].mapnameFilters[ "cities" ]
+        end,
+        function( value )
+            Harvest.savedVars["settings"].mapnameFilters[ "cities" ] = value
+        end,
+    false, nil)
+    
     LAM:AddHeader(panelID, "HarvestDebugHeader", "Debug")
 
     LAM:AddCheckbox(panelID, "HarvestMapDebug", "Debug mode", "Enable debug mode",
@@ -248,16 +409,16 @@ end
 
 local lastContext
 function Harvest.RefreshFilterCheckboxes()
-   --check which checkboxes will be shown, so you do not need to update everything
-   local context = GetMapContentType() == MAP_CONTENT_AVA --true if pvp context
-   local checkboxes = context and newPVPCheckboxes or newPVECheckboxes 
-   --do not refresh checkboxes if map context is not changed
-   if context ~= lastContext then
-      lastContext = context
-      for profession = 1, 8 do
-         ZO_CheckButton_SetCheckState(checkboxes[profession], Harvest.GetFilter(profession))
-      end
-   end
+    --check which checkboxes will be shown, so you do not need to update everything
+    local context = GetMapContentType() == MAP_CONTENT_AVA --true if pvp context
+    local checkboxes = context and newPVPCheckboxes or newPVECheckboxes
+    --do not refresh checkboxes if map context is not changed
+    if context ~= lastContext then
+        lastContext = context
+        for profession = 1, 8 do
+            ZO_CheckButton_SetCheckState(checkboxes[profession], Harvest.GetFilter(profession))
+        end
+    end
 end
 CALLBACK_MANAGER:RegisterCallback("OnWorldMapChanged", Harvest.RefreshFilterCheckboxes)
 
@@ -271,39 +432,32 @@ end
 local oldGetString = GetString
 -- the filter checkboxes display the localization string, retrieved by this function
 -- since there is no API to the filters, I had to hack a bit, to display my own strings :)
-function GetString( stringVariablePrefix, contextId )
+function GetString( stringVariablePrefix, contextId, ... )
     if stringVariablePrefix == "SI_MAPFILTER" and type(contextId) == "string" then
     --if Harvest.startsWith( contextId, Harvest.GetPinType("") ) then
         local profession = Harvest.GetNumberAfter(contextId, Harvest.GetPinType(""))
         return Harvest.localization[ "filter"..profession ]
     --end
     end
-    return oldGetString( stringVariablePrefix, contextId )
+    return oldGetString( stringVariablePrefix, contextId, ... )
 
 end
 
 local oldVars = WORLD_MAP_FILTERS.SetSavedVars
 -- setsavedVars initializes the filter controlls for pve and pvp map type
 -- after this function is called WORLD_MAP_FILTERS.pvePanel are initialized and can be manipulated
-WORLD_MAP_FILTERS.SetSavedVars = function( self, savedVars )
-    oldVars( self, savedVars)
+WORLD_MAP_FILTERS.SetSavedVars = function( self, savedVars, ... )
+    oldVars( self, savedVars, ... )
 
-    -- for i=1,6 do
     for i=1,8 do
-    local profession = i
-    self.pvePanel.AddPinFilterCheckBox( self.pvePanel, Harvest.GetPinType( profession ), function() Harvest.RefreshPins( profession ) end)
+        local profession = i
 
-    newPVECheckboxes[ profession ] = self.pvePanel.pinFilterCheckBoxes[ #self.pvePanel.pinFilterCheckBoxes ]
-    ZO_CheckButton_SetToggleFunction( newPVECheckboxes[ profession ], function(button, checked)
-        Harvest.SetFilter( profession, checked )
-    end)
+        self.pvePanel.AddPinFilterCheckBox( self.pvePanel, Harvest.GetPinType( profession ), function() Harvest.RefreshPins( profession ) end)
+        newPVECheckboxes[ profession ] = self.pvePanel.pinFilterCheckBoxes[ #self.pvePanel.pinFilterCheckBoxes ]
+        ZO_CheckButton_SetToggleFunction( newPVECheckboxes[ profession ], function(button, checked) Harvest.SetFilter( profession, checked ) end)
 
-    self.pvpPanel.AddPinFilterCheckBox( self.pvpPanel, Harvest.GetPinType( profession ), function() Harvest.RefreshPins( profession ) end)
-
-    newPVPCheckboxes[ profession ] = self.pvpPanel.pinFilterCheckBoxes[ #self.pvpPanel.pinFilterCheckBoxes ]
-    ZO_CheckButton_SetToggleFunction( newPVPCheckboxes[ profession ], function(button, checked)
-        Harvest.SetFilter( profession, checked )
-    end)
-
+        self.pvpPanel.AddPinFilterCheckBox( self.pvpPanel, Harvest.GetPinType( profession ), function() Harvest.RefreshPins( profession ) end)
+        newPVPCheckboxes[ profession ] = self.pvpPanel.pinFilterCheckBoxes[ #self.pvpPanel.pinFilterCheckBoxes ]
+        ZO_CheckButton_SetToggleFunction( newPVPCheckboxes[ profession ], function(button, checked) Harvest.SetFilter( profession, checked ) end)
     end
 end

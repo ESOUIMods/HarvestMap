@@ -1,13 +1,13 @@
 ## Title: HarvestMap
 ## Author: Shinni and Sharlikran
-## Version: 2.5.9
-## APIVersion: 100004
+## Version: 2.6.6
+## APIVersion: 100007
 ## OptionalDependsOn: LibAddonMenu-1.0
 ## SavedVariables: Harvest_SavedVars
 
-Libs/LibAddonMenu-1.0/LibStub/LibStub.lua
-Libs/LibAddonMenu-1.0/LibAddonMenu-1.0/LibAddonMenu-1.0.lua
-
+Libs/LibStub/LibStub.lua
+Libs/LibAddonMenu-1.0/LibAddonMenu-1.0.lua
+Libs/AceSerializer-3.0/AceSerializer-3.0.lua
 Libs/CustomCompassPins/CustomCompassPins.lua
 
 HarvestMap.lua

@@ -2,24 +2,24 @@ if Harvest == nil then Harvest = {} end
 
 --zones
 Harvest.poiData = {
-   ["alikr"] = {},      --Alik'r Desert
-   ["auridon"] = {},    --Auridon, Khenarthi's Roost
-   ["bangkorai"] = {},  --Bangkorai
-   ["coldharbor"] = {}, --Coldharbour
-   ["cyrodiil"] = {},   --Cyrodiil
-   ["deshaan"] = {},    --"Deshaan"
-   ["eastmarch"] = {},  --Eastmarch
-   ["glenumbra"] = {},  --Glenumbra, Betnikh, Stros M'Kai
-   ["grahtwood"] = {},  --Grahtwood
-   ["greenshade"] = {}, --Greenshade
-   ["malabaltor"] = {}, --Malabal Tor
-   ["reapersmarch"] = {},  --Reaper's March
-   ["rivenspire"] = {}, --Rivenspire
-   ["shadowfen"] = {},  --Shadowfen
-   ["stonefalls"] = {}, --Stonefalls, Bal Foyen, Bleakrock Isle
-   ["stormhaven"] = {}, --Stormhaven
-   ["therift"] = {},    --The Rift
-   ["craglorn"] = {},   --Craglorn
+   ["alikr"] = {},          --Alik'r Desert
+   ["auridon"] = {},        --Auridon, Khenarthi's Roost
+   ["bangkorai"] = {},      --Bangkorai
+   ["coldharbor"] = {},     --Coldharbour
+   ["cyrodiil"] = {},       --Cyrodiil
+   ["deshaan"] = {},        --"Deshaan"
+   ["eastmarch"] = {},      --Eastmarch
+   ["glenumbra"] = {},      --Glenumbra, Betnikh, Stros M'Kai
+   ["grahtwood"] = {},      --Grahtwood
+   ["greenshade"] = {},     --Greenshade
+   ["malabaltor"] = {},     --Malabal Tor
+   ["reapersmarch"] = {},   --Reaper's March
+   ["rivenspire"] = {},     --Rivenspire
+   ["shadowfen"] = {},      --Shadowfen
+   ["stonefalls"] = {},     --Stonefalls, Bal Foyen, Bleakrock Isle
+   ["stormhaven"] = {},     --Stormhaven
+   ["therift"] = {},        --The Rift
+   ["craglorn"] = {},       --Craglorn
 }
 
 --subzone
@@ -567,51 +567,51 @@ Harvest.poiData["glenumbra"] = {
     { "Wyrdbaum der Beldama^md,unter", 8},
     { "Grabhügel^pd,bei", 8},
     { "Wegschrein der Grabmäler^md,an", 1},
-    { "Dolmen der Cambrayhügel^md,an", 5}, 
+    { "Dolmen der Cambrayhügel^md,an", 5},
     { "Cambraypass^md,in", 8},
     { "Camlorn^N,in", 8},
-    { "Cath Bedraud^N,in", 8}, 
+    { "Cath Bedraud^N,in", 8},
     { "Kalthaus^N,in", 9},
     { "Kreuzgrat^N,in", 8},
-    { "Wegschrein von Kreuzgrat^md,an", 1}, 
+    { "Wegschrein von Kreuzgrat^md,an", 1},
     { "Feste Gruftwacht^fd,in", 3},
     { "Dolmen von Daenia^md,an", 5},
     { "Dolchsturz^N,in", 8},
-    { "Südstege von Dolchsturz^pd,an", 8}, 
+    { "Südstege von Dolchsturz^pd,an", 8},
     { "Wegschrein von Dolchsturz^md,an", 1},
-    { "Deleynsmühl^N,in", 8}, 
-    { "Wegschrein von Deleynsmühl^md,an", 1}, 
+    { "Deleynsmühl^N,in", 8},
+    { "Wegschrein von Deleynsmühl^md,an", 1},
     { "Murrsteininsel^fd,auf", 2},
     { "Burg Dresan^fd,in", 8},
-    { "Verlies: Spindeltiefen^N", 7}, 
+    { "Verlies: Spindeltiefen^N", 7},
     { "Ruinen von Dwynnarth^pd,in", 8},
     { "Adlersbach^N,in", 8},
-    { "Wegschrein von Adlersbach^md,an", 1}, 
+    { "Wegschrein von Adlersbach^md,an", 1},
     { "Ebenerzgruft^fd,an", 3},
     { "Enduum^N,in", 3},
-    { "Wegschrein der Fernwacht^md,an", 1}, 
+    { "Wegschrein der Fernwacht^md,an", 1},
     { "Hof der Familie Gaudet^md,auf", 2},
     { "Glenumbramoor^nd,in", 8},
     { "Vettelfenn^nd,in", 8},
-    { "Wegschrein des Vettelfenns^md,an", 1}, 
+    { "Wegschrein des Vettelfenns^md,an", 1},
     { "ilessanischer Turm^md,bei",  3},
-    { "Dolmen der Königswacht^md,an", 5}, 
+    { "Dolmen der Königswacht^md,an", 5},
     { "Feldlager der Löwengarde^nd,in", 8},
-    { "Wegschrein des Feldlagers^md,an", 1}, 
+    { "Wegschrein des Feldlagers^md,an", 1},
     { "Merovecs Torheit^Fg,in", 2},
     { "Mesanthanos Turm^Mg,an", 9},
-    { "Miltrins Fischerhütte^Fg,in", 2}, 
+    { "Miltrins Fischerhütte^Fg,in", 2},
     { "Minen von Khuras^pd,in", 3},
     { "Morastfälle^fd,an", 2},
-    { "Wegschrein des nördlichen Vettelfens^md,an", 1}, 
+    { "Wegschrein des nördlichen Vettelfens^md,an", 1},
     { "Nordküste^fd,an", 6},
     { "Par Molag^N,in", 9},
-    { "Lager der Rotkrähen^nd,in", 8}, 
+    { "Lager der Rotkrähen^nd,in", 8},
     { "Seeblick^md,an", 6},
-    { "kreischende Narbe^fdC,in", 8}, 
+    { "kreischende Narbe^fdC,in", 8},
     { "Silumm^N,in", 3},
     { "Rankenfels^N,in", 2},
-    { "Zuflucht^fd,in", 1}, 
+    { "Zuflucht^fd,in", 1},
     { "Fürstin^fd,bei", 4},
     { "Liebende^fd,bei", 4},
     { "Lager des Wolfs^nd,in", 6},
@@ -1126,13 +1126,13 @@ Harvest.poiData["stonefalls"] = {
       { "Plantagen-Ausblick^md,an", 2 },
   },
 
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
   --Bleakrock Isle (Ebonheart, lvl 1-5)
    ["bleakrock_base"] = {  --Bleakrock Isle
       --de
@@ -1289,6 +1289,49 @@ Harvest.poiData["craglorn"] = {
 --craglorn
    ["craglorn_base"] = {          --craglorn
       --de
+      { "Rahni'Za, die Schule der Krieger^N", 22 },
+      { "Molavar^N,in", 22 },
+      { "Rkundzelft^N,in", 22 },
+      { "Ende des Helden^nd,bei", 22 },
+      { "Archiv des Suchers^nd,in", 22 },
+      { "Ruinen von Kardala^pd,in", 22 },
+      { "Shadas Träne^Fg,in", 22 },
+      { "Rkhardahrk^N,in", 22 },
+      { "Haddocks Markt^Mg,in", 22 },
+      { "Meißelkreischmine^fd,in", 22 },
+      { "vergrabene Sande^pdc,in", 22 },
+      { "Mtharnaz^N,in", 22 },
+      { "Balamath^N,in", 22 },
+      { "Zalgaz' Versteck^Ng,in", 22 },
+      { "Gräber der Na-Totambu^pd", 22 },
+      { "Hircines Schlupfwinkel^Mg,in", 22 },
+      { "magische Anomalie^f,bei", 22 },
+      { "Begräbnisstätte der Anka-Ra^f,in", 22 },
+      { "Belkarth^N,in", 22 },
+      { "Wegschrein des Archivs des Suchers^md,an", 1 },
+      { "Wegschrein des Sandigen Pfads^md,an", 1 },
+      { "Wegschrein von Shadas Träne^md,an", 1 },
+      { "Begräbnisstätte der Anka-Ra^f,in", 22 },
+      { "magische Anomalie^f,bei", 22 },
+      { "Wegschrein von Belkarth^md,an", 1 },
+      { "Elinhir^N,in", 22 },
+      { "Zaubernarbe^fd,in", 22 },
+      { "Prüfung: Zitadelle von Hel Ra^N", 22 },
+      { "Prüfung: Ätherisches Archiv^N", 22 },
+      { "Wegschrein von Elinhir^md,an", 1 },
+      { "Wegschrein der Zaubernarbe^md,an", 1 },
+      { "Wegschrein von Bergblick^md,an", 1 },
+      { "Wegschrein von Inazzurs Grund^md,an", 1 },
+      { "Dolmen des Grunds der Bewährung^md,an", 5 },
+      { "Tor nach Bangkorai^nd,an", 22 },
+      { "Taborras Lager^Ng,in", 22 },
+      { "Inazzurs Grund^Mg,auf", 22 },
+      { "Donnersturzlager^nd,in", 22 },
+      { "Skorpionsschlucht^fd,in", 22 },
+      { "See der Zähne^md,an", 22 },
+      { "Ogondars Weinkeller^Mg", 22 },
+      { "Lanistas Rast^Fg,in", 22 },
+      { "Prüfung: Sanctum Ophidia", 22 },
    },
 }
 

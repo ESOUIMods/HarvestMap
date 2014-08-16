@@ -28,7 +28,7 @@ Harvest.defaultCompassLayouts = {
 }
 
 function Harvest.addCompassCallback( profession, g_mapPinManager )
-    if not Harvest.savedVars["settings"].filters[ profession ] or not Harvest.savedVars["settings"].compass then
+    if not Harvest.savedVars["settings"].filters[ profession ] or not Harvest.defaults.compass then
         return
     end
     local zone = Harvest.GetMap()
@@ -43,7 +43,9 @@ function Harvest.addCompassCallback( profession, g_mapPinManager )
     if not nodes then
         return
     end
-    for _, node in pairs( nodes ) do
+    
+    for _, item in ipairs( nodes ) do
+        local node = type(item) == "string" and Harvest.Deserialize(item) or item
         g_mapPinManager:CreatePin( pinType, node, node[1], node[2] )
     end
 end
