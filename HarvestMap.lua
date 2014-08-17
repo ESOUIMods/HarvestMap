@@ -4,6 +4,7 @@ Harvest.fishID = 8
 
 Harvest.internalVersion = 3
 Harvest.dataVersion = 7
+Harvest.displayVersion = "2.6.7"
 
 local AS = LibStub("AceSerializer-3.0")
 
