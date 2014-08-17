@@ -1,12 +1,12 @@
 ## 2.6.7
 
 Updates
-- Converted settings from LibAddonMenu-1.0 to LibAddonMenu-2.0
+- Converted settings from LibAddonMenu-1.0 to LibAddonMenu-2.0 [Garkin]
 
 ## 2.6.6
 
 Updates
-- Node data are now saved using the AceSerializer-3.0 library
+- Node data are now saved using the AceSerializer-3.0 library [Garkin]
 
 ## 2.6.5
 
