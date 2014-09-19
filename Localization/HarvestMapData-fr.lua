@@ -2,24 +2,24 @@ if Harvest == nil then Harvest = {} end
 
 --zones
 Harvest.poiData = {
-   ["alikr"] = {},      --Alik'r Desert
-   ["auridon"] = {},    --Auridon, Khenarthi's Roost
-   ["bangkorai"] = {},  --Bangkorai
-   ["coldharbor"] = {}, --Coldharbour
-   ["cyrodiil"] = {},   --Cyrodiil
-   ["deshaan"] = {},    --"Deshaan"
-   ["eastmarch"] = {},  --Eastmarch
-   ["glenumbra"] = {},  --Glenumbra, Betnikh, Stros M'Kai
-   ["grahtwood"] = {},  --Grahtwood
-   ["greenshade"] = {}, --Greenshade
-   ["malabaltor"] = {}, --Malabal Tor
-   ["reapersmarch"] = {},  --Reaper's March
-   ["rivenspire"] = {}, --Rivenspire
-   ["shadowfen"] = {},  --Shadowfen
-   ["stonefalls"] = {}, --Stonefalls, Bal Foyen, Bleakrock Isle
-   ["stormhaven"] = {}, --Stormhaven
-   ["therift"] = {},    --The Rift
-   ["craglorn"] = {},    --The Rift
+   ["alikr"] = {},          --Alik'r Desert
+   ["auridon"] = {},        --Auridon, Khenarthi's Roost
+   ["bangkorai"] = {},      --Bangkorai
+   ["coldharbor"] = {},     --Coldharbour
+   ["cyrodiil"] = {},       --Cyrodiil
+   ["deshaan"] = {},        --"Deshaan"
+   ["eastmarch"] = {},      --Eastmarch
+   ["glenumbra"] = {},      --Glenumbra, Betnikh, Stros M'Kai
+   ["grahtwood"] = {},      --Grahtwood
+   ["greenshade"] = {},     --Greenshade
+   ["malabaltor"] = {},     --Malabal Tor
+   ["reapersmarch"] = {},   --Reaper's March
+   ["rivenspire"] = {},     --Rivenspire
+   ["shadowfen"] = {},      --Shadowfen
+   ["stonefalls"] = {},     --Stonefalls, Bal Foyen, Bleakrock Isle
+   ["stormhaven"] = {},     --Stormhaven
+   ["therift"] = {},        --The Rift
+   ["craglorn"] = {},       --Craglorn
 }
 
 --subzone
@@ -154,7 +154,7 @@ Harvest.poiData["auridon"] = {
      {"Wansalen^M", 3 },
      {"oratoire du val venteux^md", 1 },
      {"épave du Rapace^fd", 6 },
-     
+
    },
 --Khenarthi's Roost (Aldmeri, lvl 1-5)
    ["khenarthisroost_base"] = {  --Khenarthi's Roost
@@ -175,7 +175,7 @@ Harvest.poiData["auridon"] = {
      {"temple des Sources du deuil^md", 8 },
      {"temple de la Danse des deux Lunes^md", 2 },
      {"plantation Troussevent^fd", 8 },
-     
+
    },
 }
 
@@ -414,7 +414,7 @@ Harvest.poiData["cyrodiil"] = {
      {"dolmen d'Hivrallonge^md", 5 },
      {"vigie de la Main de bois^fd", 2 },
      {"chai de Zimar^md", 2 },
-     
+
    },
 }
 
@@ -549,7 +549,7 @@ Harvest.poiData["eastmarch"] = {
       { "oratoire de Vendeaume^md", 1 },
       { "Wittestadr^M", 8 },
       { "oratoire de Wittestadr^md", 1 },
-      
+
    },
 }
 
@@ -566,51 +566,51 @@ Harvest.poiData["glenumbra"] = {
     { "arbre du Wyrd de Beldama^md", 8},
     { "tertres funéraires^mp", 8},
     { "oratoire des tertres funéraires^md", 1},
-    { "dolmen des collines de Cambray^md", 5}, 
+    { "dolmen des collines de Cambray^md", 5},
     { "col de Cambray^md", 8},
     { "Camlorn^F", 8},
-    { "Cath Bedraud^F", 8}, 
+    { "Cath Bedraud^F", 8},
     { "maison des frissons^fd", 9},
     { "Croissalant^M", 8},
-    { "oratoire de Croissalant^md", 1}, 
+    { "oratoire de Croissalant^md", 1},
     { "fort de Veillecaveau^md", 3},
     { "dolmen de Daénia^md", 5},
     { "Daguefilante^F", 8},
-    { "quais sud de Daguefilante^pm", 8}, 
+    { "quais sud de Daguefilante^pm", 8},
     { "oratoire de Daguefilante^md", 1},
-    { "scierie de Deleyn^fd", 8}, 
-    { "oratoire de la scierie de Deleyn^md", 1}, 
+    { "scierie de Deleyn^fd", 8},
+    { "oratoire de la scierie de Deleyn^md", 1},
     { "île Pierrefroide^fd", 2},
     { "donjon de Drèsan^md", 8},
-    { "Donjon : Tressefuseau^md", 7}, 
+    { "Donjon : Tressefuseau^md", 7},
     { "ruines de Dwynnarth^pfd", 8},
     { "Aigle-sur-rive^M", 8},
-    { "oratoire d'Aigle-sur-rive^md", 1}, 
+    { "oratoire d'Aigle-sur-rive^md", 1},
     { "crypte d'ébène^fd", 3},
     { "Enduum", 3},
-    { "oratoire de Longueveille^md", 1}, 
+    { "oratoire de Longueveille^md", 1},
     { "ferme Gaudet^fd", 2},
     { "landes de Glénumbrie^pfd", 8},
     { "marais aux harfreuses^md", 8},
-    { "oratoire du marais aux harfreuses^md", 1}, 
+    { "oratoire du marais aux harfreuses^md", 1},
     { "tour d'Ilessan^fd",  3},
-    { "dolmen de la Garde royale^md", 5}, 
+    { "dolmen de la Garde royale^md", 5},
     { "bastion de la garde du Lion^md", 8},
-    { "oratoire du bastion de la garde du Lion^md", 1}, 
+    { "oratoire du bastion de la garde du Lion^md", 1},
     { "folie de Mérovec^fd", 2},
     { "tour de Mésanthano^fd", 9},
-    { "cabane de pêche de Miltrin^fd", 2}, 
+    { "cabane de pêche de Miltrin^fd", 2},
     { "mines de Khuras^pfd", 3},
     { "chutes enlisées^pfd", 2},
-    { "oratoire du marais aux harfreuses nord^md", 1}, 
+    { "oratoire du marais aux harfreuses nord^md", 1},
     { "pointe de la côte nord^fd", 6},
     { "Par Molag^F", 9},
-    { "camp des Freux écarlates^m", 8}, 
+    { "camp des Freux écarlates^m", 8},
     { "panorama de la côte^md", 6},
-    { "Sillon hurlant^md", 8}, 
+    { "Sillon hurlant^md", 8},
     { "Silumm^F", 3},
     { "Entrécif^M", 2},
-    { "port^md", 1}, 
+    { "port^md", 1},
     { "Dame^fd", 4},
     { "Amant^md", 4},
     { "camp du loup^md", 6},
@@ -621,7 +621,7 @@ Harvest.poiData["glenumbra"] = {
     { "surplomb ouest^md", 6},
     { "Ouestrie^F", 8},
     { "oratoire de l'arbre du Wyrd^md", 1}
-    
+
    },
 --Betnikh (Daggerfall, lvl 1-5)
    ["betnihk_base"] = {
@@ -649,7 +649,7 @@ Harvest.poiData["glenumbra"] = {
       { "oratoire du Port des saints^md", 1 },
       { "oratoire de la grotte ensablée^md", 1 },
       { "La Tombe^F", 8 },
-      
+
    },
 }
 
@@ -714,7 +714,7 @@ Harvest.poiData["grahtwood"] = {
       { "caverne de Roncemort^fd", 3 },
       { "loge d'Ombronce^fd", 9 },
       { "profondeurs de Verracine^pfd", 3 },
-      
+
    },
 }
 
@@ -909,7 +909,7 @@ Harvest.poiData["reapersmarch"] = {
       { "Folbosque^F", 8 },
       { "caverne de Folbosque^fd", 2 },
       { "oratoire de Folbosque^md", 1 },
-      
+
    },
 }
 
@@ -974,7 +974,7 @@ Harvest.poiData["rivenspire"] = {
       { "Veawend Ede^M", 9 },
       { "dolmen de la lande d'Ouestemarche^md", 5 },
       { "phare zéphyréen^md", 9 },
-      
+
    },
 }
 
@@ -1040,7 +1040,7 @@ Harvest.poiData["shadowfen"] = {
       { "Xal Ithix^M", 8 },
       { "Xal Thak^M", 6 },
       { "Zuuk^M", 8 },
-      
+
    },
 }
 
@@ -1112,7 +1112,7 @@ Harvest.poiData["stonefalls"] = {
       { "Ramure de Vivec^fd", 8 },
       { "oratoire de la Ramure de Vivec^md", 1 },
       { "dolmen de Zabamat^md", 5 },
-      
+
    },
 --Bal Foyen (Ebonheart lvl 1-5)
    ["balfoyen_base"] = {      --Bal Foyen
@@ -1127,15 +1127,15 @@ Harvest.poiData["stonefalls"] = {
       { "surplomb de la pointe de la plantation^md", 2 },
    },
 
-   
-   
+
+
    --Bleakrock Isle (Ebonheart, lvl 1-5)
-   
-   
-   
-   
+
+
+
+
    ["bleakrock_base"] = {  --Bleakrock Isle
-      --fr      
+      --fr
       { "village de Morneroc^md", 8 },
       { "oratoire de Morneroc^md", 1 },
       { "pointe des compagnons^fd", 2 },
@@ -1286,7 +1286,7 @@ Harvest.poiData["therift"] = {
       { "ravin du Tueur de trolls^md", 9 },
       { "bois de Vernim^md", 8 },
       { "bosquet du feu follet^md", 6 },
-      
+
    },
 }
 
@@ -1294,6 +1294,48 @@ Harvest.poiData["craglorn"] = {
 --craglorn
    ["craglorn_base"] = {          --craglorn
       --fr
+      { "Rahni'Za, l'école des guerriers^F", 22 },
+      { "Molavar^M", 22 },
+      { "Rkundzelft^F", 22 },
+      { "crépuscule des héros^md", 22 },
+      { "Archive des Sourciers^fd", 22 },
+      { "ruines de Kardala^pfd", 22 },
+      { "larme de Shada^fd", 22 },
+      { "Rkhardahrk^M", 22 },
+      { "marché de l'aiglefin^md", 22 },
+      { "mine de Ciselcri^fd", 22 },
+      { "sables engloutis^pm", 22 },
+      { "Mtharnaz^F", 22 },
+      { "Balamath^F", 22 },
+      { "antre de Zalgaz^md", 22 },
+      { "tombes des Na-Totambu^pfd", 22 },
+      { "hantise d'Hircine^fd", 22 },
+      { "anomalie magique^fd", 22 },
+      { "site funéraire anka-ra^md", 22 },
+      { "Belkarth^M", 22 },
+      { "oratoire de l'Archive des Sourciers^md", 1 },
+      { "oratoire du chemin sablonneux^md", 1 },
+      { "oratoire de la lame de Shada^md", 1 },
+      { "site funéraire anka-ra^md", 22 },
+      { "anomalie magique^fd", 22 },
+      { "oratoire de Belkarth^md", 1 },
+      { "Élinhir^M", 22 },
+      { "Cicatrice enchantée^fd", 22 },
+      { "Épreuve : citadelle d'Hel Ra^fd", 22 },
+      { "Épreuve : Archive æthérienne^md", 22 },
+      { "oratoire d'Élinhir^md", 22 },
+      { "oratoire de la Cicatrice enchantée^md", 1 },
+      { "oratoire du panorama montagneux^md", 1 },
+      { "oratoire du fort d'Inazzur^md", 1 },
+      { "dolmen du terrain des épreuves^md", 5 },
+      { "porte de Bangkoraï^fd", 22 },
+      { "camp de Taborra^md", 22 },
+      { "forteresse d'Inazzur^fd", 22 },
+      { "camp des chutes du tonnerre^md", 22 },
+      { "ravin du scorpion^md", 22 },
+      { "lac de dents^md", 22 },
+      { "chai d'Ogondar^m", 22 },
+      { "Halte de Lanista^fd", 22 },
+      { "Épreuve : sanctum ophidia^fd", 22 },
    },
 }
-

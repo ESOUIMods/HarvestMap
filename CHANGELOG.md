@@ -1,3 +1,56 @@
+## 2.6.7
+
+Updates
+- Converted settings from LibAddonMenu-1.0 to LibAddonMenu-2.0 [Garkin]
+
+## 2.6.6
+
+Updates
+- Node data are now saved using the AceSerializer-3.0 library [Garkin]
+
+## 2.6.5
+
+Updates
+- Changed version number
+
+## 2.6.4
+
+Updates
+- Changed version number
+- Added disclaimer to Readme as requested by Zenimax
+
+## 2.6.3
+
+Feature
+- Added Map filters[1]
+
+[1]Map filters are organized by Alliance.  These filters do not apply to gathering, only importing.
+
+This is the initial release of this new feature but it does the job quite well.  If you would like to leave feedback on the new filter please be specific about the change or update you would like.  Understand that I don't want to make a large list of maps and only filter certain things when a bunch of conditions are met.
+
+## 2.6.2
+
+Bugfix
+- Fixed bug that caused an exception when importing with debug mode on
+
+## 2.6.1
+
+Bugfix
+- Fixed bug that allowed containers from Esohead.lua files to be added as Solvent nodes.[1]
+
+[1]The easiest way to fix this is to use your HarvestMerge data and import into HarvestMap with the solvent filters ON.  Then turn the filters back OFF when you import other Esohead.lua files.  You will only loose the valid "Pure Water" nodes but those are very easy to find.  Once you import the HarvestMerge with the filters on, I would reset your HarvestMerge data and import from HarvestMap so you don't import the solvent nodes again in the future.
+
+## 2.6.0
+
+Updates
+- Added Node Name translation.[1]
+
+Bugfix
+- Updated how HarvestMap handles different nodes in the same location.[2]
+
+[1] This prevents the tooltip from having the node name in each language and translating two from German or French to english.
+[2] For example High Iron Ore, Orichalcum Ore and Calcinium Ore spawning in the same spot.  The tooltip should properly reflect the nodes that have spawned it its location.
+
 ## 2.5.9
 
 Minor Update

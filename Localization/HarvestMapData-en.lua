@@ -2,24 +2,24 @@ if Harvest == nil then Harvest = {} end
 
 --zones
 Harvest.poiData = {
-   ["alikr"] = {},      --Alik'r Desert
-   ["auridon"] = {},    --Auridon, Khenarthi's Roost
-   ["bangkorai"] = {},  --Bangkorai
-   ["coldharbor"] = {}, --Coldharbour
-   ["cyrodiil"] = {},   --Cyrodiil
-   ["deshaan"] = {},    --"Deshaan"
-   ["eastmarch"] = {},  --Eastmarch
-   ["glenumbra"] = {},  --Glenumbra, Betnikh, Stros M'Kai
-   ["grahtwood"] = {},  --Grahtwood
-   ["greenshade"] = {}, --Greenshade
-   ["malabaltor"] = {}, --Malabal Tor
-   ["reapersmarch"] = {},  --Reaper's March
-   ["rivenspire"] = {}, --Rivenspire
-   ["shadowfen"] = {},  --Shadowfen
-   ["stonefalls"] = {}, --Stonefalls, Bal Foyen, Bleakrock Isle
-   ["stormhaven"] = {}, --Stormhaven
-   ["therift"] = {},    --The Rift
-   ["craglorn"] = {},   --Craglorn
+   ["alikr"] = {},          --Alik'r Desert
+   ["auridon"] = {},        --Auridon, Khenarthi's Roost
+   ["bangkorai"] = {},      --Bangkorai
+   ["coldharbor"] = {},     --Coldharbour
+   ["cyrodiil"] = {},       --Cyrodiil
+   ["deshaan"] = {},        --"Deshaan"
+   ["eastmarch"] = {},      --Eastmarch
+   ["glenumbra"] = {},      --Glenumbra, Betnikh, Stros M'Kai
+   ["grahtwood"] = {},      --Grahtwood
+   ["greenshade"] = {},     --Greenshade
+   ["malabaltor"] = {},     --Malabal Tor
+   ["reapersmarch"] = {},   --Reaper's March
+   ["rivenspire"] = {},     --Rivenspire
+   ["shadowfen"] = {},      --Shadowfen
+   ["stonefalls"] = {},     --Stonefalls, Bal Foyen, Bleakrock Isle
+   ["stormhaven"] = {},     --Stormhaven
+   ["therift"] = {},        --The Rift
+   ["craglorn"] = {},       --Craglorn
 }
 
 --subzone
@@ -88,7 +88,7 @@ Harvest.poiData["alikr"] = {
       { "Tigonus Dolmen", 5 },
       { "Tu'whacca's Throne", 8 },
       { "Wayfarer's Wharf", 2 },
-      { "Yldzuun", 3 },      
+      { "Yldzuun", 3 },
    },
 }
 
@@ -156,7 +156,7 @@ Harvest.poiData["auridon"] = {
      {"Wansalen", 3 },
      {"Windy Glade Wayshrine", 1 },
      {"Wreck of the Raptor", 6 },
-     
+
    },
 --Khenarthi's Roost (Aldmeri, lvl 1-5)
    ["khenarthisroost_base"] = {  --Khenarthi's Roost
@@ -177,7 +177,7 @@ Harvest.poiData["auridon"] = {
      {"Temple of the Mourning Springs", 8 },
      {"Temple of Two-Moons Dance", 2 },
      {"Windcatcher Plantation", 8 },
-          
+
    },
 }
 
@@ -416,7 +416,7 @@ Harvest.poiData["cyrodiil"] = {
      {"Winter's Reach Dolmen", 5 },
      {"Wooden Hand Outlook", 2 },
      {"Zimar's Winery", 2 },
-     
+
    },
 }
 
@@ -484,7 +484,7 @@ Harvest.poiData["deshaan"] = {
       { "Triple Circle Mine", 3},
       { "Vale of the Ghost Snake", 8},
       { "West Narsis Wayshrine", 1},
-            
+
    },
 }
 
@@ -567,51 +567,51 @@ Harvest.poiData["glenumbra"] = {
     { "Beldama Wyrd Tree", 8},
     { "Burial Mounds", 8},
     { "Burial Tombs Wayshrine", 1},
-    { "Cambray Hills Dolmen", 5}, 
+    { "Cambray Hills Dolmen", 5},
     { "Cambray Pass", 8},
     { "Camlorn", 8},
-    { "Cath Bedraud", 8}, 
+    { "Cath Bedraud", 8},
     { "Chill House", 9},
     { "Crosswych", 8},
-    { "Crosswych Wayshrine", 1}, 
+    { "Crosswych Wayshrine", 1},
     { "Cryptwatch Fort", 3},
     { "Daenia Dolmen", 5},
     { "Daggerfall", 8},
-    { "Daggerfall Southern Docks", 8}, 
+    { "Daggerfall Southern Docks", 8},
     { "Daggerfall Wayshrine", 1},
-    { "Deleyn's Mill", 8}, 
-    { "Deleyn's Mill Wayshrine", 1}, 
+    { "Deleyn's Mill", 8},
+    { "Deleyn's Mill Wayshrine", 1},
     { "Dourstone Isle", 2},
     { "Dresan Keep", 8},
-    { "Dungeon: Spindleclutch", 7}, 
+    { "Dungeon: Spindleclutch", 7},
     { "Dwynnarth Ruins", 8},
     { "Eagle's Brook", 8},
-    { "Eagle's Brook Wayshrine", 1}, 
+    { "Eagle's Brook Wayshrine", 1},
     { "Ebon Crypt", 3},
     { "Enduum", 3},
-    { "Farwatch Wayshrine", 1}, 
+    { "Farwatch Wayshrine", 1},
     { "Gaudet Farm", 2},
     { "Glenumbra Moors", 8},
     { "Hag Fen", 8},
-    { "Hag Fen Wayshrine", 1}, 
+    { "Hag Fen Wayshrine", 1},
     { "Ilessan Tower",  3},
-    { "King's Guard Dolmen", 5}, 
+    { "King's Guard Dolmen", 5},
     { "Lion Guard Redoubt", 8},
-    { "Lion Guard Redoubt Wayshrine", 1}, 
+    { "Lion Guard Redoubt Wayshrine", 1},
     { "Merovec's Folly", 2},
     { "Mesanthano's Tower", 9},
-    { "Miltrin's Fishing Cabin", 2}, 
+    { "Miltrin's Fishing Cabin", 2},
     { "Mines of Khuras", 3},
     { "Mire Falls", 2},
-    { "North Hag Fen Wayshrine", 1}, 
+    { "North Hag Fen Wayshrine", 1},
     { "North Shore Point", 6},
     { "Par Molag", 9},
-    { "Red Rook Camp", 8}, 
+    { "Red Rook Camp", 8},
     { "Seaview Point", 6},
-    { "Shrieking Scar", 8}, 
+    { "Shrieking Scar", 8},
     { "Silumm", 3},
     { "Tangle Rock", 2},
-    { "The Harborage", 1}, 
+    { "The Harborage", 1},
     { "The Lady", 4},
     { "The Lover", 4},
     { "The Wolf's Camp", 6},
@@ -1039,7 +1039,7 @@ Harvest.poiData["shadowfen"] = {
       { "Xal Ithix", 8 },
       { "Xal Thak", 6 },
       { "Zuuk", 8 },
-      
+
    },
 }
 
@@ -1113,7 +1113,7 @@ Harvest.poiData["stonefalls"] = {
       { "Vivec's Antlers", 8 },
       { "Vivec's Antlers Wayshrine", 1 },
       { "Zabamat Dolmen", 5 },
-      
+
    },
 
 --Entered
@@ -1135,7 +1135,7 @@ Harvest.poiData["stonefalls"] = {
 
 
    ["bleakrock_base"] = {  --Bleakrock Isle
-      --en      
+      --en
       { "Bleakrock Village", 8 },
       { "Bleakrock Wayshrine", 1 },
       { "Companions Point", 2 },
@@ -1284,7 +1284,7 @@ Harvest.poiData["therift"] = {
       { "Trollslayer's Gully", 9 },
       { "Vernim Woods", 8 },
       { "Wisplight Glen", 6 },
-      
+
    },
 }
 
@@ -1292,6 +1292,48 @@ Harvest.poiData["craglorn"] = {
 --craglorn
    ["craglorn_base"] = {          --craglorn
       --en
+      { "Rahni'Za, School of Warriors", 22 },
+      { "Molavar", 22 },
+      { "Rkundzelft", 22 },
+      { "Hero's End", 22 },
+      { "The Seeker's Archive", 22 },
+      { "Ruins of Kardala", 22 },
+      { "Shada's Tear", 22 },
+      { "Rkhardahrk", 22 },
+      { "Haddock's Market", 22 },
+      { "Chiselshriek Mine", 22 },
+      { "Buried Sands", 22 },
+      { "Mtharnaz", 22 },
+      { "Balamath", 22 },
+      { "Zalgaz's Den", 22 },
+      { "Tombs of the Na-Totambu", 22 },
+      { "Hircine's Haunt", 22 },
+      { "Magical Anomaly", 22 },
+      { "Anka-Ra Burial Site", 22 },
+      { "Belkarth", 22 },
+      { "Seeker's Archive Wayshrine", 1 },
+      { "Sandy Path Wayshrine", 1 },
+      { "Shada's Tear Wayshrine", 1 },
+      { "Anka-Ra Burial Site", 22 },
+      { "Magical Anomaly", 22 },
+      { "Belkarth Wayshrine", 1 },
+      { "Elinhir", 22 },
+      { "Spellscar", 22 },
+      { "Trial: Hel Ra Citadel", 22 },
+      { "Trial: Aetherian Archive", 22 },
+      { "Elinhir Wayshrine", 1 },
+      { "Spellscar Wayshrine", 1 },
+      { "Mountain Overlook Wayshrine", 1 },
+      { "Inazzur's Hold Wayshrine", 1 },
+      { "Proving Grounds Dolmen", 5 },
+      { "Bangkorai Gate", 22 },
+      { "Taborra's Camp", 22 },
+      { "Inazzur's Hold", 22 },
+      { "Thunder Falls Camp", 22 },
+      { "Scorpion Ravine", 22 },
+      { "Lake of Teeth", 22 },
+      { "Ogondar's Winery", 22 },
+      { "Lanista's Waystation", 22 },
+      { "Trial: Sanctum Ophidia", 22 },
    },
 }
-
