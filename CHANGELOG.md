@@ -1,12 +1,22 @@
+## 2.7.0
+
+Updates
+- 2.6.6 data structure change is now optional
+(It used to convert the data automatically, which could crash the client. The player can try to convert via the addon options)
+
+Feature
+
+- added import of other account's data, can be used to retrieve data from ESO update whipes.
+
 ## 2.6.7
 
 Updates
-- Converted settings from LibAddonMenu-1.0 to LibAddonMenu-2.0 [Garkin]
+- Converted settings from LibAddonMenu-1.0 to LibAddonMenu-2.0
 
 ## 2.6.6
 
 Updates
-- Node data are now saved using the AceSerializer-3.0 library [Garkin]
+- Node data are now saved using the AceSerializer-3.0 library
 
 ## 2.6.5
 

@@ -3,8 +3,11 @@ Harvest.chestID = 6
 Harvest.fishID = 8
 
 Harvest.internalVersion = 3
-Harvest.dataVersion = 7
-Harvest.displayVersion = "2.6.7"
+Harvest.dataVersion = 6 -- it's actually 7 but conversion takes to long (game crashes)
+-- use 6 instead as old data is still compatioble
+-- player can choose to (try to) convert to 7 via the "Reduce Size" button in the addon options
+-- next time the structure is changed, dataVersion need to be 8 as some players may have used the beta
+Harvest.displayVersion = "2.7.0"
 
 local AS = LibStub("AceSerializer-3.0")
 
@@ -539,13 +542,18 @@ function Harvest.changeCounters(counter)
 end
 
 function Harvest.saveData(nodeType, zone, x, y, profession, nodeName, itemID, scale, counter )
-
+    if not nodeName then --can happen via import of old data
+	--d("no nodename")
+        return
+    end
     -- If the map is on the blacklist then don't log it
     if Harvest.blacklistMap(zone) then
+	--d("blacklist")
         return
     end
 
     if not profession then
+	--d("no profession")
         return
     end
 
@@ -576,8 +584,12 @@ function Harvest.saveData(nodeType, zone, x, y, profession, nodeName, itemID, sc
     if Harvest.defaults.debug then
         d("Save data!")
     end
-
-    table.insert( Harvest.savedVars[nodeType].data[zone][profession], Harvest.Serialize({ x, y, { nodeName }, itemID }) )
+    
+    if type(nodeName) == "string" then
+        table.insert( Harvest.savedVars[nodeType].data[zone][profession], Harvest.Serialize({ x, y, { nodeName }, itemID }) )
+    else
+        table.insert( Harvest.savedVars[nodeType].data[zone][profession], Harvest.Serialize({ x, y, nodeName, itemID }) )
+    end
     Harvest.changeCounters(counter)
 
 end
@@ -631,26 +643,46 @@ function Harvest.alreadyFound(nodeType, zone, x, y, profession, nodeName, scale,
         local dx = entry[1] - x
         local dy = entry[2] - y
         -- (x - center_x)2 + (y - center_y)2 = r2, where center is the player
-        dist = math.pow(dx, 2) + math.pow(dy, 2)
+        dist = dx * dx + dy * dy
         -- dist2 = dx * dx + dy * dy
         -- Harvest.Debug(dist .. " : " .. dist2)
         if dist < distance then -- near player location
-            if not Harvest.duplicateName(entry[3], nodeName) then
-                if Harvest.defaults.debug then
-                    Harvest.Debug(nodeName .. " : insterted into existing Node")
+            if type(nodeName) == "string" then --single import, classic save routine
+                if not Harvest.duplicateName(entry[3], nodeName) then
+                    if Harvest.defaults.debug then
+                        Harvest.Debug(nodeName .. " : insterted into existing Node")
+                    end
+                    table.insert(entry[3], nodeName)
+                    Harvest.savedVars[nodeType].data[zone][profession][i] = Harvest.Serialize(entry)
+                    Harvest.changeCounters("insert")
+                    if Harvest.defaults.debug then
+                        d("Node:" .. nodeName .. " on: " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " already found!")
+                    end
                 end
-                table.insert(entry[3], nodeName)
+            else
+                for _, name in pairs(nodeName) do
+                    if not Harvest.duplicateName(entry[3], name) then
+                        if Harvest.defaults.debug then
+                            Harvest.Debug(nodeName .. " : insterted into existing Node")
+                        end
+                        table.insert(entry[3], name)
+                        Harvest.changeCounters("insert")
+                        if Harvest.defaults.debug then
+                            d("Node:" .. name .. " on: " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " already found!")
+                        end
+                    end
+                end
                 Harvest.savedVars[nodeType].data[zone][profession][i] = Harvest.Serialize(entry)
-                Harvest.changeCounters("insert")
-            end
-            if Harvest.defaults.debug then
-                d("Node:" .. nodeName .. " on: " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " already found!")
             end
             return true
         end
     end
     if Harvest.defaults.debug then
-        d("Node:" .. nodeName .. " on: " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " not found!")
+        if type(nodeName) == "string" then
+            d("Node:" .. nodeName .. " on: " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " not found!")
+        else
+            --d("Node:" .. nodeName .. " on: " .. zone .. " x:" .. x .." , y:" .. y .. " for profession " .. profession .. " not found!")
+        end
     end
     return false
 end
@@ -960,7 +992,7 @@ function Harvest.OnLoad(eventCode, addOnName)
         end
 
     Harvest.defaults.language = Harvest.language
-
+	
     if Harvest.defaults.internalVersion < Harvest.internalVersion then
         Harvest.updateOldHarvestMapNodes("data")
         Harvest.updateOldHarvestMapNodes("oldData")
@@ -975,15 +1007,16 @@ function Harvest.OnLoad(eventCode, addOnName)
         Harvest.updateHarvestNodes("esoinvalid")
         Harvest.defaults.dataVersion = Harvest.dataVersion
     end
-
+	
     if Harvest.defaults.internalVersion ~= Harvest.internalVersion then
         Harvest.defaults.internalVersion = Harvest.internalVersion
     end
-
+    
     Harvest.InitializeMapMarkers()
     Harvest.InitializeCompassMarkers()
     EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_PLAYER_ACTIVATED,
     function()
+    
         Harvest.InitializeOptions()
         EVENT_MANAGER:UnregisterForEvent("HarvestMap", EVENT_PLAYER_ACTIVATED)
     end)

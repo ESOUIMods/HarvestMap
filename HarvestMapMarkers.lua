@@ -27,7 +27,7 @@ function Harvest.addCallback( profession, g_mapPinManager )
     if not nodes then
         return
     end
-    for _, item in ipairs( nodes ) do
+    for key, item in ipairs( nodes ) do
         local node = type(item) == "string" and Harvest.Deserialize(item) or item
         g_mapPinManager:CreatePin( _G[pinType], node, node[1], node[2] )
     end

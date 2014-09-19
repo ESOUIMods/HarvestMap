@@ -752,8 +752,58 @@ function Harvest.hasNewMapName(mapName)
     return false
 end
 
-function Harvest.updateHarvestNodes(nodeType)
+function Harvest.globalUpdateHarvestNodes(nodeType)
+	--local nodes = Harvest.savedVars[nodeType] --save current data
+    for profile, profileData in pairs(Harvest_SavedVars) do --for every account, update the data
+        for account, accountData in pairs(profileData) do
+            if accountData["$AccountWide"] then
+                if accountData["$AccountWide"][nodeType] then
+                    Harvest.savedVars[nodeType] = accountData["$AccountWide"][nodeType]
+                    Harvest.updateHarvestNodes(nodeType) --pcall in case something goes wrong
+                end
+            end
+        end
+    end
+    --Harvest.savedVars[nodeType] = --nodes --copy current data back
+end
 
+function Harvest.makeGlobal(nodeType)
+	--importTarget = {data = {}}
+    --Harvest.savedVars["nodes"] = importTarget
+	myAccount = GetDisplayName()
+    local node
+    --copy everything into current account's data
+    for profile, profileData in pairs(Harvest_SavedVars) do
+        for account, accountData in pairs(profileData) do
+            if account ~= myAccount or profile ~= "Default" then -- this is the target, no need to import
+            if accountData["$AccountWide"] then
+                if accountData["$AccountWide"][nodeType] then
+                    nodes = accountData["$AccountWide"][nodeType]
+                    for map, mapData in pairs(nodes.data) do
+                        for profession, professionData in pairs(mapData) do
+                            for _, harvestNode in pairs(professionData) do
+                                node = type(harvestNode) == "string" and Harvest.Deserialize(harvestNode) or harvestNode
+                                pcall( function()
+									Harvest.saveData( nodeType, map,
+										node[1], node[2],
+										profession, node[3], node[4]
+									)
+                                end			) --pcall, so only incompatible data is lost
+                            end
+                        end
+                    end
+                    -- delete old data so filesize isn't doubled
+                    accountData["$AccountWide"][nodeType] = nil
+                end
+            end
+            end
+        end
+    end
+end
+
+
+function Harvest.updateHarvestNodes(nodeType)
+    
     if Harvest.savedVars[nodeType].data == nil then
         return
     end

@@ -9,15 +9,11 @@ Features:
 * filters for each pin type (chests + a pin type for every kind of harvest node)
 * size and color settings for each pin type
 * field of view and distance settings for the compass
-* import your already discovered nodes from Esohead via the chat command /harvest import esohead
-
-## Nodes are not included ##
-
-There will be absolutely no harvest nodes after installing this addon.  There was a site that hosted an Esohead.lua file people could download.  I never had contact with the person maintaining that site.  That site was taken down.
+* import your already discovered nodes from Esohead via the chat command /import
 
 ## Do I still need the Esohead addon? ##
 
-The Esohead addon needs to be active for /harvest import esohead to work. After you imported your old data, you don't need Esohead any more for this addon.  It would still be great if you continued to use Esohead and upload you data.
+The Esohead addon needs to be active for /import to work. After you imported your old data, you don't need Esohead anymore for this addon.  It would still be great if you continued to use Esohead and upload you data.
 
 ## Slash Commands
 ```/harvest reset```

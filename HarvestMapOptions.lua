@@ -171,6 +171,29 @@ function Harvest.InitializeOptions()
     }
 
     optionsTable:insert({
+        type = "button",
+        name = "Import other Accounts",
+        tooltip = "Moves gathered data from other Accounts to this one. This can also restore lost data after an ESO update.",
+        warning = "Please create a backup of your data first! Copy the file SavedVariables/HarvestMap.lua to somwhere else.",
+        width = "half",
+        func = function()
+            Harvest.makeGlobal("nodes")
+        end
+    })
+    optionsTable:insert({
+	type = "button",
+	name = "Reduce filesize",
+	tooltip = "Transforms the data's structure to reduce the total file size. Can reduce load times.",
+	warning = "Please create a backup of your data first! Copy the file SavedVariables/HarvestMap.lua to somwhere else.",
+	width = "half",
+	func = function()
+            Harvest.updateHarvestNodes("nodes")
+	    Harvest.updateHarvestNodes("mapinvalid")
+            Harvest.updateHarvestNodes("esonodes")
+            Harvest.updateHarvestNodes("esoinvalid")
+	end
+    })
+    optionsTable:insert({
         type = "header",
         name = "Compass Options",
     })
