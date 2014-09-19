@@ -1,3 +1,5 @@
+local LMP = LibStub("LibMapPins-1.0")
+
 -- Originally 6 changed to 8 adding (7)solvents, (8)fish
 Harvest.defaultMapLayouts = {
         { level = 20, texture = "HarvestMap/Textures/Map/mining.dds", size = 20, color = {1, 1, 1} },
@@ -10,7 +12,7 @@ Harvest.defaultMapLayouts = {
         { level = 20, texture = "HarvestMap/Textures/Map/fish.dds", size = 20, color = {1, 1, 1} },
     }
 
-function Harvest.addCallback( profession, g_mapPinManager )
+function Harvest.addCallback( profession )
     if not Harvest.savedVars["settings"].filters[ profession ] then
         return
     end
@@ -29,7 +31,7 @@ function Harvest.addCallback( profession, g_mapPinManager )
     end
     for key, item in ipairs( nodes ) do
         local node = type(item) == "string" and Harvest.Deserialize(item) or item
-        g_mapPinManager:CreatePin( _G[pinType], node, node[1], node[2] )
+        LMP:CreatePin( pinType, node, node[1], node[2] )
     end
 end
 
@@ -59,40 +61,29 @@ function Harvest.CreateMapPin(profession)
     end
 
     local pinType = Harvest.GetPinType( profession )
-    ZO_WorldMap_AddCustomPin(
+
+    LMP:AddPinType(
         pinType,
         function( g_mapPinManager )
-            Harvest.addCallback( profession, g_mapPinManager )
+            Harvest.addCallback( profession )
         end,
         nil,
         Harvest.savedVars["settings"].mapLayouts[ profession ],
         Harvest.tooltipCreator
     )
 
-    ZO_WorldMap_SetCustomPinEnabled( _G[pinType], true )
+    LMP:AddPinFilter(
+        pinType,
+        Harvest.localization[ "filter"..profession ],
+        false,
+        Harvest.savedVars["settings"].filters,
+        profession,
+        nil
+    )
+
 end
 
 function Harvest.InitializeMapMarkers()
-    --add hooks only if LibMapPins-1.0 is not present:
-    if not LibStub("LibMapPins-1.0", true) then
-        --support for color key in pinLayoutData table
-        ZO_PreHook(ZO_MapPin, "SetData",
-            function(self, pinTypeId)
-                local control = GetControl(self:GetControl(), "Background")
-                local color = ZO_MapPin.PIN_DATA[pinTypeId].color
-                if type(color) == "table" then
-                    control:SetColor(unpack(color))
-                end
-            end)
-        --clear color changes to the pin background texture
-        ZO_PreHook(ZO_MapPin, "ClearData",
-            function(self, ...)
-                local control = GetControl(self:GetControl(), "Background")
-                control:SetColor(1, 1, 1, 1)
-            end)
-    end
-
-    -- for profession = 1,6 do
     for profession = 1,8 do
         Harvest.CreateMapPin( profession )
     end

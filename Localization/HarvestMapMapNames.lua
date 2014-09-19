@@ -768,9 +768,8 @@ function Harvest.globalUpdateHarvestNodes(nodeType)
 end
 
 function Harvest.makeGlobal(nodeType)
-	--importTarget = {data = {}}
-    --Harvest.savedVars["nodes"] = importTarget
-	myAccount = GetDisplayName()
+    myAccount = GetDisplayName()
+    local fixtype
     local node
     --copy everything into current account's data
     for profile, profileData in pairs(Harvest_SavedVars) do
@@ -780,9 +779,20 @@ function Harvest.makeGlobal(nodeType)
                 if accountData["$AccountWide"][nodeType] then
                     nodes = accountData["$AccountWide"][nodeType]
                     for map, mapData in pairs(nodes.data) do
+                        fixtype = nil
+                        if map == "craglorn/craglorn_base" then
+                            if not nodes.craglornfix then
+                                fixtype = "craglorn14"
+                                nodes.craglornfix = 1
+                            end
+                        end
                         for profession, professionData in pairs(mapData) do
                             for _, harvestNode in pairs(professionData) do
                                 node = type(harvestNode) == "string" and Harvest.Deserialize(harvestNode) or harvestNode
+                                if fixtype == "craglorn14" then
+                                    node[1] = node[1] * 0.856 + 0.1012
+                                    node[2] = node[2] * 0.856 + 0.1444
+                                end
                                 pcall( function()
 									Harvest.saveData( nodeType, map,
 										node[1], node[2],

@@ -7,9 +7,10 @@ Harvest.dataVersion = 6 -- it's actually 7 but conversion takes to long (game cr
 -- use 6 instead as old data is still compatioble
 -- player can choose to (try to) convert to 7 via the "Reduce Size" button in the addon options
 -- next time the structure is changed, dataVersion need to be 8 as some players may have used the beta
-Harvest.displayVersion = "2.7.0"
+Harvest.displayVersion = "2.7.1"
 
 local AS = LibStub("AceSerializer-3.0")
+local LMP = LibStub("LibMapPins-1.0")
 
 -----------------------------------------
 --           Debug Logger              --
@@ -351,13 +352,13 @@ end
 
 function Harvest.RefreshPins( profession )
     if not profession then
-        ZO_WorldMap_RefreshCustomPinsOfType()
+        LMP:RefreshPins()
         COMPASS_PINS:RefreshPins()
         return
     end
     -- if profession >= 1 and profession <= 6 then
     if profession >= 1 and profession <= 8 then
-        ZO_WorldMap_RefreshCustomPinsOfType( _G[ Harvest.GetPinType( profession ) ] )
+        LMP:RefreshPins( Harvest.GetPinType( profession ) )
         COMPASS_PINS:RefreshPins( Harvest.GetPinType( profession ) )
     end
 end
@@ -1010,6 +1011,28 @@ function Harvest.OnLoad(eventCode, addOnName)
 	
     if Harvest.defaults.internalVersion ~= Harvest.internalVersion then
         Harvest.defaults.internalVersion = Harvest.internalVersion
+    end
+    
+     if not Harvest.savedVars["nodes"].craglornfix then
+        if Harvest.savedVars["nodes"].data["craglorn/craglorn_base"] then
+            local node
+            local mapData = Harvest.savedVars["nodes"].data["craglorn/craglorn_base"]
+            Harvest.savedVars["nodes"].data["craglorn/craglorn_base"] = {}
+            for profession, professionData in pairs(mapData) do
+                for _, harvestNode in pairs(professionData) do
+                    node = type(harvestNode) == "string" and Harvest.Deserialize(harvestNode) or harvestNode
+                    node[1] = node[1] * 0.856 + 0.1012
+                    node[2] = node[2] * 0.856 + 0.1444
+                    pcall( function()
+                            Harvest.saveData( "nodes", "craglorn/craglorn_base",
+                                        node[1], node[2],
+                                        profession, node[3], node[4]
+                                    )
+                    end		) --pcall, so only incompatible data is lost
+                end
+            end
+        end
+        Harvest.savedVars["nodes"].craglornfix = 1
     end
     
     Harvest.InitializeMapMarkers()

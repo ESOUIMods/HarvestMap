@@ -1,4 +1,11 @@
 ## 2.7.0
+Feature
+- Using libMapPin for EMM support (by Garkin)
+Bugfix
+- ESO 1.4 changed the craglorn map. Pins had to be moved a bit.
+
+
+## 2.7.0
 
 Updates
 - 2.6.6 data structure change is now optional

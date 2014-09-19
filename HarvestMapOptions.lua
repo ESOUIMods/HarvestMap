@@ -1,6 +1,4 @@
-local newPVECheckboxes = {}
-local newPVPCheckboxes = {}
-
+local LMP = LibStub("LibMapPins-1.0")
 local optionsTable = setmetatable({}, { __index = table })
 
 function Harvest.GetFilter( profession )
@@ -17,7 +15,7 @@ end
 
 function Harvest.SetFilter( profession, value )
     Harvest.savedVars["settings"].filters[ profession ] = value
-    Harvest.RefreshPins( profession )
+    LMP:SetEnabled( Harvest.GetPinType( profession ), value )
 end
 
 function Harvest.SetImportFilter( profession, value )
@@ -36,6 +34,7 @@ end
 
 function Harvest.SetSize( profession, value )
     Harvest.savedVars["settings"].mapLayouts[ profession ].size = value
+    LMP:SetLayoutKey( Harvest.GetPinType( profession ), "size", value )
     Harvest.RefreshPins( profession )
 end
 
@@ -46,6 +45,7 @@ end
 function Harvest.SetColor( profession, r, g, b )
     Harvest.savedVars["settings"].mapLayouts[ profession ].color = { r, g, b }
     Harvest.savedVars["settings"].compassLayouts[ profession ].color = { r, g, b }
+    LMP:SetLayoutKey( Harvest.GetPinType( profession ), "color", { r, g, b } )
     Harvest.RefreshPins( profession )
 end
 
@@ -181,17 +181,17 @@ function Harvest.InitializeOptions()
         end
     })
     optionsTable:insert({
-	type = "button",
-	name = "Reduce filesize",
-	tooltip = "Transforms the data's structure to reduce the total file size. Can reduce load times.",
-	warning = "Please create a backup of your data first! Copy the file SavedVariables/HarvestMap.lua to somwhere else.",
-	width = "half",
-	func = function()
+    type = "button",
+    name = "Reduce filesize",
+    tooltip = "Transforms the data's structure to reduce the total file size. Can reduce load times.",
+    warning = "Please create a backup of your data first! Copy the file SavedVariables/HarvestMap.lua to somwhere else.",
+    width = "half",
+    func = function()
             Harvest.updateHarvestNodes("nodes")
-	    Harvest.updateHarvestNodes("mapinvalid")
+            Harvest.updateHarvestNodes("mapinvalid")
             Harvest.updateHarvestNodes("esonodes")
             Harvest.updateHarvestNodes("esoinvalid")
-	end
+        end
     })
     optionsTable:insert({
         type = "header",
@@ -591,61 +591,11 @@ function Harvest.InitializeOptions()
     LAM:RegisterAddonPanel("HarvestMapControl", panelData)
     LAM:RegisterOptionControls("HarvestMapControl", optionsTable)
 
-    --pvepanel has no mode if the character starts his session on a pvp map
-    WORLD_MAP_FILTERS.pvePanel:SetMapMode(2) -- prevents crashing on GetPinFilter in above case
 end
-
-local lastContext
-function Harvest.RefreshFilterCheckboxes()
-    --check which checkboxes will be shown, so you do not need to update everything
-    local context = GetMapContentType() == MAP_CONTENT_AVA --true if pvp context
-    local checkboxes = context and newPVPCheckboxes or newPVECheckboxes
-    --do not refresh checkboxes if map context is not changed
-    if context ~= lastContext then
-        lastContext = context
-        for profession = 1, 8 do
-            ZO_CheckButton_SetCheckState(checkboxes[profession], Harvest.GetFilter(profession))
-        end
-    end
-end
-CALLBACK_MANAGER:RegisterCallback("OnWorldMapChanged", Harvest.RefreshFilterCheckboxes)
 
 function Harvest.GetNumberAfter( str, start )
     if string.sub(str,1,string.len(start)) == start then
         return tonumber(string.sub(str, string.len(start)+1, -1))
     end
     return nil
-end
-
-local oldGetString = GetString
--- the filter checkboxes display the localization string, retrieved by this function
--- since there is no API to the filters, I had to hack a bit, to display my own strings :)
-function GetString( stringVariablePrefix, contextId, ... )
-    if stringVariablePrefix == "SI_MAPFILTER" and type(contextId) == "string" then
-    --if Harvest.startsWith( contextId, Harvest.GetPinType("") ) then
-        local profession = Harvest.GetNumberAfter(contextId, Harvest.GetPinType(""))
-        return Harvest.localization[ "filter"..profession ]
-    --end
-    end
-    return oldGetString( stringVariablePrefix, contextId, ... )
-
-end
-
-local oldVars = WORLD_MAP_FILTERS.SetSavedVars
--- setsavedVars initializes the filter controlls for pve and pvp map type
--- after this function is called WORLD_MAP_FILTERS.pvePanel are initialized and can be manipulated
-WORLD_MAP_FILTERS.SetSavedVars = function( self, savedVars, ... )
-    oldVars( self, savedVars, ... )
-
-    for i=1,8 do
-        local profession = i
-
-        self.pvePanel.AddPinFilterCheckBox( self.pvePanel, Harvest.GetPinType( profession ), function() Harvest.RefreshPins( profession ) end)
-        newPVECheckboxes[ profession ] = self.pvePanel.pinFilterCheckBoxes[ #self.pvePanel.pinFilterCheckBoxes ]
-        ZO_CheckButton_SetToggleFunction( newPVECheckboxes[ profession ], function(button, checked) Harvest.SetFilter( profession, checked ) end)
-
-        self.pvpPanel.AddPinFilterCheckBox( self.pvpPanel, Harvest.GetPinType( profession ), function() Harvest.RefreshPins( profession ) end)
-        newPVPCheckboxes[ profession ] = self.pvpPanel.pinFilterCheckBoxes[ #self.pvpPanel.pinFilterCheckBoxes ]
-        ZO_CheckButton_SetToggleFunction( newPVPCheckboxes[ profession ], function(button, checked) Harvest.SetFilter( profession, checked ) end)
-    end
 end
