@@ -768,6 +768,10 @@ function Harvest.globalUpdateHarvestNodes(nodeType)
 end
 
 function Harvest.makeGlobal(nodeType)
+     if Harvest.refactoring then
+        d("Please wait until refactoring is finished.")
+        return
+    end
     myAccount = GetDisplayName()
     local fixtype
     local node
@@ -811,7 +815,6 @@ function Harvest.makeGlobal(nodeType)
     end
 end
 
-
 function Harvest.updateHarvestNodes(nodeType)
     
     if Harvest.savedVars[nodeType].data == nil then
@@ -826,12 +829,32 @@ function Harvest.updateHarvestNodes(nodeType)
     --if not Harvest.savedVars["nodes"].oldMapData then
     --    Harvest.savedVars["nodes"].oldMapData = {}
     --end
-    local newMapName
-    local oldMapName
-
-    Harvest.Debug("Starting update of " .. (nodeType))
+    Harvest.refactoring = (Harvest.refactoring or 0) + 1
+    local lastFunc = function()
+        d("Finished refactoring of "..nodeType)
+        Harvest.refactoring = Harvest.refactoring - 1
+        if Harvest.refactoring == 0 then
+            Harvest.refactoring = nil
+        end
+    end
+    --Harvest.Debug("Starting update of " .. (nodeType))
     for map, data in pairs(oldData) do
-        newMapName = Harvest.GetNewMapName(map)
+        local nextFunc = lastFunc
+        local funcMap = map
+        local funcData = data
+        lastFunc = function()
+            d('Refactor "'..nodeType..'" data of: '..funcMap)
+            Harvest.updateHarvestNodePart(nodeType, funcMap, funcData)
+            zo_callLater(nextFunc, 1)
+        end
+    end
+    lastFunc()
+    --Harvest.Debug("Update finished!")
+end
+
+function Harvest.updateHarvestNodePart(nodeType, map, data)
+        local newMapName = Harvest.GetNewMapName(map)
+        local oldMapName
         if newMapName then
             for profession, nodes in pairs(data) do
                 for index, item in ipairs(nodes) do
@@ -843,7 +866,6 @@ function Harvest.updateHarvestNodes(nodeType)
                         else
                             Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, nodeName, node[4])
                         end
-
                     end
                 end
             end
@@ -864,8 +886,6 @@ function Harvest.updateHarvestNodes(nodeType)
             end
         end
 
-    end
-    Harvest.Debug("Update finished!")
 end
 
 function Harvest.updateOldHarvestMapNodes(nodeType)

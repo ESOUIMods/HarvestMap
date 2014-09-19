@@ -305,6 +305,13 @@ function Harvest.OnLootReceived( eventCode, receivedBy, objectName, stackCount, 
         end
         return
     end
+    
+    if Harvest.refactoring then
+        if Harvest.defaults.debug then
+                d("Still refactoring")
+            end
+        return
+    end
 
     -- 1) type 2) map name 3) x 4) y 5) profession 6) nodeName 7) itemID 8) scale
     Harvest.saveData("nodes", zone, x, y, profession, Harvest.nodeName, link.id, nil )
@@ -749,8 +756,15 @@ function Harvest.OnUpdate(time)
             if not Harvest.savedVars["settings"].gatherFilters[ Harvest.chestID ] then
                 if interactionType == INTERACTION_NONE and Harvest.action == GetString(SI_GAMECAMERAACTIONTYPE12) then
                     local zone, x, y = Harvest.GetLocation()
-                    Harvest.saveData("nodes", zone, x, y, Harvest.chestID, "chest", nil, Harvest.minReticleover )
-                    Harvest.RefreshPins( Harvest.chestID )
+                    if Harvest.refactoring then
+                        if Harvest.defaults.debug then
+                                d("Still refactoring")
+                            end
+                        return
+                    else
+                        Harvest.saveData("nodes", zone, x, y, Harvest.chestID, "chest", nil, Harvest.minReticleover )
+                        Harvest.RefreshPins( Harvest.chestID )
+                    end
                 end
             end
 
@@ -758,8 +772,15 @@ function Harvest.OnUpdate(time)
             if not Harvest.savedVars["settings"].gatherFilters[ Harvest.fishID ] then
                 if interactionType == INTERACTION_NONE and Harvest.action == GetString(SI_GAMECAMERAACTIONTYPE16) then
                     local zone, x, y = Harvest.GetLocation()
-                    Harvest.saveData("nodes", zone, x, y, Harvest.fishID, "fish", nil, Harvest.minReticleover )
-                    Harvest.RefreshPins( Harvest.fishID )
+                    if Harvest.refactoring then
+                        if Harvest.defaults.debug then
+                                d("Still refactoring")
+                            end
+                        return
+                    else
+                        Harvest.saveData("nodes", zone, x, y, Harvest.fishID, "fish", nil, Harvest.minReticleover )
+                        Harvest.RefreshPins( Harvest.fishID )
+                    end
                 end
             end
 

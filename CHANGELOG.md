@@ -1,4 +1,8 @@
-## 2.7.0
+## 2.7.2
+Update
+- split refactoring into parts to prevent timeout.
+
+## 2.7.1
 Feature
 - Using libMapPin for EMM support (by Garkin)
 Bugfix
