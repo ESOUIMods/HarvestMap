@@ -1,3 +1,6 @@
+## 2.7.3
+- Only added Update 5 support, no other bugfixes
+
 ## 2.7.2
 Update
 - split refactoring into parts to prevent timeout.
