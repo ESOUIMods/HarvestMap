@@ -17,14 +17,14 @@ end
 
 -- Originally 6 changed to 8 adding (7)solvents, (8)fish
 Harvest.defaultCompassLayouts = {
-[1] = {texture = "HarvestMap/Textures/Compass/mining.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-[2] = {texture = "HarvestMap/Textures/Compass/clothing.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-[3] = {texture = "HarvestMap/Textures/Compass/enchanting.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-[4] = {texture = "HarvestMap/Textures/Compass/alchemy.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-[5] = {texture = "HarvestMap/Textures/Compass/wood.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-[6] = {texture = "HarvestMap/Textures/Compass/chest.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-[7] = {texture = "HarvestMap/Textures/Compass/solvent.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-[8] = {texture = "HarvestMap/Textures/Compass/fish.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
+    [1] = {texture = "HarvestMap/Textures/Compass/mining.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
+    [2] = {texture = "HarvestMap/Textures/Compass/clothing.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
+    [3] = {texture = "HarvestMap/Textures/Compass/enchanting.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
+    [4] = {texture = "HarvestMap/Textures/Compass/alchemy.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
+    [5] = {texture = "HarvestMap/Textures/Compass/wood.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
+    [6] = {texture = "HarvestMap/Textures/Compass/chest.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
+    [7] = {texture = "HarvestMap/Textures/Compass/solvent.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
+    [8] = {texture = "HarvestMap/Textures/Compass/fish.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
 }
 
 function Harvest.addCompassCallback( profession, g_mapPinManager )
@@ -69,7 +69,6 @@ function Harvest.InitializeCompassMarkers()
     for _, layout in pairs(Harvest.savedVars["settings"].compassLayouts) do
         layout.additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset}
     end
-    -- for profession = 1,6 do
     for profession = 1,8 do
         Harvest.CreateCompassPin( profession )
     end

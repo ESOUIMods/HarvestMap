@@ -1,3 +1,8 @@
+## 2.7.4
+- Added Update 6 support
+- updated libraries
+- lockbox support
+
 ## 2.7.3
 - Only added Update 5 support, no other bugfixes
 

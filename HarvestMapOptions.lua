@@ -1,5 +1,4 @@
 local LMP = LibStub("LibMapPins-1.0")
-local optionsTable = setmetatable({}, { __index = table })
 
 function Harvest.GetFilter( profession )
     return Harvest.savedVars["settings"].filters[ profession ]
@@ -39,13 +38,13 @@ function Harvest.SetSize( profession, value )
 end
 
 function Harvest.GetColor( profession )
-    return unpack( Harvest.savedVars["settings"].mapLayouts[ profession ].color )
+    return Harvest.savedVars["settings"].mapLayouts[ profession ].tint:UnpackRGB()
 end
 
 function Harvest.SetColor( profession, r, g, b )
-    Harvest.savedVars["settings"].mapLayouts[ profession ].color = { r, g, b }
+    Harvest.savedVars["settings"].mapLayouts[ profession ].tint:SetRGB( r, g, b )
     Harvest.savedVars["settings"].compassLayouts[ profession ].color = { r, g, b }
-    LMP:SetLayoutKey( Harvest.GetPinType( profession ), "color", { r, g, b } )
+    LMP:GetLayoutKey( Harvest.GetPinType( profession ), "tint" ):SetRGB( r, g, b )
     Harvest.RefreshPins( profession )
 end
 
@@ -68,7 +67,9 @@ end
 
 local function CreateFilter( profession )
 
-    optionsTable:insert({
+    local profession = profession 
+
+    local filter = {
         type = "checkbox",
         name = Harvest.localization[ "filter"..profession ],
         tooltip = Harvest.localization[ "filtertooltip"..profession ],
@@ -79,13 +80,17 @@ local function CreateFilter( profession )
             Harvest.SetFilter( profession, value )
         end,
         default = Harvest.DefaultConfiguration.filters[ profession ],
-    })
+    }
+
+    return filter
 
 end
 
 local function CreateImportFilter( profession )
 
-    optionsTable:insert({
+    local profession = profession 
+
+    local importFilter = {
         type = "checkbox",
         name = Harvest.localization[ "import"..profession ],
         tooltip = Harvest.localization[ "importtooltip"..profession ],
@@ -96,13 +101,17 @@ local function CreateImportFilter( profession )
             Harvest.SetImportFilter( profession, value )
         end,
         default = Harvest.DefaultConfiguration.importFilters[ profession ],
-    })
+    }
+
+    return importFilter
 
 end
 
 local function CreateGatherFilter( profession )
 
-    optionsTable:insert({
+    local profession = profession 
+
+    local gatherFilter = {
         type = "checkbox",
         name = Harvest.localization[ "gather"..profession ],
         tooltip = Harvest.localization[ "gathertooltip"..profession ],
@@ -113,13 +122,17 @@ local function CreateGatherFilter( profession )
             Harvest.SetGatherFilter( profession, value )
         end,
         default = Harvest.DefaultConfiguration.gatherFilters[ profession ],
-    })
+    }
+
+    return gatherFilter
 
 end
 
 local function CreateSizeSlider( profession )
 
-    optionsTable:insert({
+    local profession = profession 
+
+    local sizeSlider = {
         type = "slider",
         name = Harvest.localization[ "size"..profession ],
         tooltip = Harvest.localization[ "sizetooltip"..profession ],
@@ -132,25 +145,26 @@ local function CreateSizeSlider( profession )
             Harvest.SetSize( profession, value )
         end,
         default = Harvest.defaultMapLayouts[ profession ].size,
-    })
+    }
+
+    return sizeSlider
 
 end
 
 local function CreateColorPicker( profession )
 
-    optionsTable:insert({
+    local profession = profession 
+
+    local colorPicker = {
         type = "colorpicker",
         name = Harvest.localization[ "color"..profession ],
         tooltip = Harvest.localization[ "colortooltip"..profession ],
         getFunc = function() return Harvest.GetColor( profession ) end,
         setFunc = function( r, g, b ) Harvest.SetColor( profession, r, g, b ) end,
-        default = {
-            r = Harvest.defaultMapLayouts[ profession ].color[1],
-            g = Harvest.defaultMapLayouts[ profession ].color[2],
-            b = Harvest.defaultMapLayouts[ profession ].color[3],
-            a = 1,
-        }
-    })
+        default = Harvest.defaultMapLayouts[ profession ].tint,
+    }
+     
+    return colorPicker
 
 end
 
@@ -169,6 +183,8 @@ function Harvest.InitializeOptions()
         registerForRefresh = true,
         registerForDefaults = true,
     }
+
+    local optionsTable = setmetatable({}, { __index = table })
 
     optionsTable:insert({
         type = "button",
@@ -285,11 +301,11 @@ function Harvest.InitializeOptions()
             type = "header",
             name = Harvest.localization[ "filter"..profession ] .. " pin Options",
         })
-        CreateFilter( profession )
-        CreateImportFilter( profession )
-        CreateGatherFilter( profession )
-        CreateSizeSlider( profession )
-        CreateColorPicker( profession )
+        optionsTable:insert( CreateFilter( profession ) )
+        optionsTable:insert( CreateImportFilter( profession ) )
+        optionsTable:insert( CreateGatherFilter( profession ) )
+        optionsTable:insert( CreateSizeSlider( profession ) )
+        optionsTable:insert( CreateColorPicker( profession ) )
     end
 
     optionsTable:insert({
@@ -591,11 +607,4 @@ function Harvest.InitializeOptions()
     LAM:RegisterAddonPanel("HarvestMapControl", panelData)
     LAM:RegisterOptionControls("HarvestMapControl", optionsTable)
 
-end
-
-function Harvest.GetNumberAfter( str, start )
-    if string.sub(str,1,string.len(start)) == start then
-        return tonumber(string.sub(str, string.len(start)+1, -1))
-    end
-    return nil
 end

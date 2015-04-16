@@ -2,15 +2,15 @@ local LMP = LibStub("LibMapPins-1.0")
 
 -- Originally 6 changed to 8 adding (7)solvents, (8)fish
 Harvest.defaultMapLayouts = {
-        { level = 20, texture = "HarvestMap/Textures/Map/mining.dds", size = 20, color = {1, 1, 1} },
-        { level = 20, texture = "HarvestMap/Textures/Map/clothing.dds", size = 20, color = {1, 1, 1} },
-        { level = 20, texture = "HarvestMap/Textures/Map/enchanting.dds", size = 20, color = {1, 1, 1} },
-        { level = 20, texture = "HarvestMap/Textures/Map/alchemy.dds", size = 20, color = {1, 1, 1} },
-        { level = 20, texture = "HarvestMap/Textures/Map/wood.dds", size = 20, color = {1, 1, 1} },
-        { level = 20, texture = "HarvestMap/Textures/Map/chest.dds", size = 20, color = {1, 1, 1} },
-        { level = 20, texture = "HarvestMap/Textures/Map/solvent.dds", size = 20, color = {1, 1, 1} },
-        { level = 20, texture = "HarvestMap/Textures/Map/fish.dds", size = 20, color = {1, 1, 1} },
-    }
+    [1] = { level = 20, texture = "HarvestMap/Textures/Map/mining.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
+    [2] = { level = 20, texture = "HarvestMap/Textures/Map/clothing.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
+    [3] = { level = 20, texture = "HarvestMap/Textures/Map/enchanting.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
+    [4] = { level = 20, texture = "HarvestMap/Textures/Map/alchemy.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
+    [5] = { level = 20, texture = "HarvestMap/Textures/Map/wood.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
+    [6] = { level = 20, texture = "HarvestMap/Textures/Map/chest.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
+    [7] = { level = 20, texture = "HarvestMap/Textures/Map/solvent.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
+    [8] = { level = 20, texture = "HarvestMap/Textures/Map/fish.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
+}
 
 function Harvest.addCallback( profession )
     if not Harvest.savedVars["settings"].filters[ profession ] then
@@ -45,7 +45,7 @@ Harvest.tooltipCreator = {
             end
         end
     end,
-    tooltip = InformationTooltip
+    tooltip = 1
 }
 
 function Harvest.GetPinType( profession )
@@ -61,6 +61,13 @@ function Harvest.CreateMapPin(profession)
     end
 
     local pinType = Harvest.GetPinType( profession )
+
+    if Harvest.savedVars["settings"].mapLayouts[ profession ].color then
+        Harvest.savedVars["settings"].mapLayouts[ profession ].tint = ZO_ColorDef:New(unpack(Harvest.savedVars["settings"].mapLayouts[ profession ].color))
+        Harvest.savedVars["settings"].mapLayouts[ profession ].color = nil
+    else
+        Harvest.savedVars["settings"].mapLayouts[ profession ].tint = ZO_ColorDef:New(Harvest.savedVars["settings"].mapLayouts[ profession ].tint)
+    end
 
     LMP:AddPinType(
         pinType,
