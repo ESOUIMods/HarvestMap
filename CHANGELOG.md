@@ -1,3 +1,9 @@
+## 2.7.5
+
+Updates
+- Updated TOC; Checked change notes no routines were effected
+- Updated Map Names from Esohead
+
 ## 2.7.4
 - Added Update 6 support
 - updated libraries
@@ -13,9 +19,9 @@ Update
 ## 2.7.1
 Feature
 - Using libMapPin for EMM support (by Garkin)
+
 Bugfix
 - ESO 1.4 changed the craglorn map. Pins had to be moved a bit.
-
 
 ## 2.7.0
 
@@ -24,7 +30,6 @@ Updates
 (It used to convert the data automatically, which could crash the client. The player can try to convert via the addon options)
 
 Feature
-
 - added import of other account's data, can be used to retrieve data from ESO update whipes.
 
 ## 2.6.7
