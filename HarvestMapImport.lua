@@ -530,6 +530,43 @@ function Harvest.importFromHarvester()
     Harvest.RefreshPins()
 end
 
+local InternalImportFromHarvestMerge
+function InternalImportFromHarvestMerge(sourceTable, mapKey, professionKey)
+    local newMapName, data = next(sourceTable, mapKey)
+    if newMapName then
+        if not Harvest.filteredMapCheck(newMapName) and not Harvest.filteredCityMapCheck(newMapName) then
+            local profession, nodes = next(data, professionKey)
+            if nodes then
+                for index, item in pairs(nodes) do
+                    local node = type(item) == "string" and Harvest.Deserialize(item) or item
+                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
+                    for contents, nodeName in pairs(node[3]) do
+                        -- [1], [2] = X/Y, [3] = Node Names, [4] = itemID
+                        if (nodeName) == "chest" or (nodeName) == "fish" then
+                            Harvest.newMapNameFishChest(nodeName, newMapName, node[1], node[2])
+                        else
+                            Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, nodeName, node[4])
+                        end
+                    end
+                end
+            else
+                mapKey = newMapName
+            end
+            zo_callLater(function() InternalImportFromHarvestMerge(sourceTable, mapKey, profession) end, 5)
+        end
+    else
+        Harvest.Debug("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
+        Harvest.Debug("Number of nodes added : " .. tostring(Harvest.NumNodesAdded) )
+        Harvest.Debug("Number of nodes inserted : " .. tostring(Harvest.NumInsertedNodes) )
+        Harvest.Debug("Number of nodes filtered : " .. tostring(Harvest.NumNodesFiltered) )
+        Harvest.Debug("Number of maps filtered : " .. tostring(Harvest.NumMapFiltered) )
+        -- Harvest.Debug("Number of Rejected Nodes saved : " .. tostring(Harvest.NumRejectedNodes) )
+        Harvest.Debug("Finished.")
+
+        Harvest.RefreshPins()
+    end
+end
+
 function Harvest.importFromHarvestMerge()
     Harvest.NumNodesAdded = 0
     Harvest.NumFalseNodes = 0
@@ -552,32 +589,6 @@ function Harvest.importFromHarvestMerge()
         return
     end
     Harvest.Debug("Starting import from HarvestMerge")
-    for newMapName, data in pairs(HarvestMerge.savedVars["nodes"].data) do
-        if not Harvest.filteredMapCheck(newMapName) and not Harvest.filteredCityMapCheck(newMapName) then
-            for profession, nodes in pairs(data) do
-                for index, item in ipairs(nodes) do
-                    local node = type(item) == "string" and Harvest.Deserialize(item) or item
-                    Harvest.NumNodesProcessed = Harvest.NumNodesProcessed + 1
-                    for contents, nodeName in ipairs(node[3]) do
-                        -- [1], [2] = X/Y, [3] = Node Names, [4] = itemID
-                        if (nodeName) == "chest" or (nodeName) == "fish" then
-                            Harvest.newMapNameFishChest(nodeName, newMapName, node[1], node[2])
-                        else
-                            Harvest.newMapItemIDHarvest(newMapName, node[1], node[2], profession, nodeName, node[4])
-                        end
 
-                    end
-                end
-            end
-        end
-    end
-
-    Harvest.Debug("Number of nodes processed : " .. tostring(Harvest.NumNodesProcessed) )
-    Harvest.Debug("Number of nodes added : " .. tostring(Harvest.NumNodesAdded) )
-    Harvest.Debug("Number of nodes inserted : " .. tostring(Harvest.NumInsertedNodes) )
-    Harvest.Debug("Number of nodes filtered : " .. tostring(Harvest.NumNodesFiltered) )
-    Harvest.Debug("Number of maps filtered : " .. tostring(Harvest.NumMapFiltered) )
-    -- Harvest.Debug("Number of Rejected Nodes saved : " .. tostring(Harvest.NumRejectedNodes) )
-    Harvest.Debug("Finished.")
-    Harvest.RefreshPins()
+    InternalImportFromHarvestMerge(HarvestMerge.savedVars["nodes"].data)
 end
