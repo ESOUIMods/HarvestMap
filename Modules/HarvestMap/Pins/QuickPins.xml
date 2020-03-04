@@ -1,0 +1,18 @@
+<GuiXml>
+	<Controls>
+		<Texture name="QP_MapPin" mouseEnabled="true" hidden="true" virtual="true">
+			<OnMouseEnter>
+				self:OnMouseEnter()
+			</OnMouseEnter>
+			<OnMouseExit>
+				self:OnMouseExit()
+			</OnMouseExit>
+			<OnMouseDown>
+				self:OnMouseDown(button, ctrl, alt, shift)
+			</OnMouseDown>
+			<OnMouseUp>
+				self:OnMouseUp(button, upInside)
+			</OnMouseUp>
+		</Texture>
+	</Controls>
+</GuiXml>

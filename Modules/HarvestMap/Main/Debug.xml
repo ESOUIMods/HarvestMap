@@ -1,0 +1,28 @@
+<GuiXml>
+	<Controls>
+		<TopLevelControl name="HarvestDebugInformation" mouseEnabled="true" hidden="true" tier="HIGH" level="ZO_HIGH_TIER_UI_ERRORS" >
+			<Dimensions x="600" y="500" />
+			<Anchor point="CENTER" />
+			<Controls>
+				<Label name="$(parent)Prompt" inherits="ZO_WindowTitle" text="SI_HARVEST_CTRLC" />
+				<Backdrop name="$(parent)BG" inherits="ZO_DefaultBackdrop" />
+				<Button name="$(parent)Close" inherits="ZO_CloseButton">
+					<Anchor point="TOPRIGHT" offsetY="3" />
+					<OnClicked>
+						Harvest.CloseDebugInfo()
+					</OnClicked>
+				</Button>
+				<Backdrop name="$(parent)Info" inherits="ZO_MultiLineEditBackdrop_Keyboard">
+					<Anchor point="TOPLEFT" offsetY="30"/>
+					<Anchor point="BOTTOMRIGHT" offsetX="-2" offsetY="-40"/>
+					<Controls>
+						<EditBox name="$(parent)Box" inherits="ZO_ErrorFrameTextEdit_Keyboard_Template" escapeMarkup="false">
+							<Anchor point="TOPLEFT" />
+							<Anchor point="BOTTOMRIGHT" />
+						</EditBox>
+					</Controls>
+				</Backdrop>
+			</Controls>
+		</TopLevelControl>
+	</Controls>
+</GuiXml>

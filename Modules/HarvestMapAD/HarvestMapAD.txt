@@ -1,0 +1,9 @@
+## Title: HarvestMap-AD-Zones
+## Author: Shinni
+## Description: This HarvestMap-module is used to store data for zones that belong to the Aldmeri Dominion.
+## DependsOn: HarvestMap
+## AddOnVersion: 31309
+## ValidateSavedVariables: 1
+## APIVersion: 100028
+## SavedVariables: HarvestAD_SavedVars
+## DisableSavedVariablesAutoSaving 1

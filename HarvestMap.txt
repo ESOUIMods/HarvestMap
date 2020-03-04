@@ -1,33 +1,9 @@
-## Title: HarvestMap
-## Author: Shinni and Sharlikran
-## Version: 3.0.2
-## APIVersion: 100013
-## OptionalDependsOn: LibAddonMenu-2.0 CustomCompassPins AceSerializer-3.0 LibMapPins-1.0 HarvestMapEP HarvestMapDC HarvestMapAD
-## SavedVariables: Harvest_SavedVars
+## Title: |cFF0000HarvestMap|r
+## Author: Shinni
+## APIVersion: 100029
+## AddOnVersion: 31299
+## Description: The AddOn was installed incorrectly.
 
-Libs/LibStub/LibStub.lua
-Libs/LibAddonMenu-2.0/LibAddonMenu-2.0.lua
-Libs/LibAddonMenu-2.0/controls/panel.lua
-Libs/LibAddonMenu-2.0/controls/button.lua
-Libs/LibAddonMenu-2.0/controls/checkbox.lua
-Libs/LibAddonMenu-2.0/controls/colorpicker.lua
-Libs/LibAddonMenu-2.0/controls/header.lua
-Libs/LibAddonMenu-2.0/controls/slider.lua
-Libs/AceSerializer-3.0/AceSerializer-3.0.lua
-Libs/CustomCompassPins/CustomCompassPins.lua
-Libs/LibMapPins-1.0/LibMapPins-1.0.lua
+Libs/LibDAU/LibDAU.lua
 
-HarvestMap.lua
-
-HarvestMapConstants.lua
-HarvestMapDefaults.lua
-
-Localization/HarvestMapLocUI.lua
-Localization/HarvestMapLocNodes.lua
-Localization/HarvestMapLocZones.lua
-
-HarvestMapUpdate.lua
-HarvestMapMarkers.lua
-HarvestMapCompass.lua
-HarvestMapOptions.lua
-HarvestMap.xml
+Main/HarvestMap.lua

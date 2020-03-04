@@ -1,0 +1,11 @@
+## Title: LibMapMetaData
+## Author: Shinni
+## Description: A library that handles map hierachies and 2D/3D measurement information.
+## Version: 1.3
+## AddOnVersion: 103
+## IsLibrary: true
+## APIVersion: 100028
+## DependsOn: LibGPS Lib3D LibMapPing
+
+LibMapMetaData.lua
+MapMetaData.lua

@@ -1,0 +1,34 @@
+<GuiXml>
+	<Animations>
+		<AnimationTimeline name="CompassPinAddedAnimation" playbackType ="LOOP" loopCount="LOOP_INDEFINITELY"> -->
+			<Animations>
+				<CustomAnimation delay="0" duration="1">
+				</CustomAnimation>
+			</Animations>
+			<OnPlay>
+				CraftingCompassPinAdded(self:GetFirstAnimation():GetAnimatedControl())
+			</OnPlay>
+			<OnStop>
+				CraftingCompassPinRemoved(self:GetFirstAnimation():GetAnimatedControl())
+			</OnStop>
+		</AnimationTimeline>
+	</Animations>
+	<Controls>
+		<Compass name="ZO_CompassContainer" override="true">
+			<CompassPinType name="HARVEST_NODE"
+				pinTexture="NonExistingPath/NonExistingFile.dds"
+				pinSize="12"
+				layer="OVERLAY"
+				addedAnimation="CompassPinAddedAnimation"
+				farAlpha="1.0"
+				closeAlpha="1.0"
+				farScale="0.0"
+				farScaleDistanceM="200.0"
+				closeScale="2.0"
+				closeScaleDistanceM="0.0"
+				maxDistanceM="200.0"
+				allowUpdatesWhenAnimating="true"
+			/>
+		</Compass>
+	</Controls>
+</GuiXml>

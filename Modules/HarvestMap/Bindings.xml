@@ -1,0 +1,29 @@
+<Bindings>
+	<Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
+		<Category name="HarvestMap">
+			<Action name="SKIP_TARGET">
+				<Down></Down>
+				<Up>Harvest.farm.helper:UpdateToNextTarget()</Up>
+			</Action>
+			<Action name="TOGGLE_WORLDPINS">
+				<Down></Down>
+				<Up>
+					Harvest.SetWorldPinsVisible(not Harvest.AreWorldPinsVisible())
+					CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", Harvest.optionsPanel)
+					CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", HarvestMapInRangeMenu.panel)
+				</Up>
+			</Action>
+			<Action name="TOGGLE_MAPPINS">
+				<Down></Down>
+				<Up>
+					Harvest.SetMapPinsVisible(not Harvest.AreMapPinsVisible())
+					CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", Harvest.optionsPanel)
+				</Up>
+			</Action>
+			<Action name="HARVEST_SHOW_PANEL">
+				<Down></Down>
+				<Up>Harvest.menu:Toggle()</Up>
+			</Action>
+		</Category>
+	</Layer>
+</Bindings>

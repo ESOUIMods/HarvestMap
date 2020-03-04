@@ -1,0 +1,67 @@
+## Title: HarvestMap
+## Author: Shinni
+## Version: 3.13.10
+## APIVersion: 100028
+## AddOnVersion: 31310
+## OptionalDependsOn: MiniMap VotansMiniMap AUI LibStub LibMapPins-1.0 LibDebugLogger
+## DependsOn: Lib3D LibAddonMenu-2.0 LibGPS LibMapMetaData NodeDetection LibMapPing
+## SavedVariables: Harvest_SavedVars
+
+Libs/LibStub/LibStub.lua
+Libs/LibMainMenu/LibMainMenu.lua
+Libs/LibUpdateNotification/LibUpdateNotification.lua
+
+HarvestMap.lua
+
+Localization/UI/$(language).lua
+Localization/UI/default.lua
+
+Main/Callback.lua
+Main/PinTypes.lua
+Main/Notifications.lua
+Main/Debug.xml
+Main/Debug.lua
+Main/MapTools.lua
+Main/Utils.lua
+Main/Interaction.lua
+Main/NodeDetection.lua
+
+Options/LoadSettings.lua
+Options/Defaults.lua
+Options/GetterSetter.lua
+Options/LAMPanel.lua
+Options/MainMenu.lua
+Options/FilterMenu.lua
+
+Data/NodeVersion.lua
+Data/SubmoduleManager.lua
+Data/Serialization.lua
+Data/Data.lua
+Data/MapCache.lua
+Data/MapCacheIterators.lua
+Data/ZoneCache.lua
+
+Pins/MapMode.lua
+Pins/QuickPins.xml
+Pins/QuickPins.lua
+Pins/MapPins.lua
+Pins/MapPinQueue.lua
+Pins/InRangePins.lua
+Pins/HiddenPins.lua
+Pins/WorldPins.xml
+
+HeatMap/HeatMapDisplay.lua
+HeatMap/HeatMapCalculation.lua
+
+Tour/BaseInterface.lua
+Tour/TourDisplay.lua
+Tour/PinTypeFilters.lua
+Tour/GeneratorInterface.lua
+Tour/GeneratorLogic.lua
+Tour/Helper.lua
+Tour/Editor.lua
+Tour/TourLoader.lua
+Tour/Path.lua
+Tour/Controls.xml
+
+Bindings.xml

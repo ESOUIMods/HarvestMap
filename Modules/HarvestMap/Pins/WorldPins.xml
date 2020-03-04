@@ -1,0 +1,21 @@
+<GuiXml>
+	<Controls>
+		<Texture name="HM_MapTile" textureFile="HarvestMap/Textures/undiscovered.dds" level="2" layer="0" virtual="true" />
+		<Texture name="HM_CompassPin" pixelRoundingEnabled="false" hidden="true" virtual="true" />
+		<Control name ="HM_WorldPin" virtual="true" >
+			<Controls>
+				<Texture name="$(parent)Beam" />
+				<Texture name="$(parent)Icon" />
+			</Controls>
+		</Control>
+		<TopLevelControl name="HM_WorldPins" layer="0" level="0">
+			<Controls>
+				<Control name="$(parent)Measurement" />
+			</Controls>
+		</TopLevelControl>
+		<TopLevelControl name="HarvestMapInRangeMenu" inherits="ZO_RightPanelFootPrint" hidden="true">
+			<Controls>
+			</Controls>
+		</TopLevelControl>
+	</Controls>
+</GuiXml>
