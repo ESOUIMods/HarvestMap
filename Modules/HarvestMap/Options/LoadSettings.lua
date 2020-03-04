@@ -9,10 +9,6 @@ function Settings:LoadSavedVars()
 	-- global settings that are computer wide (eg node/data settings)
 	Harvest_SavedVars.global = Harvest_SavedVars.global or self.defaultGlobalSettings
 	self.savedVars.global = Harvest_SavedVars.global
-	-- to help Phinix with their bug... no idea what caused it but some values are nil for them
-	if (not self.savedVars.global.errorlog.last) or (not self.savedVars.global.errorlog.start) then
-		self.savedVars.global.errorlog = self.defaultGlobalSettings.errorlog
-	end
 	-- fix for settings transfer addon
 	-- currently it thinks the keys of the accountwide settings are characters
 	-- remove the @ for the keys so this doesn't happen anymore
