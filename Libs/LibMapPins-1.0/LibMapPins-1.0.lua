@@ -26,7 +26,7 @@
 -- OTHER DEALINGS IN THE SOFTWARE.
 --
 -------------------------------------------------------------------------------
-local MAJOR, MINOR = "LibMapPins-1.0", 9
+local MAJOR, MINOR = "LibMapPins-1.0", 10
 
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
@@ -635,7 +635,14 @@ function lib:SetEnabled(pinType, state)
    local needsRefresh = self.pinManager:IsCustomPinEnabled(pinTypeId) ~= enabled
    local filter = self.filters[pinTypeId]
    if filter then
-      ZO_CheckButton_SetCheckState((GetMapContentType() == MAP_CONTENT_AVA) and filter.pvp or filter.pve, enabled)
+      local mapFilterType = GetMapFilterType()
+      if mapFilterType == MAP_FILTER_TYPE_STANDARD then
+         ZO_CheckButton_SetCheckState(filter.pve, enabled)
+      elseif mapFilterType == MAP_FILTER_TYPE_AVA_CYRODIIL then
+         ZO_CheckButton_SetCheckState(filter.pvp, enabled)
+      elseif mapFilterType == MAP_FILTER_TYPE_AVA_IMPERIAL then
+         ZO_CheckButton_SetCheckState(filter.imperialPvP, enabled)
+      end
    end
 
    self.pinManager:SetCustomPinEnabled(pinTypeId, enabled)
@@ -668,7 +675,7 @@ function lib:Disable(pinType)
 end
 
 -------------------------------------------------------------------------------
--- lib:AddPinFilter(pinType, pinCheckboxText, separate, savedVars, savedVarsPveKey, savedVarsPvpKey)
+-- lib:AddPinFilter(pinType, pinCheckboxText, separate, savedVars, savedVarsPveKey, savedVarsPvpKey, savedVarsImperialPvpKey)
 -------------------------------------------------------------------------------
 -- Adds filter checkboxes to the world map.
 -- Returns: pveCheckbox, pvpCheckbox
@@ -688,8 +695,12 @@ end
 --                state for PvP context, used only if separate is true. If separate
 --                is true, savedVars exists but this argument is nil, state will
 --                be stored in savedVars[pinTypeString .. "_pvp"].
+-- savedVarsImperialPvpKey: (nilable), key in the savedVars table where you store
+--                filter state for Imperial City PvP context, used only if separate
+--                is true. If separate is true, savedVars exists but this argument
+--                is nil, state will be stored in savedVars[pinTypeString .. "_imperialPvP"].
 -------------------------------------------------------------------------------
-function lib:AddPinFilter(pinType, pinCheckboxText, separate, savedVars, savedVarsPveKey, savedVarsPvpKey)
+function lib:AddPinFilter(pinType, pinCheckboxText, separate, savedVars, savedVarsPveKey, savedVarsPvpKey, savedVarsImperialPvpKey)
    local pinTypeString, pinTypeId
    if type(pinType) == "string" then
       pinTypeString = pinType
@@ -711,8 +722,10 @@ function lib:AddPinFilter(pinType, pinCheckboxText, separate, savedVars, savedVa
       filter.pveKey = savedVarsPveKey or pinTypeString
       if separate then
          filter.pvpKey = savedVarsPvpKey or pinTypeString .. "_pvp"
+         filter.imperialPvPKey = savedVarsImperialPvpKey or pinTypeString .. "_imperialPvP"
       else
          filter.pvpKey = filter.pveKey
+         filter.imperialPvPKey = filter.pveKey
       end
    end
 
@@ -729,6 +742,7 @@ function lib:AddPinFilter(pinType, pinCheckboxText, separate, savedVars, savedVa
 
    filter.pve = AddCheckbox(WORLD_MAP_FILTERS.pvePanel, pinCheckboxText)
    filter.pvp = AddCheckbox(WORLD_MAP_FILTERS.pvpPanel, pinCheckboxText)
+   filter.imperialPvP = AddCheckbox(WORLD_MAP_FILTERS.imperialPvPPanel, pinCheckboxText)
 
    if filter.vars ~= nil then
       ZO_CheckButton_SetToggleFunction(filter.pve,
@@ -741,7 +755,20 @@ function lib:AddPinFilter(pinType, pinCheckboxText, separate, savedVars, savedVa
             filter.vars[filter.pvpKey] = state
             self:SetEnabled(pinTypeId, state)
          end)
-      self:SetEnabled(pinTypeId, (GetMapContentType() == MAP_CONTENT_AVA) and filter.vars[filter.pvpKey] or filter.vars[filter.pveKey])
+      ZO_CheckButton_SetToggleFunction(filter.imperialPvP,
+         function(button, state)
+            filter.vars[filter.imperialPvPKey] = state
+            self:SetEnabled(pinTypeId, state)
+         end)
+
+      local mapFilterType = GetMapFilterType()
+      if mapFilterType == MAP_FILTER_TYPE_STANDARD then
+         self:SetEnabled(pinTypeId, filter.vars[filter.pveKey])
+      elseif mapFilterType == MAP_FILTER_TYPE_AVA_CYRODIIL then
+         self:SetEnabled(pinTypeId, filter.vars[filter.pvpKey])
+      elseif mapFilterType == MAP_FILTER_TYPE_AVA_IMPERIAL then
+         self:SetEnabled(pinTypeId, filter.vars[filter.imperialPvPKey])
+      end
    else
       ZO_CheckButton_SetToggleFunction(filter.pve,
          function(button, state)
@@ -753,9 +780,14 @@ function lib:AddPinFilter(pinType, pinCheckboxText, separate, savedVars, savedVa
             self:SetEnabled(pinTypeId, state)
          end)
       ZO_CheckButton_SetCheckState(filter.pvp, self:IsEnabled(pinTypeId))
+      ZO_CheckButton_SetToggleFunction(filter.imperialPvP,
+         function(button, state)
+            self:SetEnabled(pinTypeId, state)
+         end)
+      ZO_CheckButton_SetCheckState(filter.imperialPvP, self:IsEnabled(pinTypeId))
    end
 
-   return filter.pve, filter.pvp
+   return filter.pve, filter.pvp, filter.imperialPvP
 end
 
 -------------------------------------------------------------------------------
@@ -782,7 +814,16 @@ end
 -------------------------------------------------------------------------------
 --refresh checkbox state for world map filters
 function lib.OnMapChanged()
-   local context = GetMapContentType() == MAP_CONTENT_AVA and "pvp" or "pve"
+   local context
+   local mapFilterType = GetMapFilterType()
+   if mapFilterType == MAP_FILTER_TYPE_STANDARD then
+      context = "pve"
+   elseif mapFilterType == MAP_FILTER_TYPE_AVA_CYRODIIL then
+      context = "pvp"
+   elseif mapFilterType == MAP_FILTER_TYPE_AVA_IMPERIAL then
+      context = "imperialPvP"
+   end
+
    if lib.context ~= context then
       lib.context = context
       local filterKey = context .. "Key"
@@ -899,6 +940,34 @@ local function OnLoad(code, addon)
    if ZO_WorldMapFiltersPvPContainer then
       ZO_WorldMapFiltersPvPContainer:SetAnchorFill()
    end
+
+   if WORLD_MAP_FILTERS.imperialPvPPanel.checkBoxPool then
+      WORLD_MAP_FILTERS.imperialPvPPanel.checkBoxPool.parent = ZO_WorldMapFiltersImperialPvPContainerScrollChild or WINDOW_MANAGER:CreateControlFromVirtual("ZO_WorldMapFiltersImperialPvPContainer", ZO_WorldMapFiltersImperialPvP, "ZO_ScrollContainer"):GetNamedChild("ScrollChild")
+      for i, control in pairs(WORLD_MAP_FILTERS.imperialPvPPanel.checkBoxPool.m_Active) do
+         control:SetParent(WORLD_MAP_FILTERS.imperialPvPPanel.checkBoxPool.parent)
+      end
+      if ZO_WorldMapFiltersImperialPvPCheckBox1 then 
+         local valid, point, control, relPoint, x, y = ZO_WorldMapFiltersImperialPvPCheckBox1:GetAnchor(0)
+         if control == WORLD_MAP_FILTERS.imperialPvPPanel.control then
+            ZO_WorldMapFiltersImperialPvPCheckBox1:SetAnchor(point, ZO_WorldMapFiltersImperialPvPContainerScrollChild, relPoint, x, y)
+         end
+      end
+   end
+   if WORLD_MAP_FILTERS.imperialPvPPanel.comboBoxPool then
+      WORLD_MAP_FILTERS.imeprialPvPPanel.comboBoxPool.parent = ZO_WorldMapFiltersImperialPvPContainerScrollChild or WINDOW_MANAGER:CreateControlFromVirtual("ZO_WorldMapFiltersImperialPvPContainer", ZO_WorldMapFiltersImperialPvP, "ZO_ScrollContainer"):GetNamedChild("ScrollChild")
+      for i, control in pairs(WORLD_MAP_FILTERS.imperialPvPPanel.comboBoxPool.m_Active) do
+         control:SetParent(WORLD_MAP_FILTERS.imperialPvPPanel.comboBoxPool.parent)
+      end
+      if ZO_WorldMapFiltersImperialPvPComboBox1 then 
+         local valid, point, control, relPoint, x, y = ZO_WorldMapFiltersImperialPvPComboBox1:GetAnchor(0)
+         if control == WORLD_MAP_FILTERS.imperialPvPPanel.control then
+            ZO_WorldMapFiltersPvPComboBox1:SetAnchor(point, ZO_WorldMapFiltersImperialPvPContainerScrollChild, relPoint, x, y)
+         end
+      end
+   end
+   if ZO_WorldMapFiltersImperialPvPContainer then
+      ZO_WorldMapFiltersImperialPvPContainer:SetAnchorFill()
+   end
 end
 EVENT_MANAGER:RegisterForEvent("LibMapPins", EVENT_ADD_ON_LOADED, OnLoad)
 
@@ -924,7 +993,7 @@ EVENT_MANAGER:RegisterForEvent("LibMapPins", EVENT_ADD_ON_LOADED, OnLoad)
 -- MapPinTest/MapPintest.txt
 -------------------------------------------------------------------------------
 ## Title: MapPinTest
-## APIVersion: 100011
+## APIVersion: 100012
 ## SavedVariables: MapPinTest_SavedVariables
 
 Libs/LibStub/LibStub.lua

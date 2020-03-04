@@ -1,3 +1,7 @@
+## 2.7.7
+- updated LibMapPins-1.0, LibAddonMenu-2.0, LibStub
+- changed api version
+
 ## 2.7.6
 - updated LibMapPins-1.0 library [Garkin]
 - optimized import routine for importing data from HarvestMerge [Garkin]
