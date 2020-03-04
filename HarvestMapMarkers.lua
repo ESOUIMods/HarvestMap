@@ -15,7 +15,8 @@ function Harvest.AddMapPinCallback( pinTypeId )
     local map = Harvest.GetMap()
     local nodes = Harvest.GetNodesOnMap( map, pinTypeId )
     local pinType = Harvest.GetPinType( pinTypeId )
-
+    local pinData = LMP.pinManager.customPins[_G[pinType]]
+    LMP.pinManager:RemovePins(pinData.pinTypeString)
     Harvest.mapCounter[pinType] = Harvest.mapCounter[pinType] + 1
     Harvest.AddPinsLater(Harvest.mapCounter[pinType], pinType, nodes, nil)
 end
@@ -37,7 +38,7 @@ function Harvest.AddPinsLater(counter, pinType, nodes, index)
         Harvest.mapCounter[pinType] = 0
         return
     end
-
+    
     local node = nil
     for counter = 1,10 do
         index, node = next(nodes, index)
@@ -46,7 +47,6 @@ function Harvest.AddPinsLater(counter, pinType, nodes, index)
             return
         end
         LMP:CreatePin( pinType, node, node[1], node[2] )
-        --EVENT_MANAGER:UnregisterForUpdate("FyrMiniMapLoadCustomPinGroup"..tostring(_G[pinType]))
     end
     if FyrMM then
         Harvest.AddPinsLater(counter, pinType, nodes, index)
@@ -87,7 +87,6 @@ function Harvest.InitializeMapPinType( pinTypeId )
 end
 
 local nameFun = function(pin)
-    d("asd")
     local str = ""
     if not IsInGamepadPreferredMode() then str = "Delete Pin: " end
     for _, name in pairs( pin.m_PinTag[3] ) do

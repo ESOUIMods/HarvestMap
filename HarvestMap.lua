@@ -483,8 +483,9 @@ function Harvest.OnLoad(eventCode, addOnName)
     Harvest.AddToUpdateQueue(Harvest.MoveData)
     -- some data cannot be properly saved, ie functions or tints.
     -- repair this data
-    -- HOWEVER, only execute this after the save files were updated!
-    Harvest.AddToUpdateQueue(Harvest.FixSaveFile)
+    Harvest.FixSaveFile()
+    -- i don't think this has to be executed after the save file is updated
+        --Harvest.AddToUpdateQueue(Harvest.FixSaveFile)
 
     -- initialize pin callback functions
     Harvest.InitializeMapMarkers()

@@ -1,6 +1,6 @@
 ## Title: HarvestMap
 ## Author: Shinni and Sharlikran
-## Version: 3.0.1
+## Version: 3.0.2
 ## APIVersion: 100013
 ## OptionalDependsOn: LibAddonMenu-2.0 CustomCompassPins AceSerializer-3.0 LibMapPins-1.0 HarvestMapEP HarvestMapDC HarvestMapAD
 ## SavedVariables: Harvest_SavedVars

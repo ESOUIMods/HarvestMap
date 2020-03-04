@@ -3,7 +3,7 @@ if not Harvest then
 end
 
 Harvest.dataVersion = 10
-Harvest.displayVersion = "3.0.1"
+Harvest.displayVersion = "3.0.2"
 -- constants/enums for the pin types
 Harvest.BLACKSMITH = 1
 Harvest.CLOTHING = 2
