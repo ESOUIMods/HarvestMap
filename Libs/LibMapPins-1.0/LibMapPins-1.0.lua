@@ -26,7 +26,7 @@
 -- OTHER DEALINGS IN THE SOFTWARE.
 --
 -------------------------------------------------------------------------------
-local MAJOR, MINOR = "LibMapPins-1.0", 10
+local MAJOR, MINOR = "LibMapPins-1.0", 11
 
 local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then return end
@@ -263,14 +263,10 @@ function lib:CreatePin(pinType, pinTag, locX, locY, areaRadius)
             local mapIndex = AUI.Minimap.Map.GetCurrentMapIndex()
             local pinName = pinTypeString .. AUI.Minimap.Pin.GetCustomPinCount() + 1
             AUI.Minimap.Pin.CreateCustomPin(pinName, self.AUI.mapping[pinTypeId], pinTag, mapIndex, locX, locY, areaRadius)
-
-            if WORLD_MAP_SCENE:IsShowing() then
-               self.pinManager:CreatePin(pinTypeId, pinTag, locX, locY, areaRadius)
-            end
          end
-      else
-         self.pinManager:CreatePin(pinTypeId, pinTag, locX, locY, areaRadius)
       end
+
+      self.pinManager:CreatePin(pinTypeId, pinTag, locX, locY, areaRadius)
    end
 end
 
@@ -884,7 +880,7 @@ end
 local function OnLoad(code, addon)
    if addon:find("^ZO") then return end
    EVENT_MANAGER:UnregisterForEvent("LibMapPins", EVENT_ADD_ON_LOADED)
-   
+
    if WORLD_MAP_FILTERS.pvePanel.checkBoxPool then
       WORLD_MAP_FILTERS.pvePanel.checkBoxPool.parent = ZO_WorldMapFiltersPvEContainerScrollChild or WINDOW_MANAGER:CreateControlFromVirtual("ZO_WorldMapFiltersPvEContainer", ZO_WorldMapFiltersPvE, "ZO_ScrollContainer"):GetNamedChild("ScrollChild")
       for i, control in pairs(WORLD_MAP_FILTERS.pvePanel.checkBoxPool.m_Active) do
@@ -912,7 +908,7 @@ local function OnLoad(code, addon)
    if ZO_WorldMapFiltersPvEContainer then
       ZO_WorldMapFiltersPvEContainer:SetAnchorFill()
    end
-   
+
    if WORLD_MAP_FILTERS.pvpPanel.checkBoxPool then
       WORLD_MAP_FILTERS.pvpPanel.checkBoxPool.parent = ZO_WorldMapFiltersPvPContainerScrollChild or WINDOW_MANAGER:CreateControlFromVirtual("ZO_WorldMapFiltersPvPContainer", ZO_WorldMapFiltersPvP, "ZO_ScrollContainer"):GetNamedChild("ScrollChild")
       for i, control in pairs(WORLD_MAP_FILTERS.pvpPanel.checkBoxPool.m_Active) do
