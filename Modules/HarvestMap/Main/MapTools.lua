@@ -50,13 +50,13 @@ function MapTools:SetMapToPlayerLocation()
 	-- if we can click on the player location, then we are probably erroneously viewing a zone map
 	-- (exception is hew's bane where we can click outside of abahs landing and it will open abahs landing)
 	if WouldProcessMapClick(localX, localY) then
-		self:Warning("Had to perform a map click: %s, %f, %f", GetMapTileTexture(), localX, localY )
+		self:Warn("Had to perform a map click: %s, %f, %f", GetMapTileTexture(), localX, localY )
 		ProcessMapClick(localX, localY)
 		localX, localY, heading = GetMapPlayerPosition("player")
 	end
 	
 	if localX < 0 or localX > 1 or localY < 0 or localY > 1 then
-		self:Warning("Player coordinates out of bound: %s, %f, %f", GetMapTileTexture(), localX, localY )
+		self:Warn("Player coordinates out of bound: %s, %f, %f", GetMapTileTexture(), localX, localY )
 		-- the player is not visible on the current map,
 		-- then we should use the parent map
 		if MapZoomOut() == SET_MAP_RESULT_MAP_CHANGED then
@@ -66,7 +66,7 @@ function MapTools:SetMapToPlayerLocation()
 			-- so just use SetMapToPlayerLocation() instead
 			local newMapZoneIndex = GetCurrentMapZoneIndex()
 			if newMapZoneIndex ~= mapZoneIndex or newMapZoneIndex ~= playerZoneIndex then
-				self:Warning("Reset player location. mapZoneIndices: %d, %d, playerZoneIndex: %d.",
+				self:Warn("Reset player location. mapZoneIndices: %d, %d, playerZoneIndex: %d.",
 						newMapZoneIndex, mapZoneIndex, playerZoneIndex )
 				SetMapToPlayerLocation()
 			end

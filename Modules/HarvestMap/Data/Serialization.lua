@@ -33,7 +33,7 @@ function Serialization:LoadNodesOfPinTypeToCache(pinTypeId, mapCache)
 	local map = mapMetaData.map
 	
 	if not mapMetaData.mapMeasurement then
-		self:Warning("could not load cache for map %s, no measurement given!", map)
+		self:Warn("could not load cache for map %s, no measurement given!", map)
 		return
 	end
 
@@ -95,7 +95,7 @@ function Serialization:Load()
 	for nodeIndex, node in pairs(self.serializedNodes) do
 		success, worldX, worldY, worldZ, timestamp, version, globalX, globalY, flags = self:Deserialize( node, pinTypeId )
 		if not success then--or not x or not y then
-			self:Warning("invalid node:", worldX)
+			self:Warn("invalid node:", worldX)
 			self.serializedNodes[nodeIndex] = nil
 		else
 			valid = true

@@ -117,11 +117,11 @@ function Data:IsNodeDataValid(mapMetaData, worldX, worldY, worldZ, localX, local
 	assert(mapMetaData)
 	
 	if Harvest.mapTools:IsMapBlacklisted(mapMetaData.map) then
-		self:Warning("Node data invalid. %s is blacklisted", map)
+		self:Warn("Node data invalid. %s is blacklisted", map)
 		return false
 	end
 	if localX <= 0 or localX >= 1 or localY <= 0 or localY >= 1 then
-		self:Warning("Node data invalid. Coords %f, %f are outside of the map", localX, localY)
+		self:Warn("Node data invalid. Coords %f, %f are outside of the map", localX, localY)
 		return false
 	end
 	return true

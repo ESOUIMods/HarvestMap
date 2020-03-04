@@ -102,7 +102,7 @@ function Detection.LinkControlWithNode(event, control)
 	if mapCache == nil and nodeId == nil then
 		mapCache = Harvest.mapPins.mapCache
 		if not mapCache then
-			Detection:Warning("no mapCache for mapPins?")
+			Detection:Warn("no mapCache for mapPins?")
 			return
 		end
 		if not mapCache:DoesHandlePinType(Harvest.UNKNOWN) then mapCache:InitializePinType(Harvest.UNKNOWN) end
@@ -134,7 +134,7 @@ end
 function Detection.OnNodeDeleted(mapCache, nodeId)
 	local control = mapCache.hasCompassPin[nodeId]
 	if not control then return end
-	Detection:Warning("A node was deleted while it had a compass pin assigned!")
+	Detection:Warn("A node was deleted while it had a compass pin assigned!")
 	
 	for _, control in pairs(LibNodeDetection.detection.knownPositionCompassPins) do
 		if control.mapCache == mapCache and control.nodeId == nodeId then
