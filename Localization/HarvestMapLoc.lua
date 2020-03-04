@@ -287,5 +287,8 @@ Harvest.allLocalizations = {
 }
 
 -- Set Localization
-Harvest.language = (GetCVar("language.2") or "en")
+Harvest.language = GetCVar("language.2")
+if not (Harvest.language == "en" or Harvest.language == "de" or Harvest.language == "fr") then
+    Harvest.language = "en"
+end
 Harvest.localization = Harvest.allLocalizations[Harvest.language]

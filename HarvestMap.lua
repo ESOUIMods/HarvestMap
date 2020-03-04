@@ -7,7 +7,7 @@ Harvest.dataVersion = 6 -- it's actually 7 but conversion takes to long (game cr
 -- use 6 instead as old data is still compatioble
 -- player can choose to (try to) convert to 7 via the "Reduce Size" button in the addon options
 -- next time the structure is changed, dataVersion need to be 8 as some players may have used the beta
-Harvest.displayVersion = "2.7.4"
+Harvest.displayVersion = "2.7.6"
 
 local AS = LibStub("AceSerializer-3.0")
 local LMP = LibStub("LibMapPins-1.0")

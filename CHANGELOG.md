@@ -1,3 +1,7 @@
+## 2.7.6
+- updated LibMapPins-1.0 library [Garkin]
+- optimized import routine for importing data from HarvestMerge [Garkin]
+
 ## 2.7.5
 
 Updates
