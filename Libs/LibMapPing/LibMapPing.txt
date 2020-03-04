@@ -2,7 +2,7 @@
 ## Author: sirinsidiator
 ## Version: 9
 ## AddOnVersion: 900
-## APIVersion: 100028
+## APIVersion: 100028 100029
 ## IsLibrary: true
 ## OptionalDependsOn: LibStub
 ##

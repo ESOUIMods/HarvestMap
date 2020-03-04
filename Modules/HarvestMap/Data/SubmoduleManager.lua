@@ -59,13 +59,12 @@ local addOnNameToPotentialSubmodule = {
 			["wrothgar"] = true,
 			["thievesguild"] = true,
 			["darkbrotherhood"] = true,
-			--dungeonthingy, does that one even have a prefix?
 			["vvardenfell"] = true,
-			-- 2nd dungeon thingy
 			["clockwork"] = true,
 			["summerset"] = true,
 			["murkmire"] = true,
 			["elsweyr"] = true,
+			["southernelsweyr"] = true,
 		},
 	},
 	HarvestMapNF = {

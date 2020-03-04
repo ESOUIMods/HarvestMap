@@ -1,4 +1,4 @@
-## APIVersion: 100028
+## APIVersion: 100028 100029
 ## Title: LibAddonMenu-2.0
 ## Version: 2.0 r29
 ## AddOnVersion: 29

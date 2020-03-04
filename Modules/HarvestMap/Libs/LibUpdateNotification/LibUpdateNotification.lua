@@ -117,7 +117,8 @@ local function OnAddOnLoaded(_, addOnName)
 	
 	
 	g_guildId = GUILD_IDS[GetWorldName()]
-	assert(g_guildId, "No guild provided for world " .. tostring(GetWorldName()))
+	if not g_guildId then return end -- eg PTS server
+	--assert(g_guildId, "No guild provided for world " .. tostring(GetWorldName()))
 	
 	GUILD_BROWSER_MANAGER:RegisterCallback("OnGuildDataReady", OnGuildDataReady)
 	if GUILD_BROWSER_MANAGER:GetGuildData(g_guildId) then
