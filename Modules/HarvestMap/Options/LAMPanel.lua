@@ -1,5 +1,18 @@
 
 local LAM = LibAddonMenu2
+assert(LAM, "\n\nThe library LibAddonMenu could not be loaded. Your installation of the library is probably missing some files.")
+--if not LAM then
+	--local addOnManager = GetAddOnManager()
+	--for id = 1, addOnManager:GetNumAddOns() do
+	--	local name, displayName = addOnManager:GetAddOnInfo(id)
+	--	if name == "LibAddonMenu-2.0" then
+	--		local path = addOnManager:GetAddOnRootDirectoryPath(id)
+	--		path = path:gsub("user:/", "")
+	--		error("The installation of LibAddonMenu is corrupted.\nThe library was loaded from '" .. path .. "'.")
+	--	end
+	--end
+--end
+
 
 local Settings = Harvest.settings
 
@@ -300,14 +313,19 @@ function Settings:InitializeLAM()
 		width = "full",
 	})
 	
+	local spawnfiltertooltip = Harvest.GetLocalization("spawnfiltertooltip")
+	if not LibNodeDetection then
+		spawnfiltertooltip = Harvest.GetLocalization("nodedetectionmissing")
+	end
 	submenuTable:insert({
 		type = "checkbox",
 		name = Harvest.GetLocalization("mapspawnfilter"),
-		tooltip = Harvest.GetLocalization("spawnfiltertooltip"),
+		tooltip = spawnfiltertooltip,
 		setFunc = Harvest.SetMapSpawnFilterEnabled,
 		getFunc = Harvest.IsMapSpawnFilterEnabled,
 		default = Harvest.settings.defaultSettings.mapSpawnFilter,
 		warning = Harvest.GetLocalization("spawnfilterwarning"),
+		disabled = (LibNodeDetection == nil),
 		width = "full",
 	})
 	
@@ -324,11 +342,12 @@ function Settings:InitializeLAM()
 	submenuTable:insert({
 		type = "checkbox",
 		name = Harvest.GetLocalization("minimapspawnfilter"),
-		tooltip = Harvest.GetLocalization("spawnfiltertooltip"),
+		tooltip = spawnfiltertooltip,
 		setFunc = Harvest.SetMinimapSpawnFilterEnabled,
 		getFunc = Harvest.IsMinimapSpawnFilterEnabled,
 		default = Harvest.settings.defaultSettings.minimapSpawnFilter,
 		warning = Harvest.GetLocalization("spawnfilterwarning"),
+		disabled = (LibNodeDetection == nil),
 		width = "full",
 	})
 	
@@ -454,11 +473,12 @@ function Settings:InitializeLAM()
 	submenuTable:insert({
 		type = "checkbox",
 		name = Harvest.GetLocalization("compassspawnfilter"),
-		tooltip = Harvest.GetLocalization("spawnfiltertooltip"),
+		tooltip = spawnfiltertooltip,
 		getFunc = Harvest.IsCompassSpawnFilterEnabled,
 		setFunc = Harvest.SetCompassSpawnFilterEnabled,
 		default = Harvest.settings.defaultSettings.compassSpawnFilter,
 		warning = Harvest.GetLocalization("spawnfilterwarning"),
+		disabled = (LibNodeDetection == nil),
 		width = "full",
 	})
 	
@@ -505,11 +525,12 @@ function Settings:InitializeLAM()
 	submenuTable:insert({
 		type = "checkbox",
 		name = Harvest.GetLocalization("worldspawnfilter"),
-		tooltip = Harvest.GetLocalization("spawnfiltertooltip"),
+		tooltip = spawnfiltertooltip,
 		setFunc = Harvest.SetWorldSpawnFilterEnabled,
 		getFunc = Harvest.IsWorldSpawnFilterEnabled,
 		default = Harvest.settings.defaultSettings.worldSpawnFilter,
 		warning = Harvest.GetLocalization("spawnfilterwarning"),
+		disabled = (LibNodeDetection == nil),
 		width = "full",
 	})
 	
@@ -679,5 +700,6 @@ function Settings:InitializeLAM()
 	]]
 	Harvest.optionsPanel = LAM:RegisterAddonPanel("HarvestMapControl", panelData)
 	LAM:RegisterOptionControls("HarvestMapControl", optionsTable)
+	self.optionsTable = optionsTable
 
 end

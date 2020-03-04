@@ -1,10 +1,10 @@
 ## Title: HarvestMap
 ## Author: Shinni
-## Version: 3.13.12
+## Version: 3.13.13
 ## APIVersion: 100028
-## AddOnVersion: 31312
-## OptionalDependsOn: MiniMap VotansMiniMap AUI LibStub LibMapPins-1.0 LibDebugLogger
-## DependsOn: Lib3D LibAddonMenu-2.0 LibGPS LibMapMetaData NodeDetection LibMapPing
+## AddOnVersion: 31313
+## OptionalDependsOn: MiniMap VotansMiniMap AUI LibStub LibMapPins-1.0 LibDebugLogger NodeDetection
+## DependsOn: Lib3D LibAddonMenu-2.0 LibGPS LibMapMetaData LibMapPing
 ## SavedVariables: Harvest_SavedVars
 
 Libs/LibStub/LibStub.lua

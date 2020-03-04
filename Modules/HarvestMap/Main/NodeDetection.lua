@@ -6,6 +6,10 @@ local Detection = {}
 Harvest:RegisterModule("detection", Detection)
 
 function Detection:Initialize()
+	if not LibNodeDetection then
+		self:Info("NodeDetection is not enabled")
+		return
+	end
 	CallbackManager:RegisterCallback(Events.MAP_CHANGE, self.OnMapChanged)
 	CallbackManager:RegisterForEvent(Events.MAP_ADDED_TO_ZONE, function(event, mapCache, zoneCache)
 		self:Info("added map '%s' to zone %d. Relink spawned resources.", mapCache.map, zoneCache.zoneIndex)
@@ -94,7 +98,7 @@ function Detection.LinkControlWithNode(event, control)
 		if nodeId then
 			mapCache.hasCompassPin[nodeId] = true
 			-- fire callback so the node is updated on the map etc
-			CallbackManager:FireCallbacks(Events.NODE_UPDATED, mapCache, nodeId)
+			CallbackManager:FireCallbacks(Events.NODE_COMPASS_LINK_CHANGED, mapCache, nodeId)
 			return
 		end
 	end
@@ -102,7 +106,7 @@ function Detection.LinkControlWithNode(event, control)
 	if mapCache == nil and nodeId == nil then
 		mapCache = Harvest.mapPins.mapCache
 		if not mapCache then
-			Detection:Warn("no mapCache for mapPins?")
+			Detection:Warn("no mapCache for mapPins? Is HeatMap mode active?")
 			return
 		end
 		if not mapCache:DoesHandlePinType(Harvest.UNKNOWN) then mapCache:InitializePinType(Harvest.UNKNOWN) end
@@ -124,7 +128,7 @@ function Detection.UnlinkControlWithNode(event, control)
 			CallbackManager:FireCallbacks(Events.NODE_DELETED, control.mapCache, control.nodeId)
 			control.mapCache:Delete(control.nodeId)
 		else
-			CallbackManager:FireCallbacks(Events.NODE_UPDATED, control.mapCache, control.nodeId)
+			CallbackManager:FireCallbacks(Events.NODE_COMPASS_LINK_CHANGED, control.mapCache, control.nodeId)
 		end
 		control.mapCache = nil
 		control.nodeId = nil

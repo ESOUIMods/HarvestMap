@@ -168,10 +168,14 @@ function HarvestHeat.Initialize()
 	if HarvestHeat.initialized then
 		return
 	end
+	local function OnNodeChanged(event, mapCache, nodeId)
+		if mapCache.pinTypeId[nodeId] == Harvest.UNKNOWN then return end
+		HarvestHeat.RefreshHeatmap()
+	end
 	CALLBACK_MANAGER:RegisterCallback( "OnWorldMapChanged", HarvestHeat.RefreshHeatmap)
-	Harvest.callbackManager:RegisterForEvent(Harvest.events.NODE_ADDED, HarvestHeat.RefreshHeatmap)
-	Harvest.callbackManager:RegisterForEvent(Harvest.events.NODE_UPDATED, HarvestHeat.RefreshHeatmap)
-	Harvest.callbackManager:RegisterForEvent(Harvest.events.NODE_DELETED, HarvestHeat.RefreshHeatmap)
+	Harvest.callbackManager:RegisterForEvent(Harvest.events.NODE_ADDED, OnNodeChanged)
+	Harvest.callbackManager:RegisterForEvent(Harvest.events.NODE_UPDATED, OnNodeChanged)
+	Harvest.callbackManager:RegisterForEvent(Harvest.events.NODE_DELETED, OnNodeChanged)
 	-- the fade in animation of the world map messes up the alpha values of the heat map
 	-- so display the heatmap after the map finished its fade in animation
 	local mapscene = SCENE_MANAGER:GetScene("worldMap")

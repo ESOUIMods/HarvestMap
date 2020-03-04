@@ -30,7 +30,7 @@ end
 -- or when a node is deleted by the debug tool
 function MapPins:OnNodeChangedCallback(event, mapCache, nodeId)
 	local nodeAdded = (event == Events.NODE_ADDED)
-	local nodeUpdated = (event == Events.NODE_UPDATED)
+	local nodeUpdated = (event == Events.NODE_UPDATED or event == Events.NODE_COMPASS_LINK_CHANGED)
 	local nodeDeleted = (event == Events.NODE_DELETED)
 	
 	-- when the heatmap is active, the map pins aren't used
@@ -131,6 +131,7 @@ function MapPins:RegisterCallbacks()
 	CallbackManager:RegisterForEvent(Events.NODE_DELETED, callback)
 	CallbackManager:RegisterForEvent(Events.NODE_UPDATED, callback)
 	CallbackManager:RegisterForEvent(Events.NODE_ADDED, callback)
+	CallbackManager:RegisterForEvent(Events.NODE_COMPASS_LINK_CHANGED, callback)
 	-- when a map related setting is changed
 	CallbackManager:RegisterForEvent(Events.SETTING_CHANGED, function(...) self:OnSettingsChanged(...) end)
 	CallbackManager:RegisterForEvent(Events.PIN_QUEUE_EMPTY, function() self:RefreshUpdateHandler() end)

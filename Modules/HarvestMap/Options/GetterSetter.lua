@@ -11,7 +11,7 @@ function Harvest.SetMapSpawnFilterEnabled(enabled)
 end
 
 function Harvest.IsMapSpawnFilterEnabled()
-	return Settings.savedVars.settings.mapSpawnFilter
+	return LibNodeDetection and Settings.savedVars.settings.mapSpawnFilter
 end
 
 function Harvest.SetMinimapSpawnFilterEnabled(enabled)
@@ -20,7 +20,7 @@ function Harvest.SetMinimapSpawnFilterEnabled(enabled)
 end
 
 function Harvest.IsMinimapSpawnFilterEnabled()
-	return Settings.savedVars.settings.minimapSpawnFilter
+	return LibNodeDetection and Settings.savedVars.settings.minimapSpawnFilter
 end
 
 function Harvest.SetCompassSpawnFilterEnabled(enabled)
@@ -29,7 +29,7 @@ function Harvest.SetCompassSpawnFilterEnabled(enabled)
 end
 
 function Harvest.IsCompassSpawnFilterEnabled()
-	return Settings.savedVars.settings.compassSpawnFilter
+	return LibNodeDetection and Settings.savedVars.settings.compassSpawnFilter
 end
 
 function Harvest.SetWorldSpawnFilterEnabled(enabled)
@@ -38,7 +38,7 @@ function Harvest.SetWorldSpawnFilterEnabled(enabled)
 end
 
 function Harvest.IsWorldSpawnFilterEnabled()
-	return Settings.savedVars.settings.worldSpawnFilter
+	return LibNodeDetection and Settings.savedVars.settings.worldSpawnFilter
 end
 
 	

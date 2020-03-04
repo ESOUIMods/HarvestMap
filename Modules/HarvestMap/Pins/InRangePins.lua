@@ -113,6 +113,7 @@ function InRangePins:Initialize()
 	end
 	CallbackManager:RegisterForEvent(Events.NODE_UPDATED, onNodeChanged)
 	CallbackManager:RegisterForEvent(Events.NODE_DELETED, onNodeChanged)
+	CallbackManager:RegisterForEvent(Events.NODE_COMPASS_LINK_CHANGED, onNodeChanged)
 	
 	CallbackManager:RegisterForEvent(Events.NEW_ZONE_ENTERED, function(event, zoneCache)
 		self:Info("Entered zone %d", zoneCache.zoneIndex)
@@ -125,6 +126,7 @@ function InRangePins:Initialize()
 		self.zoneCache = zoneCache
 		local zoneMeasurement = zoneCache.zoneMeasurement
 		self.globalToWorldFactor = zoneMeasurement.globalToWorldFactor
+		self:Info("global to world factor, origin are %f, %f, %f", self.globalToWorldFactor, zoneMeasurement.originGlobalX, zoneMeasurement.originGlobalY)
 		self:RefreshAllPins()
 	end)
 	
@@ -435,7 +437,7 @@ function InRangePins.UpdatePin(mapCache, nodeId, self, lastUpdate, compassKeys, 
 		else
 			validWorldPin = self.settings.isPinTypeVisible[pinTypeId] --.IsMapPinTypeVisible(pinTypeId)
 		end
-		if self.settings.worldSpawnFilter then--IsWorldSpawnFilterEnabled() then
+		if LibNodeDetection and self.settings.worldSpawnFilter then--IsWorldSpawnFilterEnabled() then
 			if Harvest.HARVEST_NODES[pinTypeId] and not mapCache.hasCompassPin[nodeId] then
 				validWorldPin = false
 			end
@@ -478,7 +480,7 @@ function InRangePins.UpdatePin(mapCache, nodeId, self, lastUpdate, compassKeys, 
 	else
 		if not self.settings.isPinTypeVisible[pinTypeId] then return end--.IsMapPinTypeVisible(pinTypeId) then return end
 	end
-	if self.settings.compassSpawnFilter then--IsCompassSpawnFilterEnabled() then
+	if LibNodeDetection and self.settings.compassSpawnFilter then--IsCompassSpawnFilterEnabled() then
 		if Harvest.HARVEST_NODES[pinTypeId] and not mapCache.hasCompassPin[nodeId] then
 			return
 		end

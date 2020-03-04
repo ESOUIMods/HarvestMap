@@ -51,9 +51,11 @@ Harvest.HARVEST_NODES = {
 
 -- translates pintypes, e.g. LibNodeDetection.pinTypes.BLACKSMITH to Harvest.BLACKSMITH
 Harvest.DETECTION_TO_HARVEST_PINTYPE = {}
-for key, value in pairs(LibNodeDetection.pinTypes) do
-	if type(key) == "string" and type(value) == "number" then
-		Harvest.DETECTION_TO_HARVEST_PINTYPE[value] = Harvest[key]
+if LibNodeDetection then
+	for key, value in pairs(LibNodeDetection.pinTypes) do
+		if type(key) == "string" and type(value) == "number" then
+			Harvest.DETECTION_TO_HARVEST_PINTYPE[value] = Harvest[key]
+		end
 	end
 end
 

@@ -42,9 +42,10 @@ Supported minimaps: Votan, Fyrakin and AUI]],
 	minimapspawnfilter = "Display only spawned resources on minimap",
 	spawnfiltertooltip = [[When enabled, HarvestMap will hide pins for resources that have not spawned yet.
 For example if another player already harvested the resource, then the pin will be hidden until the resource is available again.
-This option works only for harvestable crafting material. It does not work for containers such as chests or heavy sacks.
-Does not work if another addon hides the compass.]],
-	spawnfilterwarning = "Does not work if another addon hides the compass.",
+This option works only for harvestable crafting material, it does not work for containers such as chests or heavy sacks.
+Does not work if another addon hides or rescales the compass.]],
+	nodedetectionmissing = "This option can only be enabled, if the 'NodeDetection' library is enabled.",
+	spawnfilterwarning = "Does not work if another addon hides or rescales the compass.",
 	--["minimaponly"] = "Display pins only on the minimap",
 	--["minimaponlytooltip"] = "When this option is enabled, there will be no pins on the default map. The pins will only be displayed on the minimap.",
 	["level"] = "Display map pins above POI pins.",
