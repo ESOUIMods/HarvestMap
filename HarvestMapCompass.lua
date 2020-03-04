@@ -1,11 +1,14 @@
-local maxDistance = 0.02
+if not Harvest then
+	Harvest = {}
+end
 
 function Harvest.additionalLayout( pin )
     local color = COMPASS_PINS.pinLayouts[ pin.pinType ].color
     if not color then
-        d("The Pin Type : " .. pin.pinType )
+    --    d("The Pin Type : " .. pin.pinType )
         return
-    end
+	end
+
     local tex = pin:GetNamedChild( "Background" )
     tex:SetColor(color[1] , color[2] , color[3], 1)
 end
@@ -15,62 +18,69 @@ function Harvest.additionalLayoutReset( pin )
     tex:SetColor( 1, 1, 1, 1 )
 end
 
--- Originally 6 changed to 8 adding (7)solvents, (8)fish
-Harvest.defaultCompassLayouts = {
-    [1] = {texture = "HarvestMap/Textures/Compass/mining.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-    [2] = {texture = "HarvestMap/Textures/Compass/clothing.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-    [3] = {texture = "HarvestMap/Textures/Compass/enchanting.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-    [4] = {texture = "HarvestMap/Textures/Compass/alchemy.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-    [5] = {texture = "HarvestMap/Textures/Compass/wood.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-    [6] = {texture = "HarvestMap/Textures/Compass/chest.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-    [7] = {texture = "HarvestMap/Textures/Compass/solvent.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-    [8] = {texture = "HarvestMap/Textures/Compass/fish.dds", maxDistance = maxDistance, color = {1, 1, 1}, additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset} },
-}
 
-function Harvest.addCompassCallback( profession, g_mapPinManager )
-    if not Harvest.savedVars["settings"].filters[ profession ] or not Harvest.defaults.compass then
+function Harvest.AddCompassCallback( pinTypeId, g_mapPinManager )
+    if not Harvest.IsPinTypeVisible(pinTypeId) or not Harvest.AreCompassPinsVisible() then
         return
     end
-    local zone = Harvest.GetMap()
-    local nodes = Harvest.savedVars["nodes"].data[zone]
-    local pinType = Harvest.GetPinType( profession )
-
-    if not nodes then
+    -- data is still being manipulated, better if we don't access it yet
+    if not Harvest.IsUpdateQueueEmpty() then
         return
     end
+    local map = Harvest.GetMap()
+    local nodes = Harvest.GetNodesOnMap( map, pinTypeId )
+    local pinType = Harvest.GetPinType( pinTypeId )
 
-    nodes = nodes[ profession ]
-    if not nodes then
-        return
-    end
-    
-    for _, item in ipairs( nodes ) do
-        local node = type(item) == "string" and Harvest.Deserialize(item) or item
-        g_mapPinManager:CreatePin( pinType, node, node[1], node[2] )
-    end
+    Harvest.compassCounter[pinType] = Harvest.compassCounter[pinType] + 1
+    Harvest.AddCompassPinsLater(Harvest.compassCounter[pinType], g_mapPinManager, pinType, nodes, nil)
 end
 
-function Harvest.CreateCompassPin(profession)
-    --if not Harvest.savedVars["settings"].filters[ profession ] then
-    --    return
-    --end
-    local pinType = Harvest.GetPinType( profession )
+function Harvest.AddCompassPinsLater(counter, g_mapPinManager, pinType, nodes, index)
+    if counter ~= Harvest.compassCounter[pinType] then
+        return
+    end
+
+	if not Harvest.IsPinTypeVisible_string( pinType ) then
+		Harvest.compassCounter[pinType] = 0
+		return
+	end
+
+    -- data is still being manipulated, better if we don't access it yet
+    if not Harvest.IsUpdateQueueEmpty() then
+        Harvest.compassCounter[pinType] = 0
+        return
+    end
+
+    local node = nil
+    for counter = 1,10 do
+        index, node = next(nodes, index)
+        if index == nil then
+            Harvest.compassCounter[pinType] = 0
+            return
+        end
+        g_mapPinManager:CreatePin( pinType, node, node[1], node[2] )
+    end
+    zo_callLater(function() Harvest.AddCompassPinsLater(counter, g_mapPinManager, pinType, nodes, index) end, 0.1)
+end
+
+function Harvest.InitializeCompassPinType( pinTypeId )
+    local pinType = Harvest.GetPinType( pinTypeId )
 
     COMPASS_PINS:AddCustomPin(
         pinType,
         function( g_mapPinManager )
-            Harvest.addCompassCallback( profession, g_mapPinManager )
+            Harvest.AddCompassCallback( pinTypeId, g_mapPinManager )
         end,
-        Harvest.savedVars["settings"].compassLayouts[ profession ]
+        Harvest.GetCompassPinLayout( pinTypeId )
     )
 end
 
 function Harvest.InitializeCompassMarkers()
-    for _, layout in pairs(Harvest.savedVars["settings"].compassLayouts) do
-        layout.additionalLayout = {Harvest.additionalLayout, Harvest.additionalLayoutReset}
-    end
-    for profession = 1,8 do
-        Harvest.CreateCompassPin( profession )
+    -- initialize each compass pin type
+    for pinType in ipairs( Harvest.PINTYPES ) do
+        Harvest.InitializeCompassPinType( pinType )
     end
     COMPASS_PINS:RefreshPins()
 end
+
+

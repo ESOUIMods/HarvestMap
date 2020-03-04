@@ -1,8 +1,8 @@
 ## Title: HarvestMap
 ## Author: Shinni and Sharlikran
-## Version: 2.7.6
-## APIVersion: 100012
-## OptionalDependsOn: LibAddonMenu-2.0 CustomCompassPins AceSerializer-3.0 LibMapPins-1.0
+## Version: 3.0.0
+## APIVersion: 100013
+## OptionalDependsOn: LibAddonMenu-2.0 CustomCompassPins AceSerializer-3.0 LibMapPins-1.0 HarvestMapEP HarvestMapDC HarvestMapAD
 ## SavedVariables: Harvest_SavedVars
 
 Libs/LibStub/LibStub.lua
@@ -19,16 +19,15 @@ Libs/LibMapPins-1.0/LibMapPins-1.0.lua
 
 HarvestMap.lua
 
-Localization/HarvestMapLoc.lua
-Localization/HarvestMapNodesLoc.lua
-Localization/HarvestMapMapNames.lua
-Localization/HarvestMapData-en.lua
-Localization/HarvestMapData-de.lua
-Localization/HarvestMapData-fr.lua
+HarvestMapConstants.lua
+HarvestMapDefaults.lua
 
-HarvestMapData.lua
+Localization/HarvestMapLocUI.lua
+Localization/HarvestMapLocNodes.lua
+Localization/HarvestMapLocZones.lua
+
+HarvestMapUpdate.lua
 HarvestMapMarkers.lua
 HarvestMapCompass.lua
 HarvestMapOptions.lua
-HarvestMapImport.lua
 HarvestMap.xml

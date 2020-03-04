@@ -1,97 +1,164 @@
 local LMP = LibStub("LibMapPins-1.0")
 
--- Originally 6 changed to 8 adding (7)solvents, (8)fish
-Harvest.defaultMapLayouts = {
-    [1] = { level = 20, texture = "HarvestMap/Textures/Map/mining.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
-    [2] = { level = 20, texture = "HarvestMap/Textures/Map/clothing.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
-    [3] = { level = 20, texture = "HarvestMap/Textures/Map/enchanting.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
-    [4] = { level = 20, texture = "HarvestMap/Textures/Map/alchemy.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
-    [5] = { level = 20, texture = "HarvestMap/Textures/Map/wood.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
-    [6] = { level = 20, texture = "HarvestMap/Textures/Map/chest.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
-    [7] = { level = 20, texture = "HarvestMap/Textures/Map/solvent.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
-    [8] = { level = 20, texture = "HarvestMap/Textures/Map/fish.dds", size = 20, tint = ZO_ColorDef:New(1, 1, 1) },
-}
+if not Harvest then
+	Harvest = {}
+end
 
-function Harvest.addCallback( profession )
-    if not Harvest.savedVars["settings"].filters[ profession ] then
+function Harvest.AddMapPinCallback( pinTypeId )
+    if not Harvest.IsPinTypeVisible( pinTypeId ) then
         return
     end
-    --d("Profession : " .. profession )
-    local zone = Harvest.GetMap()
-    local nodes = Harvest.savedVars["nodes"].data[zone]
-    local pinType = Harvest.GetPinType( profession )
+    -- data is still being manipulated, better if we don't access it yet
+    if not Harvest.IsUpdateQueueEmpty() then
+        return
+    end
+    local map = Harvest.GetMap()
+    local nodes = Harvest.GetNodesOnMap( map, pinTypeId )
+    local pinType = Harvest.GetPinType( pinTypeId )
 
-    if not nodes then
+    Harvest.mapCounter[pinType] = Harvest.mapCounter[pinType] + 1
+    Harvest.AddPinsLater(Harvest.mapCounter[pinType], pinType, nodes, nil)
+end
+
+function Harvest.AddPinsLater(counter, pinType, nodes, index)
+    -- map was changed while new pins are still being added
+    -- abort adding new pins!
+    if counter ~= Harvest.mapCounter[pinType] then
         return
     end
 
-    nodes = nodes[ profession ]
-    if not nodes then
+    if not Harvest.IsPinTypeVisible_string( pinType ) then
+        Harvest.mapCounter[pinType] = 0
         return
     end
-    for key, item in ipairs( nodes ) do
-        local node = type(item) == "string" and Harvest.Deserialize(item) or item
+
+    -- data is still being manipulated, better if we don't access it yet
+    if not Harvest.IsUpdateQueueEmpty() then
+        Harvest.mapCounter[pinType] = 0
+        return
+    end
+
+    local node = nil
+    for counter = 1,10 do
+        index, node = next(nodes, index)
+        if index == nil then
+            Harvest.mapCounter[pinType] = 0
+            return
+        end
         LMP:CreatePin( pinType, node, node[1], node[2] )
+        --EVENT_MANAGER:UnregisterForUpdate("FyrMiniMapLoadCustomPinGroup"..tostring(_G[pinType]))
+    end
+    if FyrMM then
+        Harvest.AddPinsLater(counter, pinType, nodes, index)
+    else
+        zo_callLater(function() Harvest.AddPinsLater(counter, pinType, nodes, index) end, 0.1)
     end
 end
 
 Harvest.tooltipCreator = {
     creator = function( pin )
-        for _, name in ipairs(pin.m_PinTag[3]) do
-            if Harvest.nodeLocalization[name] then
-                InformationTooltip:AddLine( Harvest.nodeLocalization[name] )
-            else
-                InformationTooltip:AddLine( name )
-            end
+        for _, name in pairs( pin.m_PinTag[3] ) do
+            InformationTooltip:AddLine( Harvest.GetLocalizedNodeName( name ) )
         end
     end,
     tooltip = 1
 }
 
-function Harvest.GetPinType( profession )
-    return "HrvstPin" .. profession
-end
-
-function Harvest.CreateMapPin(profession)
-
-    if Harvest.defaults.verbose then
-        d(Harvest.settings)
-        d(Harvest.savedVars["settings"].mapLayouts)
-        d(Harvest.savedVars["settings"].mapLayouts[ profession ])
-    end
-
-    local pinType = Harvest.GetPinType( profession )
-
-    if Harvest.savedVars["settings"].mapLayouts[ profession ].color then
-        Harvest.savedVars["settings"].mapLayouts[ profession ].tint = ZO_ColorDef:New(unpack(Harvest.savedVars["settings"].mapLayouts[ profession ].color))
-        Harvest.savedVars["settings"].mapLayouts[ profession ].color = nil
-    else
-        Harvest.savedVars["settings"].mapLayouts[ profession ].tint = ZO_ColorDef:New(Harvest.savedVars["settings"].mapLayouts[ profession ].tint)
-    end
+function Harvest.InitializeMapPinType( pinTypeId )
+    local pinType = Harvest.GetPinType( pinTypeId )
 
     LMP:AddPinType(
         pinType,
         function( g_mapPinManager )
-            Harvest.addCallback( profession )
+            Harvest.AddMapPinCallback( pinTypeId )
         end,
         nil,
-        Harvest.savedVars["settings"].mapLayouts[ profession ],
+        Harvest.GetMapPinLayout( pinTypeId ),
         Harvest.tooltipCreator
     )
 
     LMP:AddPinFilter(
         pinType,
-        Harvest.localization[ "filter"..profession ],
+        Harvest.GetLocalizedPinFilter( pinTypeId ),
         false,
-        Harvest.savedVars["settings"].filters,
-        profession,
-        nil
+        Harvest.savedVars["settings"].isPinTypeVisible
     )
 
 end
 
-function Harvest.InitializeMapMarkers()
-    for profession = 1,8 do
-        Harvest.CreateMapPin( profession )
+local nameFun = function(pin)
+    d("asd")
+    local str = ""
+    if not IsInGamepadPreferredMode() then str = "Delete Pin: " end
+    for _, name in pairs( pin.m_PinTag[3] ) do
+        str = str .. Harvest.GetLocalizedNodeName( name ) .. " "
     end
+    return str
+end
+
+Harvest.debugHandler = {
+    {
+        name = nameFun,
+        callback = function(pin)
+            if not Harvest.IsDebugEnabled() or IsInGamepadPreferredMode() then
+                for _,pinTypeId in ipairs( Harvest.PINTYPES ) do
+                    local pinType = Harvest.GetPinType( pinTypeId )
+                    LMP:SetClickHandlers(pinType, nil, nil)
+                end
+                return
+            end
+            local pinType, pinTag = pin:GetPinTypeAndTag()
+            pinType = LMP.pinManager.customPins[pinType].pinTypeString
+            local pinTypeId = Harvest.GetPinId( pinType )
+            --LMP:RemoveCustomPin( pinType, pinTag )
+            local map = Harvest.GetMap()
+            local saveFile = Harvest.GetSaveFile( map )
+            for i, node in pairs( Harvest.cache[ map ][ pinTypeId ]) do
+                if node == pinTag then
+                    LMP:RemoveCustomPin( pinType, pinTag )
+                    saveFile.data[ map ][ pinTypeId ][ i ] = nil
+                    Harvest.cache[ map ][ pinTypeId ][ i ] = nil
+                    return
+                end
+            end
+
+        end,
+        show = function() return true end,
+        duplicates = function(pin1, pin2) return not Harvest.IsDebugEnabled() end,
+        gamepadName = nameFun
+    }
+}
+
+function Harvest.InitializeMapMarkers()
+    for pinTypeId in ipairs( Harvest.PINTYPES ) do
+        Harvest.InitializeMapPinType( pinTypeId )
+    end
+
+    LMP:AddPinType(
+        Harvest.GetPinType( "Debug" ),
+        function( g_mapPinManager ) --gets called when debug is enabled
+            if IsInGamepadPreferredMode() then
+                for _,pinTypeId in ipairs( Harvest.PINTYPES ) do
+                    local pinType = Harvest.GetPinType( pinTypeId )
+                    LMP:SetClickHandlers(pinType, nil, nil)
+                end
+                return
+            end
+            for _,pinTypeId in ipairs( Harvest.PINTYPES ) do
+                local pinType = Harvest.GetPinType( pinTypeId )
+                LMP:SetClickHandlers(pinType, Harvest.debugHandler, nil)
+            end
+        end,
+        nil,
+        Harvest.GetMapPinLayout( 1 ),
+        Harvest.tooltipCreator
+    )
+    -- debug pin type. when enabled clicking on pins deletes them
+    LMP:AddPinFilter(
+        Harvest.GetPinType( "Debug" ),
+        "HarvestMap debug mode",
+        false,
+        Harvest.savedVars["settings"].isPinTypeVisible
+    )
+
 end

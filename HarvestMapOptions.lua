@@ -1,167 +1,192 @@
 local LMP = LibStub("LibMapPins-1.0")
 
-function Harvest.GetFilter( profession )
-    return Harvest.savedVars["settings"].filters[ profession ]
+if not Harvest then
+    Harvest = {}
 end
 
-function Harvest.GetImportFilter( profession )
-    return Harvest.savedVars["settings"].importFilters[ profession ]
+function Harvest.IsPinTypeSavedOnImport( pinTypeId )
+    return Harvest.savedVars["settings"].isPinTypeSavedOnImport[ pinTypeId ]
 end
 
-function Harvest.GetGatherFilter( profession )
-    return Harvest.savedVars["settings"].gatherFilters[ profession ]
+function Harvest.SetPinTypeSavedOnImport( pinTypeId, value )
+    Harvest.savedVars["settings"].isPinTypeSavedOnImport[ pinTypeId ] = value
 end
 
-function Harvest.SetFilter( profession, value )
-    Harvest.savedVars["settings"].filters[ profession ] = value
-    LMP:SetEnabled( Harvest.GetPinType( profession ), value )
+function Harvest.IsZoneSavedOnImport( zone )
+    return Harvest.savedVars["settings"].isZoneSavedOnImport[ zone ]
 end
 
-function Harvest.SetImportFilter( profession, value )
-    Harvest.savedVars["settings"].importFilters[ profession ] = value
-    -- No need to refresh pins since it happens on import
+function Harvest.SetZoneSavedOnImport( zone, value )
+    Harvest.savedVars["settings"].isZoneSavedOnImport[ zone ] = value
 end
 
-function Harvest.SetGatherFilter( profession, value )
-    Harvest.savedVars["settings"].gatherFilters[ profession ] = value
-    -- No need to refresh pins since it happens when gathering
+function Harvest.AreCompassPinsVisible()
+    return Harvest.savedVars["settings"].isCompassVisible
 end
 
-function Harvest.GetSize( profession )
-    return Harvest.savedVars["settings"].mapLayouts[ profession ].size
+function Harvest.SetCompassPinsVisible( value )
+    Harvest.savedVars["settings"].isCompassVisible = value
 end
 
-function Harvest.SetSize( profession, value )
-    Harvest.savedVars["settings"].mapLayouts[ profession ].size = value
-    LMP:SetLayoutKey( Harvest.GetPinType( profession ), "size", value )
-    Harvest.RefreshPins( profession )
+function Harvest.GetCompassLayouts()
+    return Harvest.savedVars["settings"].compassLayouts
 end
 
-function Harvest.GetColor( profession )
-    return Harvest.savedVars["settings"].mapLayouts[ profession ].tint:UnpackRGB()
+function Harvest.GetCompassPinLayout( pinTypeId )
+    return Harvest.savedVars["settings"].compassLayouts[ pinTypeId ]
 end
 
-function Harvest.SetColor( profession, r, g, b )
-    Harvest.savedVars["settings"].mapLayouts[ profession ].tint:SetRGB( r, g, b )
-    Harvest.savedVars["settings"].compassLayouts[ profession ].color = { r, g, b }
-    LMP:GetLayoutKey( Harvest.GetPinType( profession ), "tint" ):SetRGB( r, g, b )
-    Harvest.RefreshPins( profession )
+function Harvest.GetMapLayouts()
+    return Harvest.savedVars["settings"].mapLayouts
 end
 
--- Harvest DuplicateNode Range Checking
-function Harvest.GetMinDist()
-    return Harvest.defaults.minDefault
+function Harvest.GetMapPinLayout( pinTypeId )
+    return Harvest.savedVars["settings"].mapLayouts[ pinTypeId ]
 end
 
-function Harvest.SetMinDist(value)
-    Harvest.defaults.minDefault = value
+function Harvest.IsPinTypeVisible( pinTypeId )
+    return Harvest.savedVars["settings"].isPinTypeVisible[ Harvest.GetPinType(pinTypeId) ]
 end
 
-function Harvest.GetMinReticle()
-    return Harvest.defaults.minReticleover
+function Harvest.IsPinTypeVisible_string( pinType )
+    return Harvest.savedVars["settings"].isPinTypeVisible[ pinType ]
 end
 
-function Harvest.SetMinReticle(value)
-    Harvest.defaults.minReticleover = value
+function Harvest.SetPinTypeVisible( pinTypeId, value )
+    Harvest.savedVars["settings"].isPinTypeVisible[ Harvest.GetPinType( pinTypeId ) ] = value
+    LMP:SetEnabled( Harvest.GetPinType( pinTypeId ), value )
 end
 
-local function CreateFilter( profession )
+function Harvest.IsDebugEnabled()
+    return Harvest.savedVars["settings"].isPinTypeVisible[ Harvest.GetPinType( "Debug" ) ]
+end
 
-    local profession = profession 
+function Harvest.SetDebugEnabled( value )
+    Harvest.savedVars["settings"].isPinTypeVisible[ Harvest.GetPinType( "Debug" ) ] = value
+    LMP:SetEnabled(  Harvest.GetPinType( "Debug" ), value )
+end
+
+function Harvest.AreDebugMessagesEnabled()
+    return Harvest.savedVars["settings"].debug
+end
+
+function Harvest.SetDebugMessagesEnabled( value )
+    Harvest.savedVars["settings"].debug = value
+end
+
+function Harvest.IsPinTypeSavedOnGather( pinTypeId )
+    return Harvest.savedVars["settings"].isPinTypeSavedOnGather[ pinTypeId ]
+end
+
+function Harvest.SetPinTypeSavedOnGather( pinTypeId, value )
+    Harvest.savedVars["settings"].isPinTypeSavedOnGather[ pinTypeId ] = value
+end
+
+function Harvest.GetMinDistanceBetweenPins()
+    return Harvest.savedVars["settings"].minDistanceBetweenPins
+end
+
+function Harvest.SetMinDistanceBetweenPins( value )
+    Harvest.savedVars["settings"].minDistanceBetweenPins = value
+end
+
+function Harvest.GetMapPinSize( pinTypeId )
+    return Harvest.savedVars["settings"].mapLayouts[ pinTypeId ].size
+end
+
+function Harvest.SetMapPinSize( pinTypeId, value )
+    Harvest.savedVars["settings"].mapLayouts[ pinTypeId ].size = value
+    LMP:SetLayoutKey( Harvest.GetPinType( pinTypeId ), "size", value )
+    Harvest.RefreshPins( pinTypeId )
+end
+
+function Harvest.GetPinColor( pinTypeId )
+    return Harvest.savedVars["settings"].mapLayouts[ pinTypeId ].tint:UnpackRGB()
+end
+
+function Harvest.SetPinColor( pinTypeId, r, g, b )
+    Harvest.savedVars["settings"].mapLayouts[ pinTypeId ].tint:SetRGB( r, g, b )
+    Harvest.savedVars["settings"].compassLayouts[ pinTypeId ].color = { r, g, b }
+    LMP:GetLayoutKey( Harvest.GetPinType( pinTypeId ), "tint" ):SetRGB( r, g, b )
+    Harvest.RefreshPins( pinTypeId )
+end
+
+local function CreateFilter( pinTypeId )
+
+    local pinTypeId = pinTypeId
 
     local filter = {
         type = "checkbox",
-        name = Harvest.localization[ "filter"..profession ],
-        tooltip = Harvest.localization[ "filtertooltip"..profession ],
+        name = Harvest.GetLocalizedPinFilter( pinTypeId ),
+        tooltip = Harvest.GetLocalizedPinFilterTooltip( pinTypeId ),
         getFunc = function()
-            return Harvest.GetFilter( profession )
+            return Harvest.IsPinTypeVisible( pinTypeId )
         end,
         setFunc = function( value )
-            Harvest.SetFilter( profession, value )
+            Harvest.SetPinTypeVisible( pinTypeId, value )
         end,
-        default = Harvest.DefaultConfiguration.filters[ profession ],
+        default = Harvest.defaultSettings.isPinTypeVisible[ pinTypeId ],
     }
 
     return filter
 
 end
 
-local function CreateImportFilter( profession )
+local function CreateGatherFilter( pinTypeId )
 
-    local profession = profession 
-
-    local importFilter = {
-        type = "checkbox",
-        name = Harvest.localization[ "import"..profession ],
-        tooltip = Harvest.localization[ "importtooltip"..profession ],
-        getFunc = function()
-            Harvest.GetImportFilter( profession )
-        end,
-        setFunc = function( value )
-            Harvest.SetImportFilter( profession, value )
-        end,
-        default = Harvest.DefaultConfiguration.importFilters[ profession ],
-    }
-
-    return importFilter
-
-end
-
-local function CreateGatherFilter( profession )
-
-    local profession = profession 
+    local pinTypeId = pinTypeId
 
     local gatherFilter = {
         type = "checkbox",
-        name = Harvest.localization[ "gather"..profession ],
-        tooltip = Harvest.localization[ "gathertooltip"..profession ],
+        name = Harvest.GetLocalizedGatherFilter( pinTypeId ),
+        tooltip = Harvest.GetLocalizedGatherFilterTooltip( pinTypeId ),
         getFunc = function()
-            Harvest.GetGatherFilter( profession )
+            return Harvest.IsPinTypeSavedOnGather( pinTypeId )
         end,
         setFunc = function( value )
-            Harvest.SetGatherFilter( profession, value )
+            Harvest.SetPinTypeSavedOnGather( pinTypeId, value )
         end,
-        default = Harvest.DefaultConfiguration.gatherFilters[ profession ],
+        default = Harvest.defaultSettings.isPinTypeSavedOnGather[ pinTypeId ],
     }
 
     return gatherFilter
 
 end
 
-local function CreateSizeSlider( profession )
+local function CreateSizeSlider( pinTypeId )
 
-    local profession = profession 
+    local pinTypeId = pinTypeId
 
     local sizeSlider = {
         type = "slider",
-        name = Harvest.localization[ "size"..profession ],
-        tooltip = Harvest.localization[ "sizetooltip"..profession ],
+        name = Harvest.GetLocalizedMapPinSize( pinTypeId ),
+        tooltip =  Harvest.GetLocalizedMapPinSizeTooltip( pinTypeId ),
         min = 16,
         max = 64,
         getFunc = function()
-            return Harvest.GetSize( profession )
+            return Harvest.GetMapPinSize( pinTypeId )
         end,
         setFunc = function( value )
-            Harvest.SetSize( profession, value )
+            Harvest.SetMapPinSize( pinTypeId, value )
         end,
-        default = Harvest.defaultMapLayouts[ profession ].size,
+        default = Harvest.defaultSettings.mapLayouts[ pinTypeId ].size,
     }
 
     return sizeSlider
 
 end
 
-local function CreateColorPicker( profession )
+local function CreateColorPicker( pinTypeId )
 
-    local profession = profession 
+    local pinTypeId = pinTypeId
 
     local colorPicker = {
         type = "colorpicker",
-        name = Harvest.localization[ "color"..profession ],
-        tooltip = Harvest.localization[ "colortooltip"..profession ],
-        getFunc = function() return Harvest.GetColor( profession ) end,
-        setFunc = function( r, g, b ) Harvest.SetColor( profession, r, g, b ) end,
-        default = Harvest.defaultMapLayouts[ profession ].tint,
+        name = Harvest.GetLocalizedPinColor( pinTypeId ),
+        tooltip = Harvest.GetLocalizedPinColorTooltip( pinTypeId ),
+        getFunc = function() return Harvest.GetPinColor( pinTypeId ) end,
+        setFunc = function( r, g, b ) Harvest.SetPinColor( pinTypeId, r, g, b ) end,
+        default = Harvest.defaultSettings.mapLayouts[ pinTypeId ].tint,
     }
      
     return colorPicker
@@ -186,29 +211,22 @@ function Harvest.InitializeOptions()
 
     local optionsTable = setmetatable({}, { __index = table })
 
+    -- New Duplicate Node Range Check Sliders
     optionsTable:insert({
-        type = "button",
-        name = "Import other Accounts",
-        tooltip = "Moves gathered data from other Accounts to this one. This can also restore lost data after an ESO update.",
-        warning = "Please create a backup of your data first! Copy the file SavedVariables/HarvestMap.lua to somwhere else.",
-        width = "half",
-        func = function()
-            Harvest.makeGlobal("nodes")
-        end
+        type = "slider",
+        name = Harvest.GetLocalizedMinDistance(),
+        tooltip = Harvest.GetLocalizedMinDistanceTooltip(),
+        min = 25,
+        max = 100,
+        getFunc = function()
+            return Harvest.savedVars["settings"].minDistanceBetweenPins * 1000000
+        end,
+        setFunc = function( value )
+            Harvest.savedVars["settings"].minDistanceBetweenPins = 0.000001 * value
+        end,
+        default = Harvest.defaultSettings.minDistanceBetweenPins * 1000000,
     })
-    optionsTable:insert({
-    type = "button",
-    name = "Reduce filesize",
-    tooltip = "Transforms the data's structure to reduce the total file size. Can reduce load times.",
-    warning = "Please create a backup of your data first! Copy the file SavedVariables/HarvestMap.lua to somwhere else.",
-    width = "half",
-    func = function()
-            Harvest.updateHarvestNodes("nodes")
-            Harvest.updateHarvestNodes("mapinvalid")
-            Harvest.updateHarvestNodes("esonodes")
-            Harvest.updateHarvestNodes("esoinvalid")
-        end
-    })
+
     optionsTable:insert({
         type = "header",
         name = "Compass Options",
@@ -216,25 +234,25 @@ function Harvest.InitializeOptions()
 
     optionsTable:insert({
         type = "checkbox",
-        name = Harvest.localization[ "compass" ],
-        tooltip = Harvest.localization[ "compasstooltip" ],
-        getFunc = function() return Harvest.defaults.compass end,
+        name = Harvest.GetLocalizedCompass(),
+        tooltip = Harvest.GetLocalizedCompassTooltip(),
+        getFunc = function() return Harvest.AreCompassPinsVisible() end,
         setFunc = function( value )
-            Harvest.defaults.compass = value
+            Harvest.SetCompassPinsVisible( value )
             COMPASS_PINS:RefreshPins()
         end,
-        default = Harvest.DefaultSettings.compass,
+        default = Harvest.defaultSettings.isCompassVisible,
     })
 
     optionsTable:insert({
         type = "slider",
-        name = Harvest.localization["fov"],
-        tooltip = Harvest.localization["fovtooltip"],
+        name = Harvest.GetLocalizedFOV(),
+        tooltip = Harvest.GetLocalizedFOVTooltip(),
         min = 25,
         max = 100,
         getFunc = function()
             local FOV = Harvest.savedVars["settings"].compassLayouts[1].FOV or COMPASS_PINS.defaultFOV
-            return 100 *  FOV / (2 * math.pi)
+            return zo_round(100 *  FOV / (2 * math.pi))
         end,
         setFunc = function( value )
             for profession = 1,8 do
@@ -247,314 +265,33 @@ function Harvest.InitializeOptions()
 
     optionsTable:insert({
         type = "slider",
-        name = Harvest.localization["distance"],
-        tooltip = Harvest.localization["distancetooltip"],
+        name = Harvest.GetLocalizedCompassDistance(),
+        tooltip = Harvest.GetLocalizedCompassDistanceTooltip(),
         min = 1,
         max = 100,
         getFunc = function()
             return Harvest.savedVars["settings"].compassLayouts[1].maxDistance * 1000
         end,
         setFunc = function( value )
-            for profession = 1, 8 do
-                Harvest.savedVars["settings"].compassLayouts[ profession ].maxDistance  = value / 1000
+            for _, pinTypeId in pairs( Harvest.PINTYPES ) do
+                Harvest.savedVars["settings"].compassLayouts[ pinTypeId ].maxDistance  = value / 1000
             end
             COMPASS_PINS:RefreshPins()
         end,
-        default = Harvest.defaultCompassLayouts[1].maxDistance * 1000
+        default = Harvest.defaultSettings.compassLayouts[1].maxDistance * 1000
     })
 
-    -- New Duplicate Node Range Check Sliders
-    optionsTable:insert({
-        type = "slider",
-        name = Harvest.localization["minnodedist"],
-        tooltip = Harvest.localization["nodedisttooltip"],
-        min = 25,
-        max = 100,
-        getFunc = function()
-            return Harvest.GetMinDist()
-        end,
-        setFunc = function( value )
-            Harvest.SetMinDist( value )
-            Harvest.minDefault = 0.000001 * Harvest.defaults.minDefault
-        end,
-        default = Harvest.DefaultSettings.minDefault,
-    })
-
-    optionsTable:insert({
-        type = "slider",
-        name = Harvest.localization["minreticledist"],
-        tooltip = Harvest.localization["reticledisttooltip"],
-        min = 49,
-        max = 100,
-        getFunc = function()
-            return Harvest.GetMinReticle()
-        end,
-        setFunc = function( value )
-            Harvest.SetMinReticle( value )
-            Harvest.minReticleover = 0.000001 * Harvest.defaults.minReticleover
-        end,
-        default = Harvest.DefaultSettings.minReticleover,
-    })
-
-    for profession = 1, 8 do
+    for _, pinTypeId in pairs( Harvest.PINTYPES ) do
         optionsTable:insert({
             type = "header",
-            name = Harvest.localization[ "filter"..profession ] .. " pin Options",
+            name = Harvest.GetLocalizedPinFilter( pinTypeId ) .. " Options",
         })
-        optionsTable:insert( CreateFilter( profession ) )
-        optionsTable:insert( CreateImportFilter( profession ) )
-        optionsTable:insert( CreateGatherFilter( profession ) )
-        optionsTable:insert( CreateSizeSlider( profession ) )
-        optionsTable:insert( CreateColorPicker( profession ) )
+        optionsTable:insert( CreateFilter( pinTypeId ) )
+        --optionsTable:insert( CreateImportFilter( pinTypeId ) )
+        optionsTable:insert( CreateGatherFilter( pinTypeId ) )
+        optionsTable:insert( CreateSizeSlider( pinTypeId ) )
+        optionsTable:insert( CreateColorPicker( pinTypeId ) )
     end
-
-    optionsTable:insert({
-        type = "header",
-        name = "Aldmeri Dominion Map Filters",
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Auridon Map Filter",
-        tooltip = "Enable filtering for Auridon",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "auridon" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "auridon" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "auridon" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Grahtwood Map Filter",
-        tooltip = "Enable filtering for Grahtwood",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "grahtwood" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "grahtwood" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "grahtwood" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Greenshade Map Filter",
-        tooltip = "Enable filtering for Greenshade",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "greenshade" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "greenshade" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "greenshade" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Malabal Tor Map Filter",
-        tooltip = "Enable filtering for Malabal Tor",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "malabaltor" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "malabaltor" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "malabaltor" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Reaper's March Tor Map Filter",
-        tooltip = "Enable filtering for Reaper's March",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "reapersmarch" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "reapersmarch" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "reapersmarch" ],
-    })
-
-    optionsTable:insert({
-        type = "header",
-        name = "Daggerfall Covenant Map Filters",
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Alik'r Desert Filter",
-        tooltip = "Enable filtering for Alik'r Desert",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "alikr" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "alikr" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "alikr" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Bangkorai Map Filter",
-        tooltip = "Enable filtering for Bangkorai",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "bangkorai" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "bangkorai" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "bangkorai" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Glenumbra Map Filter",
-        tooltip = "Enable filtering for Glenumbra",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "glenumbra" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "glenumbra" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "glenumbra" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Rivenspire Map Filter",
-        tooltip = "Enable filtering for Rivenspire",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "rivenspire" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "rivenspire" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "rivenspire" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Stormhaven Map Filter",
-        tooltip = "Enable filtering for Stormhaven",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "stormhaven" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "stormhaven" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "stormhaven" ],
-    })
-
-    optionsTable:insert({
-        type = "header",
-        name = "Ebonheart Pact Map Filters",
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Deshaan Map Filter",
-        tooltip = "Enable filtering for Deshaan",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "deshaan" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "deshaan" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "deshaan" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Eastmarch Map Filter",
-        tooltip = "Enable filtering for Eastmarch",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "eastmarch" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "eastmarch" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "eastmarch" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Shadowfen Map Filter",
-        tooltip = "Enable filtering for Shadowfen",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "shadowfen" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "shadowfen" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "shadowfen" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Stonefalls Map Filter",
-        tooltip = "Enable filtering for Stonefalls",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "stonefalls" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "stonefalls" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "stonefalls" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "The Rift Map Filter",
-        tooltip = "Enable filtering for The Rift",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "therift" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "therift" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "therift" ],
-    })
-
-    optionsTable:insert({
-        type = "header",
-        name = "Other Map Filters",
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Craglorn Map Filter",
-        tooltip = "Enable filtering for Craglorn",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "craglorn" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "craglorn" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "craglorn" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Coldharbor Map Filter",
-        tooltip = "Enable filtering for Coldharbor",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "coldharbor" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "coldharbor" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "coldharbor" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Cyrodiil Map Filter",
-        tooltip = "Enable filtering for Cyrodiil",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "cyrodiil" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "cyrodiil" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "cyrodiil" ],
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Cities Map Filters",
-        tooltip = "Enable filtering for City Maps",
-        getFunc = function()
-            return Harvest.savedVars["settings"].mapnameFilters[ "cities" ]
-        end,
-        setFunc = function( value )
-            Harvest.savedVars["settings"].mapnameFilters[ "cities" ] = value
-        end,
-        default = Harvest.DefaultConfiguration.mapnameFilters[ "cities" ],
-    })
 
     optionsTable:insert({
         type = "header",
@@ -562,27 +299,11 @@ function Harvest.InitializeOptions()
     })
     optionsTable:insert({
         type = "checkbox",
-        name = "Debug mode",
-        tooltip = "Enable debug mode",
-        getFunc = function()
-            return Harvest.defaults.debug
-        end,
-        setFunc = function( value )
-            Harvest.defaults.debug = value
-        end,
-        default = Harvest.DefaultSettings.debug,
-    })
-    optionsTable:insert({
-        type = "checkbox",
-        name = "Verbose debug mode",
-        tooltip = "Enable verbose debug mode",
-        getFunc = function()
-            return Harvest.defaults.verbose
-        end,
-        setFunc = function( value )
-            Harvest.defaults.verbose = value
-        end,
-        default = Harvest.DefaultSettings.verbose,
+        name = "Display debug messages",
+        tooltip = "Enable to display debug messages in the chat.",
+        getFunc = Harvest.AreDebugMessagesEnabled,
+        setFunc = Harvest.SetDebugMessagesEnabled,
+        default = Harvest.defaultSettings.debug,
     })
 
     optionsTable:insert({
@@ -594,13 +315,15 @@ function Harvest.InitializeOptions()
         name = "Account Wide Settings",
         tooltip = "Enable account Wide Settings",
         getFunc = function()
-            return Harvest.defaults.wideSetting
+            return Harvest.savedVars["global"].accountWideSettings
         end,
         setFunc = function( value )
-            Harvest.defaults.wideSetting = value
-            changeAccountWideSettings(value)
+            Harvest.savedVars["global"].accountWideSettings = value
+            ReloadUI("ingame")
         end,
-        default = Harvest.DefaultSettings.wideSetting,
+        width = "full",
+        warning = "Will reload the UI.",
+        --default = Harvest.defaultGlobalSettings.accountWideSettings,
     })
 
     local LAM = LibStub("LibAddonMenu-2.0")

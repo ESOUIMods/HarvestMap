@@ -2,7 +2,7 @@
     <Controls>
         <TopLevelControl name="HarvestMap">
             <OnUpdate>
-                Harvest.OnUpdate(time)
+                Harvest.OnDelayedUpdate(time)
             </OnUpdate>
         </TopLevelControl>
     </Controls>
