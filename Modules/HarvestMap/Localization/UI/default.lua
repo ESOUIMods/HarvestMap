@@ -220,6 +220,10 @@ Nodes per kilometer: <<3>>]],
 	["HARVESTFARM_GENERATOR"] = "Generate new tour",
 	["HARVESTFARM_EDITOR"] = "Edit tour",
 	["HARVESTFARM_SAVE"] = "Save/Load tour",
+
+	--Harvestmap menu (enhanced pin filters)
+	["3dPins"] = "3D pins",
+	["CompassPins"] = "Compass pins",
 }
 
 local default = Harvest.defaultLocalizedStrings

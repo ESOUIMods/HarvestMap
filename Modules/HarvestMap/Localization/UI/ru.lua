@@ -288,4 +288,8 @@ Harvest.localizedStrings = {
 	["HARVESTFARM_GENERATOR"] = "Создать новый путь",
 	["HARVESTFARM_EDITOR"] = "Редактировать путь",
 	["HARVESTFARM_SAVE"] = "Сохранить/Загрузить путь",
+
+	--Harvestmap menu (enhanced pin filters)
+	["3dPins"] = "3D булавки",
+	["CompassPins"] = "Контакты компаса",
 }

@@ -1,4 +1,5 @@
-local LMM = LibStub("LibMainMenu")
+local LMM = LibMainMenu
+assert(LMM, "\n\nThe library LibMainMenu could not be loaded. Your installation of the library is probably damaged or missing files.")
 
 local Menu = {}
 Harvest:RegisterModule("menu", Menu)

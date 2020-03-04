@@ -92,7 +92,7 @@ function Filters:InitializeCompassControl()
 	
 	local definition = {
 		type = "checkbox",
-		name = "Compass Pins",
+		name = Harvest.GetLocalization("CompassPins"),
 		getFunc = Harvest.AreCompassPinsVisible,
 		setFunc = function(...)
 			Harvest.SetCompassPinsVisible(...)
@@ -147,7 +147,7 @@ function Filters:InitializeWorldControl()
 	
 	local definition = {
 		type = "checkbox",
-		name = "3D Pins",
+		name = Harvest.GetLocalization("3dPins"),
 		getFunc = Harvest.AreWorldPinsVisible,
 		setFunc = function(...)
 			Harvest.SetWorldPinsVisible(...)
@@ -163,7 +163,7 @@ function Filters:InitializeWorldControl()
 	
 	definition = {
 		type = "checkbox",
-		name = "Override map pin filter",
+		name = Harvest.GetLocalization("override"),
 		getFunc = Harvest.IsWorldFilterActive,
 		setFunc = Harvest.SetWorldFilterActive,
 	}

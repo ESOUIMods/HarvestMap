@@ -207,4 +207,8 @@ Harvest.localizedStrings = {
 	["HARVESTFARM_GENERATOR"] = "Générer un nouveau circuit",
 	["HARVESTFARM_EDITOR"] = "Modifier circuit",
 	["HARVESTFARM_SAVE"] = "Sauver/Charger circuit",
+
+	--Harvestmap menu (enhanced pin filters)
+	["3dPins"] = "Marqueurs 3D",
+	["CompassPins"] = "Marqueurs de boussole",
 }

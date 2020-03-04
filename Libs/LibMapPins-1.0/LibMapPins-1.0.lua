@@ -26,12 +26,18 @@
 -- OTHER DEALINGS IN THE SOFTWARE.
 --
 -------------------------------------------------------------------------------
-local MAJOR, MINOR = "LibMapPins-1.0", 17
+local MAJOR, MINOR = "LibMapPins-1.0", 18
 
-local lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
+local lib, oldminor
+if LibStub then
+   lib, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
+else
+   lib = {}
+end
 if not lib then return end
 
 -------------------------------------------------------------------------------
+lib.name = MAJOR
 lib.version = MINOR
 lib.updateFrom = lib.updateFrom or oldminor
 lib.hookVersions = lib.hookVersions or setmetatable({}, { __index = function() return 0 end })
@@ -687,12 +693,16 @@ end
 -- 2: "zone/subzone"       (this format is used by HarvestMap)
 -- If argument is nil or false, function returns first format
 -------------------------------------------------------------------------------
-function lib:GetZoneAndSubzone(alternative)
-   if alternative then
-      return select(3,(GetMapTileTexture()):lower():find("maps/([%w%-]+/[%w%-]+_[%w%-]+)"))
-   end
+function lib:GetZoneAndSubzone(alternative, bStripUIMap)
+	local mapTexture = GetMapTileTexture():lower()
+	if bStripUIMap == true then
+		mapTexture = mapTexture:gsub("ui_map_", "")
+	end
+	if alternative then
+		return select(3,mapTexture:find("maps/([%w%-]+/[%w%-]+_[%w%-]+)"))
+	end
 
-   return select(3,(GetMapTileTexture()):lower():find("maps/([%w%-]+)/([%w%-]+_[%w%-]+)"))
+	return select(3,mapTexture:find("maps/([%w%-]+)/([%w%-]+_[%w%-]+)"))
 end
 
 
@@ -772,7 +782,7 @@ end
 -------------------------------------------------------------------------------
 local function OnLoad(code, addon)
    if addon:find("^ZO") then return end
-   EVENT_MANAGER:UnregisterForEvent("LibMapPins", EVENT_ADD_ON_LOADED)
+   EVENT_MANAGER:UnregisterForEvent(lib.name, EVENT_ADD_ON_LOADED)
 
    if WORLD_MAP_FILTERS.pvePanel.checkBoxPool then
       WORLD_MAP_FILTERS.pvePanel.checkBoxPool.parent = ZO_WorldMapFiltersPvEContainerScrollChild or WINDOW_MANAGER:CreateControlFromVirtual("ZO_WorldMapFiltersPvEContainer", ZO_WorldMapFiltersPvE, "ZO_ScrollContainer"):GetNamedChild("ScrollChild")
@@ -886,7 +896,35 @@ local function OnLoad(code, addon)
       ZO_WorldMapFiltersBattlegroundContainer:SetAnchorFill()
    end
 end
-EVENT_MANAGER:RegisterForEvent("LibMapPins", EVENT_ADD_ON_LOADED, OnLoad)
+EVENT_MANAGER:RegisterForEvent(lib.name, EVENT_ADD_ON_LOADED, OnLoad)
+
+-------------------------------------------------------------------------------
+-- lib:MyPosition()
+-------------------------------------------------------------------------------
+-- Returns the player position on current map as a chat output.
+-- The output format is prepared for the data collection.
+-------------------------------------------------------------------------------
+function lib:MyPosition()
+	 if SetMapToPlayerLocation() == SET_MAP_RESULT_MAP_CHANGED then
+		  CALLBACK_MANAGER:FireCallbacks("OnWorldMapChanged")
+	 end
+
+	 local mapName = zo_strformat(SI_ENCOUNTER_LOG_MAP_NAME_FORMATTER, GetMapName())
+	 local x, y = GetMapPlayerPosition("player")
+	 local zone, subzone = self:GetZoneAndSubzone()
+
+	 d(string.format("[\"%s\"][\"%s\"] = { %0.5f, %0.5f } -- %s", zone, subzone, x, y, mapName))
+end
+
+if SLASH_COMMANDS['/mypos'] == nil then
+	SLASH_COMMANDS["/mypos"] = function() lib:MyPosition() end
+	SLASH_COMMANDS["/myloc"] = function() lib:MyPosition() end
+end
+
+SLASH_COMMANDS["/lmppos"] = function() lib:MyPosition() end
+SLASH_COMMANDS["/lmploc"] = function() lib:MyPosition() end
+
+
 
 -------------------------------------------------------------------------------
 -- Useful methods for pins:
@@ -948,7 +986,7 @@ local pinLayoutData  = {
 local pinTooltipCreator = {
    creator = function(pin)
       local locX, locY = pin:GetNormalizedPosition()
-      InformationTooltip:AddLine(zo_strformat("Position of my pin is: <<1>>•<<2>>", ("%05.02f"):format(locX*100), ("%05.02f"):format(locY*100)))
+		InformationTooltip:AddLine(zo_strformat("Position of my pin is: <<1>>â€¢<<2>>", ("%05.02f"):format(locX*100), ("%05.02f"):format(locY*100)))
    end,
    tooltip = 1,
 }
@@ -1037,3 +1075,5 @@ function lib.AUI.IsMinimapLoaded() end
 function lib.AUI.AddCustomPinType() end
 function lib.AUI.UpdateQueuedCustomPinTypes() end
 function lib.AUI.SetQueuedCustomPinType() end
+
+LibMapPins = lib

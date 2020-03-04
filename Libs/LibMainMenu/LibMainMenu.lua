@@ -1,8 +1,8 @@
 
 --[[
-Author: Ayantir
+Author: Ayantir, Baertram
 Filename: LibMainMenu.lua
-Version: 5
+Version: 9
 ]]--
 
 --[[
@@ -27,16 +27,27 @@ Please read full licence at :
 http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
 
 ]]--
-
-LibMainMenu = ZO_Object:Subclass()
-
 --Register LAM with LibStub
-local MAJOR, MINOR = "LibMainMenu", 5
-local LibMainMenu, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
-if not LibMainMenu then return end	--the same or newer version of this lib is already loaded into memory 
+local MAJOR, MINOR = "LibMainMenu", 9
+local libMainMenu, oldminor
+if LibStub then
+    libMainMenu, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
+else
+    --Check if LibMainMenu was already loaded before properly
+    if LibMainMenu ~= nil and LibMainMenu.AddCategory ~= nil and LibMainMenu.wasLoadedProperly == true and LIBMAINMENU ~= nil then
+        --Library was loaded properly already
+        return
+    else
+        --Create new library instance via the global variable
+        libMainMenu = {}
+        libMainMenu.wasLoadedProperly = false
+    end
+end
+if not libMainMenu then return end
 
 LIBMAINMENU_LAYOUT_INFO = {}
 local Initialized = false
+libMainMenu.wasInitializedProperly = false
 
 local function InitializeLMM()
 	local LMMXML = CreateTopLevelWindow("LMMXML")
@@ -46,35 +57,45 @@ local function InitializeLMM()
 	local sceneGroupBar = CreateControlFromVirtual("$(parent)SceneGroupBar", LMMXML, "ZO_LabelButtonBar")
 	sceneGroupBar:SetAnchor(RIGHT, GuiRoot, nil, -40, -340)
 
-	local libMainMenuSubcategoryBar = CreateControl("LibMainMenuSubcategoryBar", GuiRoot, CT_CONTROL)
-	local libMainMenuSubcategoryButton = CreateControl("LibMainMenuSubcategoryButton", GuiRoot, CT_LABEL)
+	local libMainMenuSubcategoryBar = CreateControl("libMainMenuSubcategoryBar", GuiRoot, CT_CONTROL)
+	local libMainMenuSubcategoryButton = CreateControl("libMainMenuSubcategoryButton", GuiRoot, CT_LABEL)
 	libMainMenuSubcategoryButton:SetColor(ZO_CONTRAST_TEXT:UnpackRGBA())
 	libMainMenuSubcategoryButton:SetFont("ZoFontHeader3")
 	libMainMenuSubcategoryButton:SetHandler("OnMouseEnter", function(self) self:SetColor(ZO_HIGHLIGHT_TEXT:UnpackRGBA()) end)
 	libMainMenuSubcategoryButton:SetHandler("OnMouseExit", function(self) self:SetColor(ZO_CONTRAST_TEXT:UnpackRGBA()) end)
 	libMainMenuSubcategoryButton:SetMouseEnabled(true)
 
-	local libMainMenuCategoryBarButton = CreateControlFromVirtual("LibMainMenuCategoryBarButton", GuiRoot, "ZO_MenuBarButtonTemplate1")
-	libMainMenuCategoryBarButton:SetHandler("OnMouseEnter", function(self) LibMainMenuCategoryBarButton_OnMouseEnter(self) end)
-	libMainMenuCategoryBarButton:SetHandler("OnMouseExit", function(self) LibMainMenuCategoryBarButton_OnMouseExit(self) end)
+	local libMainMenuCategoryBarButton = CreateControlFromVirtual("libMainMenuCategoryBarButton", GuiRoot, "ZO_MenuBarButtonTemplate1")
+	libMainMenuCategoryBarButton:SetHandler("OnMouseEnter", function(self) libMainMenuCategoryBarButton_OnMouseEnter(self) end)
+	libMainMenuCategoryBarButton:SetHandler("OnMouseExit", function(self) libMainMenuCategoryBarButton_OnMouseExit(self) end)
 
-	local indicator = CreateControlFromVirtual("$(parent)Indicator", LibMainMenuCategoryBarButton, "ZO_MultiIcon")
+	local indicator = CreateControlFromVirtual("$(parent)Indicator", libMainMenuCategoryBarButton, "ZO_MultiIcon")
 	indicator:SetHidden(true)
-	indicator:SetAnchor(CENTER, LibMainMenuCategoryBarButton, nil, 0, 24)
+	indicator:SetAnchor(CENTER, libMainMenuCategoryBarButton, nil, 0, 24)
 	
-	LIBMAINMENU = LibMainMenu:New(LMMXML)
+	LIBMAINMENU = libMainMenu:New(LMMXML)
 	
 	Initialized = true
-	
 end
 
-function LibMainMenu:New(control)
+local function checkIfInitialized(doAbortIfNotInitialized)
+    doAbortIfNotInitialized = doAbortIfNotInitialized or false
+    if libMainMenu and (not LIBMAINMENU or Initialized == false) then
+        if doAbortIfNotInitialized then
+            d("[" .. tostring(MAJOR) .. "] Library was not initialized properly (did you forgot to call function \'AddCategory\'?).\nPlease read the library's description on www.esoui.com!")
+            return
+        end
+        InitializeLMM()
+    end
+end
+
+function libMainMenu:New(control)
     local manager = ZO_Object.New(self)
     manager:Initialize(control)
     return manager
 end
 
-function LibMainMenu:Initialize(control)
+function libMainMenu:Initialize(control)
 
     self.control = control
 	
@@ -109,7 +130,9 @@ function LibMainMenu:Initialize(control)
 	
 end
 
-function LibMainMenu:SetupSceneGroupBar(category, sceneGroupName)
+function libMainMenu:SetupSceneGroupBar(category, sceneGroupName)
+    checkIfInitialized(true)
+
     if self.sceneGroupInfo[sceneGroupName] then
         -- This is a scene group
         ZO_MenuBar_ClearButtons(self.sceneGroupBar)
@@ -153,10 +176,10 @@ function LibMainMenu:SetupSceneGroupBar(category, sceneGroupName)
     end
 end
 
-function LibMainMenu:AddCategory(data)
-	
-	if (not Initialized) then InitializeLMM() end
-	
+function libMainMenu:AddCategory(data)
+    --Create the instance of the LibMainMenu object and assign it to global variable LIBMAINMENU within function InitializeLMM()
+    checkIfInitialized(false)
+
 	table.insert(LIBMAINMENU_LAYOUT_INFO, data)
 	LIBMAINMENU_LAYOUT_INFO[#LIBMAINMENU_LAYOUT_INFO].descriptor = #LIBMAINMENU_LAYOUT_INFO
 	
@@ -177,7 +200,7 @@ function LibMainMenu:AddCategory(data)
 	--categoryLayoutInfo.callback = function() self:OnCategoryClicked(i) end
 	--ZO_MenuBar_AddButton(self.categoryBar, categoryLayoutInfo)
 
-	local subcategoryBar = CreateControl("LibMainMenuSubcategoryBar" .. #LIBMAINMENU_LAYOUT_INFO, self.control, CT_CONTROL)
+	local subcategoryBar = CreateControl("libMainMenuSubcategoryBar" .. #LIBMAINMENU_LAYOUT_INFO, self.control, CT_CONTROL)
 	--subcategoryBar:SetAnchor(TOP, LIBMAINMENU.categoryBar, BOTTOM, 0, 7)
 	local subcategoryBarFragment = ZO_FadeSceneFragment:New(subcategoryBar)
 	LIBMAINMENU.categoryInfo[#LIBMAINMENU_LAYOUT_INFO] =
@@ -194,7 +217,9 @@ function LibMainMenu:AddCategory(data)
 	
 end
 
-function LibMainMenu:RefreshCategoryIndicators()
+function libMainMenu:RefreshCategoryIndicators()
+    checkIfInitialized(true)
+
     for i, categoryLayoutData in ipairs(LIBMAINMENU_LAYOUT_INFO) do
         local indicators = categoryLayoutData.indicators
         if indicators then
@@ -221,17 +246,23 @@ function LibMainMenu:RefreshCategoryIndicators()
     end
 end
 
-function LibMainMenu:AddCategoryAreaFragment(fragment)
+function libMainMenu:AddCategoryAreaFragment(fragment)
+    checkIfInitialized(true)
+
     LIBMAINMENU.categoryAreaFragments[#LIBMAINMENU.categoryAreaFragments + 1] = fragment
 end
 
-function LibMainMenu:OnCategoryClicked(category)
+function libMainMenu:OnCategoryClicked(category)
+    checkIfInitialized(true)
+
     if(not self.ignoreCallbacks) then
         self:ShowCategory(category)
     end
 end
 
-function LibMainMenu:ShowCategory(category)
+function libMainMenu:ShowCategory(category)
+    checkIfInitialized(true)
+
     local categoryLayoutInfo = LIBMAINMENU_LAYOUT_INFO[category]
 	local categoryInfo = self.categoryInfo[category]
 	if(categoryInfo.lastSceneName) then
@@ -241,7 +272,9 @@ function LibMainMenu:ShowCategory(category)
 	end
 end
 
-function LibMainMenu:ShowScene(sceneName)
+function libMainMenu:ShowScene(sceneName)
+    checkIfInitialized(true)
+
     local sceneInfo = self.sceneInfo[sceneName]
     if sceneInfo.sceneGroupName then
         self:ShowSceneGroup(sceneInfo.sceneGroupName, sceneName)
@@ -250,7 +283,9 @@ function LibMainMenu:ShowScene(sceneName)
     end
 end
 
-function LibMainMenu:ShowSceneGroup(sceneGroupName, specificScene)
+function libMainMenu:ShowSceneGroup(sceneGroupName, specificScene)
+    checkIfInitialized(true)
+
     local sceneGroupInfo = self.sceneGroupInfo[sceneGroupName]
     if(not specificScene) then
         local sceneGroup = SCENE_MANAGER:GetSceneGroup(sceneGroupName)
@@ -260,7 +295,9 @@ function LibMainMenu:ShowSceneGroup(sceneGroupName, specificScene)
     self:Update(sceneGroupInfo.category, specificScene)
 end
 
-function LibMainMenu:Update(category, sceneName)
+function libMainMenu:Update(category, sceneName)
+    checkIfInitialized(true)
+
     self.ignoreCallbacks = true
 
     local categoryInfo = LIBMAINMENU.categoryInfo[category]
@@ -288,28 +325,35 @@ function LibMainMenu:Update(category, sceneName)
     self.ignoreCallbacks = false
 end
 
-function LibMainMenu:SetLastSceneName(categoryInfo, sceneName)
+function libMainMenu:SetLastSceneName(categoryInfo, sceneName)
+    checkIfInitialized(true)
+
     categoryInfo.lastSceneName = sceneName
     categoryInfo.lastSceneGroupName = nil
 end
 
-function LibMainMenu:SetLastSceneGroupName(categoryInfo, sceneGroupName)
+function libMainMenu:SetLastSceneGroupName(categoryInfo, sceneGroupName)
+    checkIfInitialized(true)
+
     categoryInfo.lastSceneGroupName = sceneGroupName
     categoryInfo.lastSceneName = nil
 end
 
-function LibMainMenu:IsShowing()
+function libMainMenu:IsShowing()
+    checkIfInitialized(true)
+
     return LIBMAINMENU.categoryBarFragment:IsShowing()
 end
 
-function LibMainMenu:AddSceneGroup(category, sceneGroupName, menuBarIconData)
-	
+function libMainMenu:AddSceneGroup(category, sceneGroupName, menuBarIconData)
+    checkIfInitialized(true)
+
 	local categoryInfo = LIBMAINMENU.categoryInfo[category]
 	local sceneGroup = SCENE_MANAGER:GetSceneGroup(sceneGroupName)
 	
 	for i=1, sceneGroup:GetNumScenes() do
 		local sceneName = sceneGroup:GetSceneName(i)
-		local scene = LibMainMenu:AddRawScene(sceneName, category, categoryInfo, sceneGroupName)
+		local scene = libMainMenu:AddRawScene(sceneName, category, categoryInfo, sceneGroupName)
 	end
 
 	if(not self:HasLast(categoryInfo)) then
@@ -332,11 +376,15 @@ function LibMainMenu:AddSceneGroup(category, sceneGroupName, menuBarIconData)
 	
 end
 
-function LibMainMenu:HasLast(categoryInfo)
+function libMainMenu:HasLast(categoryInfo)
+    checkIfInitialized(true)
+
     return categoryInfo.lastSceneName ~= nil or categoryInfo.lastSceneGroupName ~= nil
 end
 
-function LibMainMenu:AddRawScene(sceneName, category, categoryInfo, sceneGroupName)
+function libMainMenu:AddRawScene(sceneName, category, categoryInfo, sceneGroupName)
+    checkIfInitialized(true)
+
     local scene = SCENE_MANAGER:GetScene(sceneName)
     --scene:AddFragment(categoryInfo.subcategoryBarFragment)
 
@@ -359,7 +407,9 @@ function LibMainMenu:AddRawScene(sceneName, category, categoryInfo, sceneGroupNa
     return scene
 end
 
-function LibMainMenu:ToggleCategory(category)
+function libMainMenu:ToggleCategory(category)
+    checkIfInitialized(true)
+
 	local categoryLayoutInfo = LIBMAINMENU_LAYOUT_INFO[category]
 	local categoryInfo = LIBMAINMENU.categoryInfo[category]
 	if(categoryInfo.lastSceneName) then
@@ -369,7 +419,9 @@ function LibMainMenu:ToggleCategory(category)
 	end
 end
 
-function LibMainMenu:ToggleSceneGroup(sceneGroupName, specificScene)
+function libMainMenu:ToggleSceneGroup(sceneGroupName, specificScene)
+    checkIfInitialized(true)
+
     local sceneGroupInfo = LIBMAINMENU.sceneGroupInfo[sceneGroupName]
     if(not specificScene) then
         local sceneGroup = SCENE_MANAGER:GetSceneGroup(sceneGroupName)
@@ -383,7 +435,9 @@ function LibMainMenu:ToggleSceneGroup(sceneGroupName, specificScene)
     end
 end
 
-function LibMainMenu:ShowSceneGroup(sceneGroupName, specificScene)
+function libMainMenu:ShowSceneGroup(sceneGroupName, specificScene)
+    checkIfInitialized(true)
+
     local sceneGroupInfo = LIBMAINMENU.sceneGroupInfo[sceneGroupName]
     if(not specificScene) then
         local sceneGroup = SCENE_MANAGER:GetSceneGroup(sceneGroupName)
@@ -393,7 +447,9 @@ function LibMainMenu:ShowSceneGroup(sceneGroupName, specificScene)
     self:Update(sceneGroupInfo.category, specificScene)
 end
 
-function LibMainMenu:ShowScene(sceneName)
+function libMainMenu:ShowScene(sceneName)
+    checkIfInitialized(true)
+
     local sceneInfo = LIBMAINMENU.sceneInfo[sceneName]
     if sceneInfo.sceneGroupName then
         self:ShowSceneGroup(sceneInfo.sceneGroupName, sceneName)
@@ -402,7 +458,9 @@ function LibMainMenu:ShowScene(sceneName)
     end
 end
 
-function LibMainMenu:ToggleScene(sceneName)
+function libMainMenu:ToggleScene(sceneName)
+    checkIfInitialized(true)
+
     local sceneInfo = LIBMAINMENU.sceneInfo[sceneName]
     if(SCENE_MANAGER:IsShowing(sceneName)) then
         SCENE_MANAGER:ShowBaseScene()
@@ -437,3 +495,8 @@ function LibMainMenuCategoryBarButton_OnMouseExit(self)
     ClearTooltip(InformationTooltip)
 	]]--
 end
+
+--Finished loading of the library properly
+-->Attention: The global variable LIBMAINMENU wil be first created as you use the function LibMainMenu:AddCategory (upon initialization)!
+libMainMenu.wasLoadedProperly = true
+LibMainMenu = libMainMenu

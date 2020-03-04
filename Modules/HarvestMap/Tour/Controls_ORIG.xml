@@ -1,6 +1,57 @@
 <GuiXml>
 	<Controls>
 		<Line name="HarvestLink" thickness="8" virtual="true"/>
+		<TopLevelControl name="HarvestFarmGenerator" inherits="ZO_WorldMapInfoContent" >
+		</TopLevelControl>
+		<TopLevelControl name="HarvestFarmEditor" hidden="true" >
+			<Anchor point="TOPLEFT" relativeTo="ZO_WorldMapInfo" relativePoint="TOPLEFT" offsetY="95"/>
+			<Anchor point="BOTTOMRIGHT" relativeTo="ZO_WorldMapInfo" relativePoint="BOTTOMRIGHT" offsetX="0"/>
+		</TopLevelControl>
+		<TopLevelControl name="HarvestFarmHelper" inherits="ZO_WorldMapInfoContent" >
+			<Controls>
+				<Label name="$(parent)Description" font="ZoFontGame">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
+				</Label>
+			</Controls>
+		</TopLevelControl>
+		<TopLevelControl name="HarvestFarmLoader" inherits="ZO_WorldMapInfoContent" >
+			<Controls>
+				<Label name="$(parent)SaveTitle" font="ZoFontWinH4">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
+				</Label>
+				<Label name="$(parent)NameTitle" font="ZoFontGame">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)SaveTitle" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)SaveTitle" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
+				</Label>
+				<Backdrop name="$(parent)Name" inherits="ZO_SingleLineEditBackdrop_Keyboard">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)NameTitle" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)NameTitle" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
+					<Controls>
+						<EditBox name="$(parent)Field" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText"/>
+					</Controls>
+				</Backdrop>
+				<Button name="$(parent)SaveButton" clickSound="Click" inherits="ZO_DefaultButton" >
+					<Anchor point="TOPLEFT" relativeTo="$(parent)Name" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="10" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)Name" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="10" />
+					<OnClicked>
+						Harvest.farm.loader:Save()
+					</OnClicked>
+				</Button>
+				<Label name="$(parent)LoadTitle" font="ZoFontWinH4">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)SaveButton" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="10" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)SaveButton" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="10" />
+				</Label>
+				<Control name="$(parent)Pane" inherits="ZO_ScrollContainer">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)LoadTitle" relativePoint="BOTTOMLEFT" offsetX="10" offsetY="0" />
+					<Anchor point="BOTTOMRIGHT"/>
+				</Control>
+				<Label name="$(parent)NoTour" font="ZoFontGame">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)Pane" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
+				</Label>
+			</Controls>
+		</TopLevelControl>
 		<Control name="SaveEntry" virtual="true" >
 			<Dimensions x="300" y="145" />
 			<Controls>
@@ -93,63 +144,6 @@
 						</Texture>
 					</Controls>
 				</Control>
-			</Controls>
-		</TopLevelControl>
-		<TopLevelControl name="HarvestFarmGenerator" inherits="ZO_WorldMapInfoContent" >
-			<Anchor point="TOPLEFT" relativeTo="HarvestFarmMenu" offsetY="50"/>
-			<Anchor point="BOTTOMRIGHT" relativeTo="HarvestFarmMenu" offsetX="-20"/>
-		</TopLevelControl>
-		<TopLevelControl name="HarvestFarmEditor" hidden="true" >
-			<Anchor point="TOPLEFT" relativeTo="HarvestFarmMenu" offsetY="50"/>
-			<Anchor point="BOTTOMRIGHT" relativeTo="HarvestFarmMenu" offsetX="-20"/>
-		</TopLevelControl>
-		<TopLevelControl name="HarvestFarmHelper" inherits="ZO_WorldMapInfoContent" >
-			<Anchor point="TOPLEFT" relativeTo="HarvestFarmMenu" offsetY="50"/>
-			<Anchor point="BOTTOMRIGHT" relativeTo="HarvestFarmMenu" offsetX="-20"/>
-			<Controls>
-				<Label name="$(parent)Description" font="ZoFontGame">
-					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
-					<Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
-				</Label>
-			</Controls>
-		</TopLevelControl>
-		<TopLevelControl name="HarvestFarmLoader" inherits="ZO_WorldMapInfoContent" >
-			<Anchor point="TOPLEFT" relativeTo="HarvestFarmMenu" offsetY="50"/>
-			<Anchor point="BOTTOMRIGHT" relativeTo="HarvestFarmMenu" offsetX="-20"/>
-			<Controls>
-				<Label name="$(parent)SaveTitle" font="ZoFontWinH4">
-					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
-					<Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
-				</Label>
-				<Label name="$(parent)NameTitle" font="ZoFontGame">
-					<Anchor point="TOPLEFT" relativeTo="$(parent)SaveTitle" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
-					<Anchor point="TOPRIGHT" relativeTo="$(parent)SaveTitle" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
-				</Label>
-				<Backdrop name="$(parent)Name" inherits="ZO_SingleLineEditBackdrop_Keyboard">
-					<Anchor point="TOPLEFT" relativeTo="$(parent)NameTitle" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
-					<Anchor point="TOPRIGHT" relativeTo="$(parent)NameTitle" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
-					<Controls>
-						<EditBox name="$(parent)Field" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText"/>
-					</Controls>
-				</Backdrop>
-				<Button name="$(parent)SaveButton" clickSound="Click" inherits="ZO_DefaultButton" >
-					<Anchor point="TOPLEFT" relativeTo="$(parent)Name" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="10" />
-					<Anchor point="TOPRIGHT" relativeTo="$(parent)Name" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="10" />
-					<OnClicked>
-						Harvest.farm.loader:Save()
-					</OnClicked>
-				</Button>
-				<Label name="$(parent)LoadTitle" font="ZoFontWinH4">
-					<Anchor point="TOPLEFT" relativeTo="$(parent)SaveButton" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="10" />
-					<Anchor point="TOPRIGHT" relativeTo="$(parent)SaveButton" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="10" />
-				</Label>
-				<Control name="$(parent)Pane" inherits="ZO_ScrollContainer">
-					<Anchor point="TOPLEFT" relativeTo="$(parent)LoadTitle" relativePoint="BOTTOMLEFT" offsetX="10" offsetY="0" />
-					<Anchor point="BOTTOMRIGHT"/>
-				</Control>
-				<Label name="$(parent)NoTour" font="ZoFontGame">
-					<Anchor point="TOPLEFT" relativeTo="$(parent)Pane" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
-				</Label>
 			</Controls>
 		</TopLevelControl>
 	</Controls>

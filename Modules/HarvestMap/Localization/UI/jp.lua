@@ -187,4 +187,8 @@
 	["HARVESTFARM_GENERATOR"] = "新しいツアーの生成",
 	["HARVESTFARM_EDITOR"] = "ツアーの編集",
 	["HARVESTFARM_SAVE"] = "ツアーのセーブ/ロード",
+
+	--Harvestmap menu (enhanced pin filters)
+	["3dPins"] = "3Dピン",
+	["CompassPins"] = "コンパスピン",
 }

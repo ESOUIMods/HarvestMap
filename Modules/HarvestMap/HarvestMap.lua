@@ -1,4 +1,3 @@
-
 Harvest = Harvest or {}
 
 local logFunctions = {}

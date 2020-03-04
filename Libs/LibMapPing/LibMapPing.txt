@@ -12,6 +12,4 @@
 ##
 ## You can read the full terms at https://account.elderscrollsonline.com/add-on-terms
 
-LibStub/LibStub.lua
-
 LibMapPing.lua
