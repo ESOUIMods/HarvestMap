@@ -1,5 +1,5 @@
 
-local GPS = LibStub("LibGPS2")
+local GPS = LibGPS2
 local MapTools = {}
 Harvest:RegisterModule("mapTools", MapTools)
 

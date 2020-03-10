@@ -4,10 +4,8 @@
 ## APIVersion: 100029 100030
 ## AddOnVersion: 31315
 ## OptionalDependsOn: MiniMap VotansMiniMap AUI LibMapPins-1.0 LibDebugLogger NodeDetection
-## DependsOn: Lib3D LibAddonMenu-2.0 LibGPS LibMapMetaData LibMapPing LibMainMenu
+## DependsOn: Lib3D LibAddonMenu-2.0 LibGPS2 LibMapMetaData LibMapPing LibMainMenu
 ## SavedVariables: Harvest_SavedVars
-
-Libs/LibUpdateNotification/LibUpdateNotification.lua
 
 HarvestMap.lua
 

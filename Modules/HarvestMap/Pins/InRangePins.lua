@@ -1,5 +1,5 @@
 local Harvest = _G["Harvest"]
-local GPS = LibStub("LibGPS2")
+local GPS = LibGPS2
 
 local PARENT = COMPASS.container
 local pairs = _G["pairs"]

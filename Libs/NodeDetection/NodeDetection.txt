@@ -5,7 +5,7 @@
 ## AddOnVersion: 102
 ## APIVersion: 100028 100029
 ## IsLibrary: true
-## DependsOn: Lib3D LibGPS LibMapPing
+## DependsOn: Lib3D LibGPS2 LibMapPing
 
 ## This is not a public library. It was tailored to ResourceRadar and HarvestMap.
 

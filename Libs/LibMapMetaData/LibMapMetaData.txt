@@ -5,7 +5,7 @@
 ## AddOnVersion: 103
 ## IsLibrary: true
 ## APIVersion: 100028 100029
-## DependsOn: LibGPS Lib3D LibMapPing
+## DependsOn: LibGPS2 Lib3D LibMapPing
 
 LibMapMetaData.lua
 MapMetaData.lua

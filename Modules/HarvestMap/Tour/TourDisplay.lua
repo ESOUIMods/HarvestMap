@@ -1,7 +1,7 @@
 
 
-local GPS = LibStub("LibGPS2")
-local LAM = LibStub("LibAddonMenu-2.0")
+local GPS = LibGPS2
+local LAM = LibAddonMenu2
 
 local CallbackManager = Harvest.callbackManager
 local Events = Harvest.events
