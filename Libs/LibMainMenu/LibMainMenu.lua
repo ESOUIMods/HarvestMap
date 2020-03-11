@@ -27,9 +27,23 @@ Please read full licence at :
 http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
 
 ]]--
-local libName, libVersion = "LibMainMenu", 9
-local libMainMenu
-libMainMenu = {}
+--Register LAM with LibStub
+local MAJOR, MINOR = "LibMainMenu", 9
+local libMainMenu, oldminor
+if LibStub then
+    libMainMenu, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
+else
+    --Check if LibMainMenu was already loaded before properly
+    if LibMainMenu ~= nil and LibMainMenu.AddCategory ~= nil and LibMainMenu.wasLoadedProperly == true and LIBMAINMENU ~= nil then
+        --Library was loaded properly already
+        return
+    else
+        --Create new library instance via the global variable
+        libMainMenu = {}
+        libMainMenu.wasLoadedProperly = false
+    end
+end
+if not libMainMenu then return end
 
 LIBMAINMENU_LAYOUT_INFO = {}
 local Initialized = false
@@ -68,7 +82,7 @@ local function checkIfInitialized(doAbortIfNotInitialized)
     doAbortIfNotInitialized = doAbortIfNotInitialized or false
     if libMainMenu and (not LIBMAINMENU or Initialized == false) then
         if doAbortIfNotInitialized then
-            d("[" .. tostring(libName) .. "] Library was not initialized properly (did you forgot to call function \'AddCategory\'?).\nPlease read the library's description on www.esoui.com!")
+            d("[" .. tostring(MAJOR) .. "] Library was not initialized properly (did you forgot to call function \'AddCategory\'?).\nPlease read the library's description on www.esoui.com!")
             return
         end
         InitializeLMM()
@@ -484,4 +498,5 @@ end
 
 --Finished loading of the library properly
 -->Attention: The global variable LIBMAINMENU wil be first created as you use the function LibMainMenu:AddCategory (upon initialization)!
+libMainMenu.wasLoadedProperly = true
 LibMainMenu = libMainMenu

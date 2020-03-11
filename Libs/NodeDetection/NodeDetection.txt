@@ -3,9 +3,9 @@
 ## Description: Detects nearby crafting resources for the Add-Ons HarvestMap and ResourceRadar
 ## Version: 1.2
 ## AddOnVersion: 102
-## APIVersion: 100028 100029
+## APIVersion: 100030 100029
 ## IsLibrary: true
-## DependsOn: Lib3D LibGPS2 LibMapPing
+## DependsOn: Lib3D LibGPS LibMapPing
 
 ## This is not a public library. It was tailored to ResourceRadar and HarvestMap.
 
