@@ -1,5 +1,6 @@
 
 local QuickPin = LibQuickPin2
+local GPS = LibGPS2
 
 local CallbackManager = Harvest.callbackManager
 local Events = Harvest.events
@@ -89,9 +90,10 @@ function PinQueue:PerformActions()
 		if Type == TYPES.ADD_NODE then
 			if shouldRenderUnspawnedNodes or mapCache.hasCompassPin[id] or not Harvest.HARVEST_NODES[pinTypeId] then
 				if not mapCache.hiddenTime[id] then
-					x = mapCache.localX[id]
-					y = mapCache.localY[id]
+					x = mapCache.globalX[id]
+					y = mapCache.globalY[id]
 					if x and y then -- eg pin is added and then removed whle map is closed
+						x, y = GPS:GlobalToLocal(x,y)
 						pinManager:CreatePin(pinTypeId, id, x, y)
 					end
 				end
@@ -103,8 +105,9 @@ function PinQueue:PerformActions()
 			for _, nodeId in pairs(mapCache.divisions[pinTypeId][id]) do
 				if shouldRenderUnspawnedNodes or mapCache.hasCompassPin[nodeId] or not Harvest.HARVEST_NODES[pinTypeId] then
 					if not mapCache.hiddenTime[nodeId] then
-						x = mapCache.localX[nodeId]
-						y = mapCache.localY[nodeId]
+						x = mapCache.globalX[nodeId]
+						y = mapCache.globalY[nodeId]
+						x, y = GPS:GlobalToLocal(x,y)
 						pinManager:CreatePin(pinTypeId, nodeId, x, y)
 					end
 				end

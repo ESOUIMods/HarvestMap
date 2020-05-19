@@ -1,4 +1,6 @@
 
+local GPS = LibGPS2
+
 -- The code in this file will calculate the heat map via convolution.
 -- The map is split into (HarvestHeat.numSubdivisions * 5)^2 sections.
 -- We will then calculate the heat via convolution with a normal kernel with
@@ -49,14 +51,13 @@ function HarvestHeat.CalculateHeatMap()
 		end
 	end
 	local viewedMap = true
-	local mapMetaData, x, y = Harvest.mapTools:GetViewedMapMetaDataAndPlayerLocalPosition()
+	local mapMetaData, x, y = Harvest.mapTools:GetViewedMapMetaDataAndPlayerGlobalPosition()
 	local mapCache = Harvest.Data:GetMapCache(mapMetaData)
 	if mapCache then
 		for _, pinTypeId in ipairs(harvest.PINTYPES) do
 			if harvest.IsMapPinTypeVisible( pinTypeId ) then
 				for _, nodeId in pairs(mapCache.nodesOfPinType[pinTypeId]) do
-					x = mapCache.localX[nodeId]
-					y = mapCache.localY[nodeId]
+					x, y = GPS:GlobalToLocal(mapCache.globalX[nodeId], mapCache.globalY[nodeId])
 					x = zo_max(0, zo_min(zo_floor(x * HarvestHeat.numSubdivisions * 5), HarvestHeat.numSubdivisions * 5 - 1))
 					y = zo_max(0, zo_min(zo_floor(y * HarvestHeat.numSubdivisions * 5), HarvestHeat.numSubdivisions * 5 - 1))
 					map[x][y] = map[x][y] + 1

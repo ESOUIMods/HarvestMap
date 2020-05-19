@@ -55,16 +55,16 @@ function Detection.LinkControlWithNode(event, control)
 	-- find a mapCache/node that represents the compass pin
 	local nodeId, _mapCache
 	for map, mapCache in pairs(zoneCache.mapCaches) do
-		local localX, localY = mapCache.mapMetaData:GlobalToLocal(control.globalX, control.globalY)
+		local worldX, worldY = control.worldX, control.worldY
 		-- find a node at compass pin location
 		local distance, bestNodeId
 		local bestDistance = math.huge
 		if control.pinTypeId ~= LibNodeDetection.pinTypes.UNKNOWN then
 			local pinTypeId = Harvest.DETECTION_TO_HARVEST_PINTYPE[control.pinTypeId]
-			nodeId, distance = mapCache:GetMergeableNode(pinTypeId, localX, localY)
+			nodeId, distance = mapCache:GetMergeableNode(pinTypeId, worldX, worldY)
 		else
 			for pinTypeId in pairs(Harvest.HARVEST_NODES) do
-				nodeId, distance = mapCache:GetMergeableNode(pinTypeId, localX, localY)
+				nodeId, distance = mapCache:GetMergeableNode(pinTypeId, worldX, worldY)
 				if nodeId then
 					if distance < bestDistance then
 						bestDistance = distance
@@ -110,8 +110,7 @@ function Detection.LinkControlWithNode(event, control)
 			return
 		end
 		if not mapCache:DoesHandlePinType(Harvest.UNKNOWN) then mapCache:InitializePinType(Harvest.UNKNOWN) end
-		local localX, localY = mapCache.mapMetaData:GlobalToLocal(control.globalX, control.globalY)
-		local nodeId = mapCache:Add(Harvest.UNKNOWN, nil, control.worldX, control.worldY, nil, localX, localY)
+		local nodeId = mapCache:Add(Harvest.UNKNOWN, nil, control.worldX, control.worldY, nil, control.globalX, control.globalY)
 		if nodeId then
 			control.nodeId = nodeId
 			control.mapCache = mapCache

@@ -116,7 +116,7 @@ function InRangePins:Initialize()
 	CallbackManager:RegisterForEvent(Events.NODE_COMPASS_LINK_CHANGED, onNodeChanged)
 	
 	CallbackManager:RegisterForEvent(Events.NEW_ZONE_ENTERED, function(event, zoneCache)
-		self:Info("Entered zone %d", zoneCache.zoneIndex)
+		self:Info("Entered zone %d %d", zoneCache.zoneIndex, zoneCache.zoneId)
 		local tbl = {}
 		for map, _ in pairs(zoneCache.mapCaches) do
 			table.insert(tbl, map)
@@ -184,11 +184,11 @@ function InRangePins:RegisterCustomPinCallback(pinType, callback)
 	self.customPinCallbacks[pinType] = callback
 end
 
-function InRangePins:AddCustomPin(pinTag, pinTypeId, range, globalX, globalY, worldZ)
+function InRangePins:AddCustomPin(pinTag, pinTypeId, range, worldX, worldY, worldZ)
 	local pin = self.customPins[pinTag] or {}
 	pin.pinTypeId = pinTypeId
 	pin.range2 = range * range
-	pin.x, pin.y = Lib3D:GlobalToWorld(globalX, globalY)
+	pin.x, pin.y = worldX, worldY
 	pin.worldZ = worldZ
 	self.customPins[pinTag] = pin
 end
@@ -276,7 +276,6 @@ function InRangePins.UpdatePins(timeInMs)
 	if Lib3D:IsValidZone() and not self.fragment:IsHidden() then
 		if not self.zoneCache then return end
 		self.worldX, self.worldY = Harvest.GetPlayer3DPosition()
-		local globalX, globalY = Lib3D:WorldToGlobal(self.worldX, self.worldY)
 		
 		local heading = GetPlayerCameraHeading()
 		if heading > pi then --normalize heading to [-pi,pi]
@@ -286,7 +285,7 @@ function InRangePins.UpdatePins(timeInMs)
 		self.timeInMs = timeInMs
 		
 		for map, mapCache in pairs(self.zoneCache.mapCaches) do
-			mapCache:ForNodesInRange(globalX, globalY, heading, self.visibleRange, self.validPinTypeIds, self.pinUpdateCallback, self, self.lastUpdate[map], self.compassKeys[map], self.worldKeys[map])
+			mapCache:ForNodesInRange(self.worldX, self.worldY, heading, self.visibleRange, self.validPinTypeIds, self.pinUpdateCallback, self, self.lastUpdate[map], self.compassKeys[map], self.worldKeys[map])
 		end
 		
 		

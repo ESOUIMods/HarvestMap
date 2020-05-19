@@ -67,7 +67,7 @@ end
 
 function Hidden.HideNearbyPins()
 
-	local x, y = GPS:LocalToGlobal( GetMapPlayerPosition( "player" ) )
+	local x, y = Harvest.GetPlayer3DPosition()
 	-- some maps don't work (ie aurbis)
 	if x then
 		local cache = Harvest.Data:GetCurrentZoneCache()

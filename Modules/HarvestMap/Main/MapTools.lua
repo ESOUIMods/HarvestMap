@@ -1,5 +1,6 @@
 
 local GPS = LibGPS2
+local Lib3D = Lib3D
 local MapTools = {}
 Harvest:RegisterModule("mapTools", MapTools)
 
@@ -11,23 +12,30 @@ function MapTools:Initialize()
 		["tamriel/tamriel"] = true,
 		["tamriel/mundus_base"] = true,
 	}
+	self.mapMetaData = {}
+	GPS:ClearMapMeasurements() -- someone has a broken gps measurement on kenarthis roost and submits broken data
 end
 
 function MapTools:GetMap()
 	local textureName = GetMapTileTexture()
 	if self.lastMapTexture ~= textureName then
 		self.lastMapTexture = textureName
-		textureName = string.lower(textureName)
-		textureName = string.gsub(textureName, "^.*maps/", "")
-		textureName = string.gsub(textureName, "_%d+%.dds$", "")
-
-		if textureName == "eyevea_base" then
-			textureName = "eyevea/" .. textureName
-		end
-
+		textureName = self:GetMapFromTexture(textureName)
 		self.lastMap = textureName
 	end
 	return self.lastMap
+end
+
+function MapTools:GetMapFromTexture(textureName)
+	textureName = string.lower(textureName)
+	textureName = string.gsub(textureName, "^.*maps/", "")
+	textureName = string.gsub(textureName, "_%d+%.dds$", "")
+
+	if textureName == "eyevea_base" then
+		textureName = "eyevea/" .. textureName
+	end
+	
+	return textureName
 end
 
 function MapTools:IsMapBlacklisted( map )
@@ -49,7 +57,8 @@ function MapTools:SetMapToPlayerLocation()
 	
 	-- if we can click on the player location, then we are probably erroneously viewing a zone map
 	-- (exception is hew's bane where we can click outside of abahs landing and it will open abahs landing)
-	if WouldProcessMapClick(localX, localY) then
+	if WouldProcessMapClick(localX, localY) and playerZoneIndex == mapZoneIndex then
+		-- second if condition is required for houses in cities. setmaptoplayer location is a zone map but clicking yields city map
 		self:Warn("Had to perform a map click: %s, %f, %f", GetMapTileTexture(), localX, localY )
 		ProcessMapClick(localX, localY)
 		localX, localY, heading = GetMapPlayerPosition("player")
@@ -74,23 +83,47 @@ function MapTools:SetMapToPlayerLocation()
 	end
 end
 
-function MapTools:GetPlayerMapMetaDataAndLocalPosition()
+function MapTools:GetPlayerMapMetaDataAndGlobalPosition()
 	local originalMap = GetMapTileTexture()
 
 	self:SetMapToPlayerLocation()
-	local mapMetaData, localX, localY, heading = self:GetViewedMapMetaDataAndPlayerLocalPosition()
-
+	local mapMetaData, globalX, globalY, heading = self:GetViewedMapMetaDataAndPlayerGlobalPosition()
+	
 	if GetMapTileTexture() ~= originalMap then
 		CALLBACK_MANAGER:FireCallbacks("OnWorldMapChanged")
 	end
 	
-	return mapMetaData, localX, localY, heading
+	if GetUnitZoneIndex("player") ~= mapMetaData.zoneIndex then
+		self:Warn("Player map meta data zone id does not match: %s, %d, %d", mapMetaData.map, GetZoneId(GetUnitZoneIndex("player")), mapMetaData.zoneId)
+		error(string.format("Player map meta data zone id does not match: %s, %d, %d", mapMetaData.map, GetZoneId(GetUnitZoneIndex("player")), mapMetaData.zoneId))
+	end
+	
+	return mapMetaData, globalX, globalY, heading
 end
 
-function MapTools:GetViewedMapMetaDataAndPlayerLocalPosition()
+function MapTools:GetViewedMapMetaDataAndPlayerGlobalPosition()
 	
 	local localX, localY, heading = GetMapPlayerPosition("player")
-	local mapMetaData = LibMapMetaData:GetCurrentMapMetaData()
+	local globalX, globalY = GPS:LocalToGlobal(localX, localY)
+	local map = self:GetMap()
+	local zoneIndex = GetCurrentMapZoneIndex()
+	if DoesCurrentMapMatchMapForPlayerLocation() then
+		zoneIndex = GetUnitZoneIndex("player")
+	end
+	local mapMetaData = self:GetMapMetaDataForZoneIndexAndMap(zoneIndex, map)
+	mapMetaData.mapMeasurement = GPS:GetCurrentMapMeasurements()
 	
-	return mapMetaData, localX, localY, heading
+	return mapMetaData, globalX, globalY, heading
+end
+
+function MapTools:GetMapMetaDataForZoneIndexAndMap(zoneIndex, map)
+	self.mapMetaData[zoneIndex] = self.mapMetaData[zoneIndex] or {}
+	local mapMetaData = self.mapMetaData[zoneIndex][map]
+	if not mapMetaData then
+		local zoneId = GetZoneId(zoneIndex)
+		local zoneMeasurement = Lib3D:GetZoneMeasurementForZoneId(zoneId)
+		mapMetaData = {map = map, zoneIndex = zoneIndex, zoneId = zoneId, zoneMeasurement = zoneMeasurement}
+		self.mapMetaData[zoneIndex][map] = mapMetaData
+	end
+	return mapMetaData
 end

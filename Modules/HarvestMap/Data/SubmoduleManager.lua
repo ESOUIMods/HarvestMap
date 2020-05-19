@@ -3,7 +3,6 @@ local SubmoduleManager = {}
 Harvest:RegisterModule("submoduleManager", SubmoduleManager)
 
 local dataDefault = {
-	data = {},
 	dataVersion = 17,
 	-- data version history:
 	-- 10 = Orsinium (all nodes are saved as ACE strings)
@@ -71,7 +70,6 @@ local addOnNameToPotentialSubmodule = {
 		displayName = "HarvestMap-NoFaction-Zones",
 		savedVarsName = "HarvestNF_SavedVars",
 	},
-	HarvestMap = { savedVarsName = "Harvest_SavedVars", },
 }
 
 function SubmoduleManager:Initialize()
@@ -86,13 +84,6 @@ function SubmoduleManager:Initialize()
 		function(event, addOnName)
 			self:TryToRegisterAddOnAsSubmodule(addOnName)
 		end)
-	-- This initialize function is called during the EVENT_ADD_ON_LOADED event
-	-- so TryToRegisterAddOnAsSubmodule("HarvestMap") function will not be called
-	-- via the above callback.
-	-- That's why we call it here:
-	self:TryToRegisterAddOnAsSubmodule("HarvestMap")
-	self.backupSavedVars = self.submodules["HarvestMap"]
-	
 end
 
 function SubmoduleManager:TryToRegisterAddOnAsSubmodule(addOnName)
@@ -157,9 +148,10 @@ end
 
 -- imports all the nodes on 'map' from the table 'data' into the save file table 'saveFile'
 -- if checkPinType is true, data will be skipped if Harvest.IsPinTypeSavedOnImport(pinTypeId) returns false
-function SubmoduleManager:ImportMapDataIntoSubmodule(map, newMapData, submodule)
+function SubmoduleManager:ImportMapDataIntoSubmodule(zoneId, map, newMapData, submodule)
 	
-	local existingData = submodule.savedVars.data
+	submodule.savedVars[zoneId] = submodule.savedVars[zoneId] or {}
+	local existingData = submodule.savedVars[zoneId]
 	-- nothing to merge, data can simply be copied
 	if not existingData[map] then
 		existingData[map] = newMapData
@@ -184,26 +176,6 @@ function SubmoduleManager:ImportMapDataIntoSubmodule(map, newMapData, submodule)
 end
 
 function SubmoduleManager:CleanUpSavedVarsForSubmodule(submodule)
-	-- old version of HarvestMap had a "Default" sub-table.
-	-- remove that
-	local savedVars = submodule.savedVars
-	if savedVars then
-		if savedVars["Default"] then
-			savedVars["Default"] = nil
-		end
-	end
-	
-	-- move old data from the HarvestMap (backup) module to the correct submodules
-	if submodule.zones then
-		for map, mapData in pairs( self.backupSavedVars.savedVars.data ) do
-			local zoneName = string.gsub( map, "/.*$", "" )
-			if submodule.zones[zoneName] then
-				self:ImportMapDataIntoSubmodule(map, mapData, submodule)
-				self.backupSavedVars.savedVars.data[map] = nil
-			end
-		end
-	end
-	
 	-- when a new zone is released, the new zone may sometimes be saved in
 	-- HarvestMap-NF until HarvestMap is updated
 	-- Here we move old data from NF to the correct submodule
@@ -211,19 +183,38 @@ function SubmoduleManager:CleanUpSavedVarsForSubmodule(submodule)
 	
 	if submodule.savedVars == HarvestNF_SavedVars then
 		-- move data from newly loaded NF module to previously loaded modules
-		for map, mapData in pairs(HarvestNF_SavedVars.data) do
-			local submodule = self:GetSubmoduleForMap(map)
-			if submodule and submodule.savedVars ~= HarvestNF_SavedVars then
-				self:ImportMapDataIntoSubmodule(map, mapData, submodule)
-				HarvestNF_SavedVars.data[map] = nil
+		for zoneId, zoneData in pairs(HarvestNF_SavedVars) do
+			if type(zoneId) == "number" then
+				for map, mapData in pairs(zoneData) do
+					local submodule = self:GetSubmoduleForMap(map)
+					if submodule and submodule.savedVars ~= HarvestNF_SavedVars then
+						self:ImportMapDataIntoSubmodule(zoneId, map, mapData, submodule)
+						HarvestNF_SavedVars[zoneId][map] = nil
+					end
+				end
+			end
+		end
+		if HarvestNF_SavedVars.data then
+			local zoneId = "data"
+			for map, mapData in pairs(HarvestNF_SavedVars.data) do
+				local submodule = self:GetSubmoduleForMap(map)
+				if submodule and submodule.savedVars ~= HarvestNF_SavedVars then
+					self:ImportMapDataIntoSubmodule(zoneId, map, mapData, submodule)
+					HarvestNF_SavedVars[zoneId][map] = nil
+				end
 			end
 		end
 	elseif submodule.zones then
 		-- move data from previously loaded NF module to newly loaded module
-		for map, mapData in pairs(HarvestNF_SavedVars.data) do
-			if submodule.zones[zoneName] then
-				self:ImportMapDataIntoSubmodule(map, mapData, submodule)
-				HarvestNF_SavedVars.data[map] = nil
+		for zoneId, zoneData in pairs(HarvestNF_SavedVars) do
+			if type(zoneId) == "number" then
+				for map, mapData in pairs(zoneData) do
+					local zoneName = string.gsub(map, "/.*$", "")
+					if submodule.zones[zoneName] then
+						self:ImportMapDataIntoSubmodule(zoneId, map, mapData, submodule)
+						HarvestNF_SavedVars[zoneId][map] = nil
+					end
+				end
 			end
 		end
 	end

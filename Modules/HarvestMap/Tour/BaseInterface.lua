@@ -38,7 +38,7 @@ function Farm:Initialize()
 		self:SetPath(path)
 		if path and Harvest.mapPins.mapCache then
 			if Harvest.mapPins.mapCache.map == path.mapCache.map then
-				local x, y = path:GetCoords(1)
+				local x, y = path:GetLocalCoords(1)
 				if x and y then
 					GPS:PanToMapPosition(x, y)
 				end

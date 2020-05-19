@@ -56,10 +56,12 @@ function MapPins:OnNodeChangedCallback(event, mapCache, nodeId)
 	-- queue the pin change
 	-- refresh a single pin by removing and recreating it
 	if not nodeAdded then
+		--self:Info("remove single map pin")
 		self.queue:RemoveNode(nodeId, pinTypeId)
 	end
 	-- the (re-)creation of the pin is performed, if the pin isn't hidden by the respawn timer
 	if not nodeDeleted and not mapCache:IsHidden(nodeId) then
+		--self:Info("add single map pin")
 		self.queue:AddNode(nodeId, pinTypeId)
 	end
 	self:RefreshUpdateHandler()
@@ -299,7 +301,7 @@ function MapPins.UpdateVisibleMapPins()
 	if not (validMapMode or validMinimapMode) then return end
 	
 	local map = Harvest.mapTools:GetMap()
-	local x, y = GetMapPlayerPosition("player")
+	local x, y = Harvest.GetPlayer3DPosition()
 
 	MapPins:AddAndRemoveVisblePins(map, x, y)
 end
@@ -331,7 +333,7 @@ end
 
 -- saves the current map and position
 -- and loads the resource data for the current map
-function MapPins:SetToMapAndPosition(mapMetaData, localX, localY)
+function MapPins:SetToMapAndPosition(mapMetaData, worldX, worldY)
 	local newMap = self.currentMap ~= mapMetaData.map
 	-- save current map
 	self.currentMap = mapMetaData.map
@@ -348,8 +350,8 @@ function MapPins:SetToMapAndPosition(mapMetaData, localX, localY)
 	self.mapCache.accessed = self.mapCache.accessed + 1
 	
 	-- set the last position of the player when the map pins were refreshed, for the "display only in range pins" option
-	self.lastViewedX = localX
-	self.lastViewedY = localY
+	self.lastViewedX = worldX
+	self.lastViewedY = worldY
 	
 	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
 		if Harvest.IsMapPinTypeVisible(pinTypeId) then
@@ -381,8 +383,9 @@ function MapPins:PinTypeRefreshCallback()
 	local validMinimapMode = Harvest.AreMinimapPinsVisible() and Harvest.mapMode:IsInMinimapMode()
 	if not (validMapMode or validMinimapMode) then return end
 	
-	local mapMetaData, localX, localY = Harvest.mapTools:GetViewedMapMetaDataAndPlayerLocalPosition()
-	self:SetToMapAndPosition(mapMetaData, localX, localY)
+	local mapMetaData, globalX, globalY = Harvest.mapTools:GetViewedMapMetaDataAndPlayerGlobalPosition()
+	local worldX, worldY = Harvest.GetPlayer3DPosition()
+	self:SetToMapAndPosition(mapMetaData, worldX, worldY)
 	self:RefreshUpdateHandler()
 end
 
@@ -418,7 +421,7 @@ MapPins.clickHandler = {-- debugHandler = {
 					MapPins.mapCache, nodeId)
 					
 			MapPins.mapCache:Delete(nodeId)
-			submodule.savedVars.data[ MapPins.mapCache.map ][ pinTypeId ][ nodeIndex ] = nil
+			submodule.savedVars[MapPins.mapCache.mapMetaData.zoneId][ MapPins.mapCache.map ][ pinTypeId ][ nodeIndex ] = nil
 			
 		end,
 		show = function() return Harvest.IsPinDeletionEnabled() and not IsInGamepadPreferredMode() end,

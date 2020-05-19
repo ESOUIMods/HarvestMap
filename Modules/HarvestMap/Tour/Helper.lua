@@ -113,7 +113,7 @@ function Helper:InitializeCallbacks(fragment)
 		if not Farm.path then return end
 		if not (Farm.path.mapCache.map == Harvest.mapTools:GetMap()) then return end
 		if not self:IsRunning() then return end
-		local x, y = Farm.path:GetCoords(self.nextPathIndex)
+		local x, y = Farm.path:GetLocalCoords(self.nextPathIndex)
 		ZO_WorldMap_GetPinManager():CreatePin( MAP_PIN_TYPE_HARVEST_TOUR , "TourPin", x, y )
 		Farm:Debug("farm map pins created")
 	end
@@ -122,10 +122,10 @@ function Helper:InitializeCallbacks(fragment)
 		Farm:Debug("farm compass refresh called")
 		if not Farm.path then return end
 		if not self:IsRunning() then return end
-		local x, y = Farm.path:GetGlobalCoords(self.nextPathIndex)
+		local x, y, z = Farm.path:GetWorldCoords(self.nextPathIndex)
 		local range = 1
 		local pinTag = MAP_PIN_TYPE_HARVEST_TOUR
-		pinmanager:AddCustomPin( pinTag, Harvest.TOUR, range, x, y )
+		pinmanager:AddCustomPin( pinTag, Harvest.TOUR, range, x, y, z )
 		Farm:Debug("farm compass pins created")
 	end
 	
@@ -165,16 +165,14 @@ function Helper:InitializeCallbacks(fragment)
 		
 		HarvestFarmCompassStats:SetText(format("%.2f", self.numFarmedNodes / (time - self.startTime) * 1000 * 60))
 		
-		local x, y = GPS:LocalToGlobal(GetMapPlayerPosition( "player" ))
-		if not x or not y then
-			return
-		end
+		local x, y, z = Harvest.GetPlayer3DPosition()
 		
-		local targetX, targetY, worldZ = Farm.path:GetGlobalCoords(self.nextPathIndex)
+		local targetX, targetY, targetZ = Farm.path:GetWorldCoords(self.nextPathIndex)
 		local dx = x - targetX
 		local dy = y - targetY
+		local dz = z - targetZ
 		
-		local distanceInMeters = Farm.path.mapCache.mapMetaData:GlobalDistanceInMeters(x, y, targetX, targetY)
+		local distanceInMeters = (dx * dx + dy * dy)^0.5
 		
 		if distanceInMeters < Harvest.GetVisitedRangeInMeters() then
 			self:UpdateToNextTarget()
@@ -183,21 +181,14 @@ function Helper:InitializeCallbacks(fragment)
 		HarvestFarmCompassDistance:SetText(format("%d m", zo_round(distanceInMeters) ))
 		
 		if time - lastTime > 1000 then
-			local x, y, z = Harvest.GetPlayer3DPosition()
-			if not z then
-				HarvestFarmCompassVerticalDistance:SetHidden(true)
+			HarvestFarmCompassVerticalDistance:SetHidden(false)
+			local str
+			if dz > 0 then
+				str = zo_strformat(SI_TOOLTIP_BELOW_ME, format("%d m", zo_round(dz) ))
 			else
-				HarvestFarmCompassVerticalDistance:SetHidden(false)
-				local distance = z - worldZ
-				local str
-				if distance > 0 then
-					str = zo_strformat(SI_TOOLTIP_BELOW_ME, format("%d m", zo_round(distance) ))
-				else
-					str = zo_strformat(SI_TOOLTIP_ABOVE_ME, format("%d m", zo_round(-distance) ))
-				end
-				HarvestFarmCompassVerticalDistance:SetText(str or "")
+				str = zo_strformat(SI_TOOLTIP_ABOVE_ME, format("%d m", zo_round(-dz) ))
 			end
-			lastTime = time
+			HarvestFarmCompassVerticalDistance:SetText(str)
 		end
 		
 		local angle = -atan2(dx, dy)

@@ -1,4 +1,4 @@
-
+local GPS = LibGPS2
 local Path = ZO_Object:Subclass()
 Harvest.path = Path
 
@@ -23,17 +23,13 @@ function Path:Dispose()
 end
 
 function Path:GetLocalCoords(index)
-	return self.mapCache.localX[self.nodeIndices[index]], self.mapCache.localY[self.nodeIndices[index]], self.mapCache.worldZ[self.nodeIndices[index]]
+	local x = self.mapCache.globalX[self.nodeIndices[index]]
+	local y = self.mapCache.globalY[self.nodeIndices[index]]
+	return GPS:GlobalToLocal(x, y)
 end
 
-function Path:GetGlobalCoords(index)
-	local x, y, z = self:GetLocalCoords(index)
-	x, y = self.mapCache.mapMetaData:LocalToGlobal(x, y)
-	return x, y, z
-end
-
-function Path:GetCoords(index)
-	return self.mapCache.localX[self.nodeIndices[index]], self.mapCache.localY[self.nodeIndices[index]]
+function Path:GetWorldCoords(index)
+	return self.mapCache.worldX[self.nodeIndices[index]], self.mapCache.worldY[self.nodeIndices[index]], self.mapCache.worldZ[self.nodeIndices[index]]
 end
 
 function Path:Revert()
@@ -171,12 +167,12 @@ function Path:GenerateFromNodeIds(nodeIds, startIndex, endIndex)
 	self.length = self.length + self:GetDistanceToPrevious(1)
 end
 
-function Path:GenerateFromCoordinates(pinTypes, localX, localY)
+function Path:GenerateFromCoordinates(pinTypes, worldXList, worldYList)
 	local mapMetaData = self.mapCache.mapMetaData
 	local nodeId
 	for index, pinTypeId in ipairs(pinTypes) do
 		Harvest.Data:CheckPinTypeInCache(pinTypeId, self.mapCache)
-		nodeId = self.mapCache:GetMergeableNode(pinTypeId, localX[index], localY[index])
+		nodeId = self.mapCache:GetMergeableNode(pinTypeId, worldXList[index], worldYList[index])
 		if nodeId then
 			self.numNodes = self.numNodes + 1
 			self.nodeIndices[self.numNodes] = nodeId
@@ -216,12 +212,10 @@ function Path:GetDistanceToPrevious(index)
 	index = self.nodeIndices[index]
 	previousIndex = self.nodeIndices[previousIndex]
 	
-	local dx = self.mapCache.localX[index] - self.mapCache.localX[previousIndex]
-	local dy = self.mapCache.localY[index] - self.mapCache.localY[previousIndex]
+	local dx = self.mapCache.worldX[index] - self.mapCache.worldX[previousIndex]
+	local dy = self.mapCache.worldY[index] - self.mapCache.worldY[previousIndex]
 	
-	return self.mapCache.mapMetaData:LocalDistanceInMeters(
-		self.mapCache.localX[index], self.mapCache.localY[index],
-		self.mapCache.localX[previousIndex], self.mapCache.localY[previousIndex])
+	return (dx * dx + dy * dy)^0.5
 end
 
 function Path:CalculateStats()

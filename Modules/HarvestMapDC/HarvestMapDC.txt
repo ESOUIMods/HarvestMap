@@ -4,6 +4,6 @@
 ## DependsOn: HarvestMap
 ## AddOnVersion: 31309
 ## ValidateSavedVariables: 1
-## APIVersion: 100030 100029
+## APIVersion: 100030 100031
 ## SavedVariables: HarvestDC_SavedVars
 ## DisableSavedVariablesAutoSaving: 1

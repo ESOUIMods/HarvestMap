@@ -121,7 +121,7 @@ function Filters:InitializeCompassControl()
 	lastControl = control
 	
 	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
-		if not Harvest.HIDDEN_PINTYPES[pinTypeId] then
+		if pinTypeId ~= Harvest.UNKNOWN and not Harvest.HIDDEN_PINTYPES[pinTypeId] then
 			definition = {
 				type = "checkbox",
 				name = Harvest.GetLocalization( "pintype" .. pinTypeId ),
@@ -175,7 +175,7 @@ function Filters:InitializeWorldControl()
 	lastControl = control
 	
 	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
-		if not Harvest.HIDDEN_PINTYPES[pinTypeId] then
+		if pinTypeId ~= Harvest.UNKNOWN and not Harvest.HIDDEN_PINTYPES[pinTypeId] then
 			definition = {
 				type = "checkbox",
 				name = Harvest.GetLocalization( "pintype" .. pinTypeId ),

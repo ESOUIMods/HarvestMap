@@ -43,11 +43,12 @@ end
 function Interaction.OnLootReceived( eventCode, receivedBy, itemLink, stackCount, soundCategory, lootType, lootedBySelf )
 	if not lootedBySelf then return end
 	if not lootType == LOOT_TYPE_ITEM then return end
+	if Interaction.lastInteractableName == "" then return end
 	local wasHarvesting = (Interaction.lastInteractionType == INTERACTION_HARVEST)
 	local wasContainer = Harvest.IsInteractableAContainer( Interaction.lastInteractableName )
 	if wasContainer then
-		-- if the last interaction was more than 10 sec ago, then it is probably not the source of the loot
-		if GetGameTimeMilliseconds() - Interaction.lastInteractableTimeInMs >= 10 * 1000 then
+		-- if the last interaction was more than 5 sec ago, then it is probably not the source of the loot
+		if GetGameTimeMilliseconds() - Interaction.lastInteractableTimeInMs >= 5 * 1000 then
 			Interaction:Error("last interaction was a container (%s), but too long ago (%d)!",
 				Interaction.lastInteractableName,
 				GetGameTimeMilliseconds() - Interaction.lastInteractableTimeInMs)
@@ -69,12 +70,12 @@ function Interaction.OnLootReceived( eventCode, receivedBy, itemLink, stackCount
 		return
 	end
 	
-	local mapMetaData, localX, localY = Harvest.mapTools:GetPlayerMapMetaDataAndLocalPosition()
+	local mapMetaData, globalX, globalY = Harvest.mapTools:GetPlayerMapMetaDataAndGlobalPosition()
 	local worldX, worldY, worldZ = Harvest.GetPlayer3DPosition()
 	
-	Interaction:Info("Discovered a new node. pintypeid: %d, map: %s, local: %f, %f, world: %f, %f, %f",
-			pinTypeId, mapMetaData.map, localX, localY, worldX, worldY, worldZ )
-	CallbackManager:FireCallbacks(Events.NODE_DISCOVERED, mapMetaData, worldX, worldY, worldZ, localX, localY, pinTypeId)
+	Interaction:Info("Discovered a new node. pintypeid: %d, map: %s, global: %f, %f, world: %f, %f, %f",
+			pinTypeId, mapMetaData.map, globalX, globalY, worldX, worldY, worldZ )
+	CallbackManager:FireCallbacks(Events.NODE_DISCOVERED, mapMetaData, worldX, worldY, worldZ, globalX, globalY, pinTypeId)
 	
 	-- reset the interaction state, so we do not fire the event again for other items in the same container/node
 	Interaction.lastInteractionType = nil
@@ -147,21 +148,21 @@ function Interaction.BeginLockpicking()
 		worldX, worldY, worldZ = Harvest.GetPlayer3DPosition()
 	end
 	
-	local mapMetaData, localX, localY = Harvest.mapTools:GetPlayerMapMetaDataAndLocalPosition()
-	Interaction:Info("Discovered a new node. pintypeid: %d, map: %s, local: %f, %f, world: %f, %f, %f",
-			pinTypeId, mapMetaData.map, localX, localY, worldX, worldY, worldZ )
-	CallbackManager:FireCallbacks(Events.NODE_DISCOVERED, mapMetaData, worldX, worldY, worldZ, localX, localY, pinTypeId)
+	local mapMetaData, globalX, globalY = Harvest.mapTools:GetPlayerMapMetaDataAndGlobalPosition()
+	Interaction:Info("Discovered a new node. pintypeid: %d, map: %s, global: %f, %f, world: %f, %f, %f",
+			pinTypeId, mapMetaData.map, globalX, globalY, worldX, worldY, worldZ )
+	CallbackManager:FireCallbacks(Events.NODE_DISCOVERED, mapMetaData, worldX, worldY, worldZ, globalX, globalY, pinTypeId)
 end
 
 function Interaction.CheckFishingState()
 	EVENT_MANAGER:UnregisterForUpdate("HarvestMap-FishState")
 	if GetInteractionType() == INTERACTION_FISH then
-		local mapMetaData, localX, localY = Harvest.mapTools:GetPlayerMapMetaDataAndLocalPosition()
+		local mapMetaData, globalX, globalY = Harvest.mapTools:GetPlayerMapMetaDataAndGlobalPosition()
 		local worldX, worldY, worldZ = Harvest.GetPlayer3DPosition()
 		local pinTypeId = Harvest.FISHING
-		Interaction:Info("Discovered a new node. pintypeid: %d, map: %s, local: %f, %f, world: %f, %f, %f",
-			pinTypeId, mapMetaData.map, localX, localY, worldX, worldY, worldZ )
-		CallbackManager:FireCallbacks(Events.NODE_DISCOVERED, mapMetaData, worldX, worldY, worldZ, localX, localY, pinTypeId)
+		Interaction:Info("Discovered a new node. pintypeid: %d, map: %s, global: %f, %f, world: %f, %f, %f",
+			pinTypeId, mapMetaData.map, globalX, globalY, worldX, worldY, worldZ )
+		CallbackManager:FireCallbacks(Events.NODE_DISCOVERED, mapMetaData, worldX, worldY, worldZ, globalY, globalY, pinTypeId)
 	end
 end
 	

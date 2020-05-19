@@ -42,7 +42,8 @@ Harvest = Harvest or {}
 -- 36 3.12.8 added timeout for interactable names
 -- 37 3.13.1 pts elsweyr beta
 -- 38 3.13.9 dungeon dlc after elsweyr
-local addonVersion = 38
+-- 39 3.14.0 save per zone id
+local addonVersion = 39
 
 -- node version which is saved for each node
 -- the node version encodes the current game and addon version

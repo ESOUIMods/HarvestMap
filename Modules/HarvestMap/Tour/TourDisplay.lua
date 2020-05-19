@@ -125,8 +125,8 @@ function TourDisplay:Refresh(path, selectedPins, selectedMapCache)
 		local mapWidth, mapHeight = ZO_WorldMapContainer:GetDimensions()
 		for index = 1, path.numNodes do
 			linkControl = self.linkPool:AcquireObject()
-			linkControl.startX, linkControl.startY = path:GetCoords(index)
-			linkControl.endX, linkControl.endY = path:GetCoords(lastIndex)
+			linkControl.startX, linkControl.startY = path:GetLocalCoords(index)
+			linkControl.endX, linkControl.endY = path:GetLocalCoords(lastIndex)
 			if linkControl.startX < linkControl.endX then
 				linkControl:SetTexture("HarvestMap/Textures/Map/tour_r.dds")
 			else
@@ -144,8 +144,8 @@ function TourDisplay:Refresh(path, selectedPins, selectedMapCache)
 		if self.minimapPool then
 			for index = 1, path.numNodes do
 				linkControl = self.minimapPool:AcquireObject()
-				linkControl.startX, linkControl.startY = path:GetCoords(index)
-				linkControl.endX, linkControl.endY = path:GetCoords(lastIndex)
+				linkControl.startX, linkControl.startY = path:GetLocalCoords(index)
+				linkControl.endX, linkControl.endY = path:GetLocalCoords(lastIndex)
 				if linkControl.startX < linkControl.endX then
 					linkControl:SetTexture("HarvestMap/Textures/Map/tour_r.dds")
 				else

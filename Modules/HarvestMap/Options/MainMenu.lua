@@ -1,5 +1,8 @@
 local LMM = LibMainMenu
-assert(LMM, "\n\nThe library LibMainMenu could not be loaded. Your installation of the library is probably damaged or missing files.")
+if not LMM.AddCategory then
+	-- an outdated version has overridden the new one
+	LMM = LibStub("LibMainMenu")
+end
 
 local Menu = {}
 Harvest:RegisterModule("menu", Menu)

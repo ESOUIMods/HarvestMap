@@ -39,26 +39,13 @@ do
 		return sqrt(dx * dx + dy * dy)
 	end
 
-	realDistance = function(a, b)
-		return GeneratorLogic.mapCache.mapMetaData:LocalDistanceInMeters(a[1], a[2], b[1], b[2])
-	--	local dx = a[3] - b[3]
-	--	local dy = a[4] - b[4]
-	--	return sqrt(dx * dx + dy * dy) * GeneratorLogic.mapCache.mapMetaData.globalToWorldFactor
-	end
+	realDistance = distance
 	
 	realDistanceWithHeight = function(a, b)
 		local dx = a[1] - b[1]
 		local dy = a[2] - b[2]
-		local dz = a[5] - b[5]
-		
-		local dist = (dx * dx + dy * dy)
-		local mapMetaData = GeneratorLogic.mapCache.mapMetaData
-		local correction = mapMetaData.defaultZoneMeasurement.globalToWorldFactor * mapMetaData.mapMeasurement.scaleX
-		dist = dist * correction * correction
-		
-		dist = dist + dz * dz
-		
-		return sqrt(dist)
+		local dz = a[5] - b[5]	
+		return sqrt(dx * dx + dy * dy + dz * dz)
 	end
 end
 
@@ -72,7 +59,7 @@ local function generateEdges(num_data_points, points, measurement, maxLength)
 			pointB = points[j]
 			dist = realDistanceWithHeight(pointA, pointB)
 			if dist <= maxLength then
-				if pointA[5] == 0 or pointB[5] == 0 or zo_abs(pointA[5] - pointB[5]) / realDistance(pointA, pointB) < 0.5 then
+				if zo_abs(pointA[5] - pointB[5]) / realDistance(pointA, pointB) < 0.5 then
 					numEdges = numEdges + 1
 					if numEdges > 30000 then
 						return
@@ -97,7 +84,7 @@ local function constructGraph(maxLength)
 	num_data_points = 0
 
 	local viewedMap = true
-	local mapMetaData = Harvest.mapTools:GetViewedMapMetaDataAndPlayerLocalPosition()
+	local mapMetaData = Harvest.mapTools:GetViewedMapMetaDataAndPlayerGlobalPosition()
 
 	-- to meters
 	GeneratorLogic.minLength = GeneratorLogic.minLengthKM * 1000
@@ -114,7 +101,7 @@ local function constructGraph(maxLength)
 			for _, nodeId in pairs(mapCache.nodesOfPinType[pinTypeId]) do
 				-- each point/vertex consists of and x and y coordinate and a list of the neighbors/edges
 				table.insert(points, {
-					mapCache.localX[nodeId], mapCache.localY[nodeId],
+					mapCache.worldX[nodeId], mapCache.worldY[nodeId],
 					0, 0, --mapCache.globalX[nodeId], mapCache.globalY[nodeId],
 					mapCache.worldZ[nodeId] or 0, pinTypeId, edges={}})
 				num_data_points = num_data_points + 1

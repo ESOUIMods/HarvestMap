@@ -116,8 +116,8 @@ function Loader:ConfirmSave()
 	local tostring = _G["tostring"]
 	for index, nodeId in ipairs(path.nodeIndices) do
 		table.insert(result[counter], tostring(path.mapCache.pinTypeId[nodeId]))
-		table.insert(result[counter], format("%.5f", path.mapCache.localX[nodeId]))
-		table.insert(result[counter], format("%.5f", path.mapCache.localY[nodeId]))
+		table.insert(result[counter], format("%.5f", path.mapCache.worldX[nodeId]))
+		table.insert(result[counter], format("%.5f", path.mapCache.worldY[nodeId]))
 		if index % 20 == 0 then
 			counter = counter + 1
 			result[counter] = {}
@@ -131,6 +131,7 @@ function Loader:ConfirmSave()
 	tour.numNodes = path.numNodes
 	tour.length = path.length
 	tour.ratio = zo_round(path.numNodes / path.length * 1000 * 100) / 100
+	tour.worldCoords = true
 	
 	local savedTours = self:GetSavedTours()
 	local tourName = HarvestFarmLoaderNameField:GetText()
@@ -143,29 +144,47 @@ function Loader:Load(tourName)
 	local savedTours = self:GetSavedTours()
 	local tour = savedTours[tourName]
 	
+	local loadError = false
 	local iter
 	local pinTypes = {}
-	local localX = {}
-	local localY = {}
+	local xList = {}
+	local yList = {}
 	local num = 1
 	for i, nodes in ipairs(tour.nodes) do
 		iter = string.gmatch(nodes, "(%d*),(%d*%.%d*),(%d*%.%d*)")
 		for pinType, x, y in iter do
 			pinTypes[num] = tonumber(pinType)
-			localX[num] = tonumber(x)
-			localY[num] = tonumber(y)
+			xList[num] = tonumber(x)
+			yList[num] = tonumber(y)
 			num = num + 1
 		end
 	end
 	
-	local path = Harvest.path:New(Harvest.mapPins.mapCache)
-	path:GenerateFromCoordinates(pinTypes, localX, localY)
-	if path.numNodes > 2 then
-		tour.numNodes = path.numNodes
-		tour.length = path.length
-		tour.ratio = zo_round(path.numNodes / path.length * 1000 * 100) / 100
-		Farm:SetPath(path)
-	else
+	if not tour.worldCoords then
+		local zoneId = arvest.mapPins.mapCache.mapMetaData.zoneId
+		local measurement = Lib3D:GetZoneMeasurementForZoneId(zoneId)
+		if measurement:IsValid() then
+			for index in pairs(xList) do
+				xList[index], yList[index] = measurement:GlobalToWorld(GPS:LocalToGlobal(xList[index], yList[index]))
+			end
+		else
+			loadError = true
+		end
+	end
+	
+	if not loadError then
+		local path = Harvest.path:New(Harvest.mapPins.mapCache)
+		path:GenerateFromCoordinates(pinTypes, xList, yList)
+		if path.numNodes > 2 then
+			tour.numNodes = path.numNodes
+			tour.length = path.length
+			tour.ratio = zo_round(path.numNodes / path.length * 1000 * 100) / 100
+			Farm:SetPath(path)
+		else
+			loadError = true
+		end
+	end
+	if loadError then
 		ZO_Dialogs_ShowDialog("HARVESTFARM_LOAD_ERROR", {}, { mainTextParams = {} } )
 	end
 end

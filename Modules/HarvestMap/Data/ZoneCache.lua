@@ -11,6 +11,7 @@ end
 function ZoneCache:Initialize(zoneMeasurement)
 	self.zoneMeasurement = zoneMeasurement
 	self.zoneIndex = zoneMeasurement.zoneIndex
+	self.zoneId = zoneMeasurement.zoneId
 	self.mapCaches = {}
 end
 
@@ -28,15 +29,14 @@ function ZoneCache:AddCache(cache)
 	local pinTypeId, globalX, globalY, otherNode
 	for map, otherCache in pairs(self.mapCaches) do
 		assert(cache ~= otherCache)
-		local isCacheLarger = cache.mapMetaData.mapMeasurement.scaleX > otherCache.mapMetaData.mapMeasurement.scaleX
+		local isCacheLarger = cache.lastNodeId > otherCache.lastNodeId
 		
 		for nodeId = 1, cache.lastNodeId do
 			pinTypeId = cache.pinTypeId[nodeId]
 			if pinTypeId then
-				otherNode = otherCache:GetMergeableNode(pinTypeId, otherCache.mapMetaData:ConvertFrom(
-									cache.mapMetaData, cache.localX[nodeId], cache.localY[nodeId]))
+				otherNode = otherCache:GetMergeableNode(pinTypeId, cache.worldX[nodeId], cache.worldY[nodeId])
 				if otherNode then
-					-- nodes can be marged, delete node from ancestor map
+					-- nodes can be merged, delete node from ancestor map
 					if isCacheLarger then
 						otherCache:Delete(otherNode)
 					else
@@ -55,21 +55,19 @@ end
 function ZoneCache:MergeNodesOfMapCacheAndPinType(mapCache, pinTypeId)
 	assert(self.mapCaches[mapCache.map] == mapCache)
 	-- todo we now have parent information to exploit!
-	local globalX, globalY, mapMetaData, otherNode
+	local otherNode
 	for map, otherCache in pairs(self.mapCaches) do
 		if mapCache ~= otherCache then
-			local isCacheLarger = mapCache.mapMetaData.mapMeasurement.scaleX > otherCache.mapMetaData.mapMeasurement.scaleX
-			
+			local isCacheLarger = mapCache.lastNodeId > otherCache.lastNodeId
 			for _, nodeId in pairs(mapCache.nodesOfPinType[pinTypeId]) do
-				otherNode = otherCache:GetMergeableNode(pinTypeId, otherCache.mapMetaData:ConvertFrom(
-									mapCache.mapMetaData, mapCache.localX[nodeId], mapCache.localY[nodeId]))
+				otherNode = otherCache:GetMergeableNode(pinTypeId, mapCache.worldX[nodeId], mapCache.worldY[nodeId])
 				if otherNode then
-					-- nodes can be marged, delete node from ancestor map
-					if isCacheLarger then
+					-- nodes can be merged, delete node from ancestor map
+					--if isCacheLarger then
 						otherCache:Delete(otherNode)
-					else
-						mapCache:Delete(nodeId)
-					end
+					--else -- this changes the nodesOfPinType array which breaks the iteration
+					--	mapCache:Delete(nodeId)
+					--end
 				end
 			end
 		end

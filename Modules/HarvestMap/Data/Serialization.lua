@@ -18,9 +18,6 @@ local Events = Harvest.events
 local SubmoduleManager = Harvest.submoduleManager
 
 function Serialization:Initialize()
-	self.globalX = {}
-	self.globalY = {}
-	
 	self.timestamp = {}
 	self.version = {}
 	self.flags = {}
@@ -31,11 +28,7 @@ function Serialization:LoadNodesOfPinTypeToCache(pinTypeId, mapCache)
 	mapCache:InitializePinType(pinTypeId)
 	local mapMetaData = mapCache.mapMetaData
 	local map = mapMetaData.map
-	
-	if not mapMetaData.mapMeasurement then
-		self:Warn("could not load cache for map %s, no measurement given!", map)
-		return
-	end
+	local zoneId = mapMetaData.zoneId
 
 	local submodule = SubmoduleManager:GetSubmoduleForMap(map)
 	if not submodule then
@@ -52,22 +45,26 @@ function Serialization:LoadNodesOfPinTypeToCache(pinTypeId, mapCache)
 			map, pinTypeId, submodule.savedVarsName)
 	
 	local savedVars = submodule.savedVars
-	if not savedVars.data[map] then return end
-	if not savedVars.data[map][pinTypeId] then return end
+	-- import old data if it exists
+	if savedVars.data then 
+		if savedVars.data[map] then 
+			local houseZoneId = GetHouseZoneId(GetCurrentZoneHouseId())
+			if houseZoneId ~= zoneId then
+				-- houses have their own zone id
+				-- do not import if we are in a house
+				-- because the data actually belongs to the parent zone
+				self:Info("moved data from map %s to zone %d", map, zoneId)
+				SubmoduleManager:ImportMapDataIntoSubmodule(zoneId, map, savedVars.data[map], submodule)
+				savedVars.data[map] = nil
+			end
+		end
+	end
 	
-	self.serializedNodes = savedVars.data[map][pinTypeId]
+	if not savedVars[zoneId] then return end
+	if not savedVars[zoneId][map] then return end
+	if not savedVars[zoneId][map][pinTypeId] then return end
+	self.serializedNodes = savedVars[zoneId][map][pinTypeId]
 	
-	--[[
-	self.globalX = {}
-	self.globalY = {}
-	
-	self.timestamp = {}
-	self.version = {}
-	self.flags = {}
-	]]
-	
-	ZO_ClearTable(self.globalX)
-	ZO_ClearTable(self.globalY)
 	ZO_ClearTable(self.timestamp)
 	ZO_ClearTable(self.version)
 	ZO_ClearTable(self.flags)
@@ -85,6 +82,7 @@ function Serialization:Load()
 	local minGameVersion = Harvest.GetMinGameVersion()
 	local mapCache = self.mapCache
 	local mapMetaData = mapCache.mapMetaData
+	local mapMeasurement = mapMetaData.mapMeasurement
 	local map = mapMetaData.map
 	local pinTypeId = self.pinTypeId
 	local numAdded, numRemoved, numMerged = 0, 0, 0
@@ -112,21 +110,9 @@ function Serialization:Load()
 			end
 			
 			if valid then
-				-- before version 34 the first two saved properties were local coordinates
-				if version % 1000 < 34 then
-					if not (globalX and globalY) then
-						globalX, globalY = mapMetaData:LocalToGlobal(worldX, worldY)
-						updated = true
-					end
-					
-					-- it's save to assume that world coords are larger than 1,
-					-- otherwise the node would be in the north eastern square meter of the 3d zone
-					-- but players can't reach that without going out of bounds
-					if worldX == nil or worldY == nil or worldX < 1 or worldY < 1 then
-						worldX = nil
-						worldY = nil
-						mapCache.hasMissingWorldCoords = true
-					end
+				-- remove data without world coordinates
+				if worldX == nil or worldY == nil or worldX < 1 or worldY < 1 then
+					valid = false
 				end
 			end
 			
@@ -134,25 +120,25 @@ function Serialization:Load()
 				if not (globalX and globalY) then
 					valid = false
 				end
-				localX, localY = mapMetaData:GlobalToLocal(globalX, globalY)
 			end
 			
-			-- if the click triggers something, this pin belongs on the child map
-			if valid and self.isMapCurrentlyViewed then
-				valid = not WouldProcessMapClick(localX, localY)
+			if valid and mapMeasurement then
+				localX, localY = mapMeasurement:ToLocal(globalX, globalY)
+				if localX > 1 or localX < 0 or localY > 1 or localY < 0 then
+					self:Debug("remove node because of local coords ", map, node)
+					valid = false
+				end
 			end
 			
 			-- remove close nodes (ie duplicates on cities)
 			if valid then
-				local nodeId = mapCache:GetMergeableNode(pinTypeId, localX, localY)
+				local nodeId = mapCache:GetMergeableNode(pinTypeId, worldX, worldY)
 				if nodeId then
 					if self.timestamp[nodeId] < timestamp then
 						self.timestamp[nodeId] = timestamp
 						self.version[nodeId] = version
-						self.globalX[nodeId] = globalX
-						self.globalY[nodeId] = globalY
 						self.flags[nodeId] = flags
-						mapCache:Move(nodeId, worldX, worldY, worldZ, localX, localY)
+						mapCache:Move(nodeId, worldX, worldY, worldZ, globalX, globalY)
 						-- update the old node
 						self.serializedNodes[mapCache.nodeIndex[nodeId] ] = self:Serialize(
 								worldX, worldY, worldZ, timestamp, version, globalX, globalY, flags)
@@ -164,13 +150,11 @@ function Serialization:Load()
 			end
 			
 			if valid then
-				nodeId = mapCache:Add(pinTypeId, nodeIndex, worldX, worldY, worldZ, localX, localY)
+				nodeId = mapCache:Add(pinTypeId, nodeIndex, worldX, worldY, worldZ, globalX, globalY)
 				if nodeId then
 					numAdded = numAdded + 1
 					self.timestamp[nodeId] = timestamp
 					self.version[nodeId] = version
-					self.globalX[nodeId] = globalX
-					self.globalY[nodeId] = globalY
 					self.flags[nodeId] = flags
 					if updated then
 						self.serializedNodes[nodeIndex] = self:Serialize(
@@ -190,8 +174,6 @@ function Serialization:Load()
 	
 	self:Debug("added %d nodes, merged %d, removed %d (includes merged)", numAdded, numMerged, numRemoved)
 	
-	ZO_ClearTable(self.globalX)
-	ZO_ClearTable(self.globalY)
 	ZO_ClearTable(self.timestamp)
 	ZO_ClearTable(self.version)
 	ZO_ClearTable(self.flags)
