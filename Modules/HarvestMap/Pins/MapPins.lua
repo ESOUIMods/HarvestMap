@@ -11,7 +11,7 @@ function MapPins:OnChangedNodeHiddenState(map, nodeId, newState)
 	if self:IsActiveMap(map) then
 		local pinTypeId = self.mapCache.pinTypeId[nodeId]
 		if not pinTypeId then return end
-		
+
 		if not Harvest.IsMapPinTypeVisible(pinTypeId) then
 			return
 		end
@@ -32,27 +32,30 @@ function MapPins:OnNodeChangedCallback(event, mapCache, nodeId)
 	local nodeAdded = (event == Events.NODE_ADDED)
 	local nodeUpdated = (event == Events.NODE_UPDATED or event == Events.NODE_COMPASS_LINK_CHANGED)
 	local nodeDeleted = (event == Events.NODE_DELETED)
-	
+
 	-- when the heatmap is active, the map pins aren't used
 	if Harvest.IsHeatmapActive() then
 		return
 	end
-	
+
 	local validMapMode = Harvest.AreMapPinsVisible() and not Harvest.mapMode:IsInMinimapMode()
 	local validMinimapMode = Harvest.AreMinimapPinsVisible() and Harvest.mapMode:IsInMinimapMode()
 	if not (validMapMode or validMinimapMode) then return end
-	
+
 	-- the node isn't on the currently displayed map
-	if not self.mapCache == mapCache then
+	if not (self.mapCache == mapCache) then
 		return
 	end
+
+	if mapCache.mapMetaData.isBlacklisted then return end
+
 	local pinTypeId = mapCache.pinTypeId[nodeId]
 	assert(pinTypeId)
 	-- if the node's pin type is visible, then we do not have to manipulate any pins
 	if not Harvest.IsMapPinTypeVisible(pinTypeId) then
 		return
 	end
-	
+
 	-- queue the pin change
 	-- refresh a single pin by removing and recreating it
 	if not nodeAdded then
@@ -79,7 +82,7 @@ function MapPins:RefreshUpdateHandler()
 		self:Debug("disable pin creation: Empty pin queue")
 		shouldDelay = true
 	end
-	
+
 	if shouldDelay then
 		self:DisableUpdateHandler()
 		return
@@ -137,12 +140,12 @@ function MapPins:RegisterCallbacks()
 	-- when a map related setting is changed
 	CallbackManager:RegisterForEvent(Events.SETTING_CHANGED, function(...) self:OnSettingsChanged(...) end)
 	CallbackManager:RegisterForEvent(Events.PIN_QUEUE_EMPTY, function() self:RefreshUpdateHandler() end)
-	
+
 	CallbackManager:RegisterForEvent(Events.MAP_MODE_CHANGED, function(event, newMode)
 		self:RefreshUpdateHandler()
 		self:RefreshVisibleDistance()
 	end)
-	
+
 	-- make sure the queue does not reference old divisions
 	CallbackManager:RegisterForEvent(Events.MAP_CACHE_ZONE_MEASUREMENT_CHANGED, function(event, mapCache)
 		if mapCache == self.mapCache then
@@ -183,12 +186,12 @@ function MapPins:AddResourceCheckbox(panel, pinTypeId)
 	label.text = text
 	label.SetColor = NewSetColor
 	label.pinTypeId = pinTypeId
-	
+
 	ZO_CheckButton_SetLabelText(checkbox, text)
 	ZO_CheckButton_SetCheckState(checkbox, Harvest.IsMapPinTypeVisible(pinTypeId))
 	ZO_CheckButton_SetToggleFunction(checkbox, function(...) OnButtonToggled(pinTypeId, ...) end)
 	ZO_CheckButtonLabel_ColorText(label, false)
-	
+
 	return checkbox
 end
 
@@ -201,7 +204,7 @@ function MapPins:RegisterResourcePinTypes()
 			-- some extra layout fields exclusive for QuickPins
 			--layout.expectedPinCount = Harvest.expectedPinCount[pinTypeId]
 			layout.OnClickHandler = MapPins.clickHandler
-			
+
 			-- create the pin type for this resource
 			QuickPin:RegisterPinType(
 				pinTypeId,
@@ -210,11 +213,11 @@ function MapPins:RegisterResourcePinTypes()
 				layout
 			)
 			table.insert(self.resourcePinTypeIds, pinTypeId)
-			
+
 			self:AddResourceCheckbox(WORLD_MAP_FILTERS.pvePanel, pinTypeId )
 			self:AddResourceCheckbox(WORLD_MAP_FILTERS.pvpPanel, pinTypeId )
 			self:AddResourceCheckbox(WORLD_MAP_FILTERS.imperialPvPPanel, pinTypeId )
-			
+
 		end
 	end
 	-- this callback will receive the pin refresh request
@@ -261,16 +264,16 @@ function MapPins:Initialize()
 	-- coords of the last pin update for the "display only nearby pins" option
 	self.lastViewedX = -10
 	self.lastViewedY = -10
-	
+
 	self:RegisterCallbacks()
-	
+
 	self.resourcePinTypeIds = {}
 	self:RegisterResourcePinTypes()
-	
+
 	-- additional filter checkboxes
 	self:AddHeatMapCheckbox()
 	self:AddDeletePinCheckbox()
-	
+
 	self:RefreshVisibleDistance()
 end
 
@@ -295,11 +298,11 @@ end
 -- called every few seconds to update the pins in the visible range
 function MapPins.UpdateVisibleMapPins()
 	if Harvest.IsHeatmapActive() then return end
-	
+
 	local validMapMode = Harvest.AreMapPinsVisible() and not Harvest.mapMode:IsInMinimapMode()
 	local validMinimapMode = Harvest.AreMinimapPinsVisible() and Harvest.mapMode:IsInMinimapMode()
 	if not (validMapMode or validMinimapMode) then return end
-	
+
 	local map = Harvest.mapTools:GetMap()
 	local x, y = Harvest.GetPlayer3DPosition()
 
@@ -314,11 +317,11 @@ function MapPins:AddAndRemoveVisblePins(map, x, y)
 	if self.mapCache.map ~= map then return end
 	-- no pins are displayed when the heatmap mode is used.
 	if Harvest.IsHeatmapActive() then return end
-	
+
 	local validMapMode = Harvest.AreMapPinsVisible() and not Harvest.mapMode:IsInMinimapMode()
 	local validMinimapMode = Harvest.AreMinimapPinsVisible() and Harvest.mapMode:IsInMinimapMode()
 	if not (validMapMode or validMinimapMode) then return end
-	
+
 	-- add creation and removal commands to the pin queue.
 	local shouldSaveCoords
 	shouldSaveCoords = self.mapCache:SetPrevAndCurVisibleNodesToTable(self.lastViewedX, self.lastViewedY, x, y, self.visibleDistance, self.queue)
@@ -348,17 +351,17 @@ function MapPins:SetToMapAndPosition(mapMetaData, worldX, worldY)
 		return
 	end
 	self.mapCache.accessed = self.mapCache.accessed + 1
-	
+
 	-- set the last position of the player when the map pins were refreshed, for the "display only in range pins" option
 	self.lastViewedX = worldX
 	self.lastViewedY = worldY
-	
+
 	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
 		if Harvest.IsMapPinTypeVisible(pinTypeId) then
 			self.mapCache:GetVisibleNodes(self.lastViewedX, self.lastViewedY, pinTypeId, self.visibleDistance, self.queue)
 		end
 	end
-	
+
 	if newMap then
 		CallbackManager:FireCallbacks(Events.MAP_CHANGE)
 	end
@@ -371,10 +374,10 @@ end
 
 function MapPins:PinTypeRefreshCallback()
 	self:Debug("Refresh of pins requested.")
-	
+
 	-- clear the queue of remaining pin creation/removal commands
 	self.queue:Clear()
-	
+
 	if Harvest.IsHeatmapActive() then
 		self:Debug("pins could not be refreshed, heatmap is active" )
 		return
@@ -382,7 +385,7 @@ function MapPins:PinTypeRefreshCallback()
 	local validMapMode = Harvest.AreMapPinsVisible() and not Harvest.mapMode:IsInMinimapMode()
 	local validMinimapMode = Harvest.AreMinimapPinsVisible() and Harvest.mapMode:IsInMinimapMode()
 	if not (validMapMode or validMinimapMode) then return end
-	
+
 	local mapMetaData, globalX, globalY = Harvest.mapTools:GetViewedMapMetaDataAndPlayerGlobalPosition()
 	local worldX, worldY = Harvest.GetPlayer3DPosition()
 	self:SetToMapAndPosition(mapMetaData, worldX, worldY)
@@ -396,11 +399,11 @@ MapPins.clickHandler = {-- debugHandler = {
 		callback = function(...) return Harvest.farm.helper:OnPinClicked(...) end,
 		show = function(pin)
 			if not Harvest.farm.path then return false end
-			
+
 			local nodeId = pin.m_PinTag
 			local index = Harvest.farm.path:GetIndex(nodeId)
 			if not index then return false end
-			
+
 			return true
 		end,
 	},
@@ -416,13 +419,13 @@ MapPins.clickHandler = {-- debugHandler = {
 			local pinTypeId = MapPins.mapCache.pinTypeId[nodeId]
 			local nodeIndex = MapPins.mapCache.nodeIndex[nodeId]
 			local submodule = Harvest.submoduleManager:GetSubmoduleForMap( MapPins.mapCache.map )
-			
+
 			CallbackManager:FireCallbacks(Events.NODE_DELETED,
 					MapPins.mapCache, nodeId)
-					
+
 			MapPins.mapCache:Delete(nodeId)
 			submodule.savedVars[MapPins.mapCache.mapMetaData.zoneId][ MapPins.mapCache.map ][ pinTypeId ][ nodeIndex ] = nil
-			
+
 		end,
 		show = function() return Harvest.IsPinDeletionEnabled() and not IsInGamepadPreferredMode() end,
 	}

@@ -17,9 +17,6 @@ The library "LibStub" is Public Domain, see Libs/LibAddonMenu-2.0/LibStub.lua
 The library "LibMainMenu" is © Ayantir, used under a Creative Commons Attribution-NonCommercial-ShareAlike license:
 http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
 
-The library "LibFeedback" was modified by Dolgubon based off code from Master Merchant with permission
-Master Merchant was written by Dan Stone (aka @khaibit) / Chris Lasswell (aka @Philgo68)
-
 The MacOS/Linux merge script is © 2018 @mojo66:
 see DownloadNewData.command
 

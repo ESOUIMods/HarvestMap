@@ -19,7 +19,7 @@ Harvest:RegisterModule("InRangePins", InRangePins)
 function InRangePins:Initialize()
 	self.pinUpdateCallback = self.UpdatePin
 	self.lastUpdate = {}
-	
+
 	CallbackManager:RegisterForEvent(Events.SETTING_CHANGED, function(event, setting, ...)
 		if setting == "compassPinsVisible" then
 			local visible = ...
@@ -91,15 +91,15 @@ function InRangePins:Initialize()
 			end
 		end
 	end)
-	
+
 	local onNodeChanged = function(event, mapCache, nodeId)
 		local map = mapCache.mapMetaData.map
 		if not self.zoneCache then return end
-		if not self.zoneCache:DoesHandleMap(map) then return end
+		if not self.zoneCache:DoesHandleMapCache(mapCache) then return end
 		-- the next case can happen when map is added to zone
 		-- then MAP_ADDED_TO_ZONE is called for nodedetection first
 		if not self.compassKeys[map] then return end
-		
+
 		local key = self.compassKeys[map][nodeId]
 		if key then
 			self.compassControlPool:ReleaseObject(key)
@@ -114,7 +114,7 @@ function InRangePins:Initialize()
 	CallbackManager:RegisterForEvent(Events.NODE_UPDATED, onNodeChanged)
 	CallbackManager:RegisterForEvent(Events.NODE_DELETED, onNodeChanged)
 	CallbackManager:RegisterForEvent(Events.NODE_COMPASS_LINK_CHANGED, onNodeChanged)
-	
+
 	CallbackManager:RegisterForEvent(Events.NEW_ZONE_ENTERED, function(event, zoneCache)
 		self:Info("Entered zone %d %d", zoneCache.zoneIndex, zoneCache.zoneId)
 		local tbl = {}
@@ -122,14 +122,14 @@ function InRangePins:Initialize()
 			table.insert(tbl, map)
 		end
 		self:Info("maps:", unpack(tbl))
-		
+
 		self.zoneCache = zoneCache
 		local zoneMeasurement = zoneCache.zoneMeasurement
 		self.globalToWorldFactor = zoneMeasurement.globalToWorldFactor
 		self:Info("global to world factor, origin are %f, %f, %f", self.globalToWorldFactor, zoneMeasurement.originGlobalX, zoneMeasurement.originGlobalY)
 		self:RefreshAllPins()
 	end)
-	
+
 	CallbackManager:RegisterForEvent(Events.MAP_ADDED_TO_ZONE, function(event, mapCache, zoneCache)
 		if zoneCache ~= self.zoneCache then return end
 		self:Info("added a new map to 3d/compass pins. map: %s, zoneIndex: %d", mapCache.map, zoneCache.zoneIndex)
@@ -140,36 +140,36 @@ function InRangePins:Initialize()
 		self.compassKeys[mapCache.map] = {}
 		self.lastUpdate[mapCache.map] = {}
 	end)
-	
+
 	self.settings = Harvest.settings.savedVars.settings
-	
+
 	self.compassControlPool = ZO_ControlPool:New("HM_CompassPin", PARENT, "HM_CompassPin")
 	self.compassKeys = {}
 	self.displayCompassPins = Harvest.AreCompassPinsVisible()
-	
+
 	self.worldControlPool = ZO_ControlPool:New("HM_WorldPin", HM_WorldPins, "HM_WorldPin")
 	HM_WorldPins:Create3DRenderSpace()
 	self.worldKeys = {}
 	self.displayWorldPins = Harvest.AreWorldPinsVisible()
-	
+
 	self.FOV = pi * 0.6
 	self.useDepth = Harvest.DoWorldPinsUseDepth()
-	
+
 	self.customPinCallbacks = {}
 	self.customPins = {}
 	self.customMap = "custom"
-	
+
 	self:CheckPause()
 	self:RefreshRange()
 	self:RefreshValidPinTypes()
-	
+
 	self.globalToWorldFactor = 1
-	
+
 	self.fragment = ZO_SimpleSceneFragment:New(HM_WorldPins)
 	HUD_UI_SCENE:AddFragment(self.fragment)
 	HUD_SCENE:AddFragment(self.fragment)
 	LOOT_SCENE:AddFragment(self.fragment)
-	
+
 	Lib3D:RegisterWorldChangeCallback("HM_3DPins", function(identifier, zoneIndex, isValidZone, isNewZone)
 		self:Info("Lib3D finished preprocessing zone %d, isValid: %s, isNewZone: %s",
 				zoneIndex, tostring(isValidZone), tostring(isNewZone))
@@ -252,7 +252,7 @@ function InRangePins:RefreshRange()
 	end
 	self.visibleRange = range
 	self.visibleRange2 = range * range
-	
+
 	range = Harvest.GetCompassDistance()
 	self.visibleCompassRange2 = range * range
 	range = Harvest.GetWorldDistance()
@@ -272,23 +272,23 @@ end
 
 function InRangePins.UpdatePins(timeInMs)
 	local self = InRangePins
-	
+
 	if Lib3D:IsValidZone() and not self.fragment:IsHidden() then
 		if not self.zoneCache then return end
 		self.worldX, self.worldY = Harvest.GetPlayer3DPosition()
-		
+
 		local heading = GetPlayerCameraHeading()
 		if heading > pi then --normalize heading to [-pi,pi]
 			heading = heading - 2 * pi
 		end
 		self.heading = heading
 		self.timeInMs = timeInMs
-		
+
 		for map, mapCache in pairs(self.zoneCache.mapCaches) do
 			mapCache:ForNodesInRange(self.worldX, self.worldY, heading, self.visibleRange, self.validPinTypeIds, self.pinUpdateCallback, self, self.lastUpdate[map], self.compassKeys[map], self.worldKeys[map])
 		end
-		
-		
+
+
 		local lastUpdate = self.lastUpdate[self.customMap]
 		local compassKeys = self.compassKeys[self.customMap]
 		local worldKeys = self.worldKeys[self.customMap]
@@ -359,9 +359,9 @@ function InRangePins:UpdateCustomPin(pinTag, layout, lastUpdate, compassKeys, wo
 			control:Set3DRenderSpaceOrientation(0,self.heading,0)
 		end
 	end
-	
+
 	if not self.displayCompassPins then return end
-	
+
 	key = compassKeys[pinTag]
 	-- the pin is out of range, so remove the pin control from the compass
 	if normalizedDistance >= 1 then
@@ -374,7 +374,7 @@ function InRangePins:UpdateCustomPin(pinTag, layout, lastUpdate, compassKeys, wo
 		end
 		return
 	end
-	
+
 	-- normalize the angle to [-1, 1] where (-/+) 1 is the left/right edge of the compass
 	local normalizedAngle = 2 * angle / self.FOV
 	-- check if the bin is outside the FOV
@@ -388,7 +388,7 @@ function InRangePins:UpdateCustomPin(pinTag, layout, lastUpdate, compassKeys, wo
 		end
 		return
 	end
-	
+
 	if key then
 		control = self.compassControlPool:GetExistingObject(key)
 	else
@@ -399,13 +399,13 @@ function InRangePins:UpdateCustomPin(pinTag, layout, lastUpdate, compassKeys, wo
 	--control:ClearAnchors()
 	control:SetAnchor(CENTER, PARENT, CENTER, 0.5 * PARENT:GetWidth() * normalizedAngle, 0)
 	--control:SetHidden(false)
-	
+
 	--if zo_abs(normalizedAngle) > 0.25 then
 	--	control:SetDimensions(36 - 16 * zo_abs(normalizedAngle), 36 - 16 * zo_abs(normalizedAngle))
 	--else
 		control:SetDimensions(32, 32)
 	--end
-	
+
 	control:SetAlpha(control.maxAlpha * (1 - normalizedDistance^4))
 end
 
@@ -426,7 +426,7 @@ function InRangePins.UpdatePin(mapCache, nodeId, self, lastUpdate, compassKeys, 
 	local normalizedDistance = worldDistance / self.visibleCompassRange2
 	local normalizedWorldDistance = worldDistance / self.visibleWorldRange2
 	--worldDistance = worldDistance -- distance in meters squared
-	
+
 	local key, control
 	-- first update the world pins
 	local validWorldPin = self.displayWorldPins and mapCache.worldZ[nodeId]
@@ -443,7 +443,7 @@ function InRangePins.UpdatePin(mapCache, nodeId, self, lastUpdate, compassKeys, 
 		end
 	end
 	if validWorldPin then
-		
+
 		key = worldKeys[nodeId]
 		if normalizedWorldDistance >= 1 then
 			if key then
@@ -471,9 +471,9 @@ function InRangePins.UpdatePin(mapCache, nodeId, self, lastUpdate, compassKeys, 
 			end
 		end
 	end
-	
+
 	if not self.displayCompassPins then return end
-	
+
 	if self.settings.isCompassFilterActive then--.IsCompassFilterActive() then
 		if not self.settings.isCompassPinTypeVisible[pinTypeId] then return end--IsCompassPinTypeVisible(pinTypeId) then return end
 	else
@@ -484,7 +484,7 @@ function InRangePins.UpdatePin(mapCache, nodeId, self, lastUpdate, compassKeys, 
 			return
 		end
 	end
-	
+
 	key = compassKeys[nodeId]
 	-- the pin is out of range, so remove the pin control from the compass
 	if normalizedDistance >= 1 then
@@ -497,7 +497,7 @@ function InRangePins.UpdatePin(mapCache, nodeId, self, lastUpdate, compassKeys, 
 		end
 		return
 	end
-	
+
 	-- normalize the angle to [-1, 1] where (-/+) 1 is the left/right edge of the compass
 	local normalizedAngle = 2 * angle / self.FOV
 	-- check if the bin is outside the FOV
@@ -511,7 +511,7 @@ function InRangePins.UpdatePin(mapCache, nodeId, self, lastUpdate, compassKeys, 
 		end
 		return
 	end
-	
+
 	if key then
 		control = self.compassControlPool.m_Active[key]--:GetExistingObject(key)
 	else
@@ -521,7 +521,7 @@ function InRangePins.UpdatePin(mapCache, nodeId, self, lastUpdate, compassKeys, 
 	--control:ClearAnchors()
 	control:SetAnchor(CENTER, PARENT, CENTER, 0.5 * PARENT:GetWidth() * normalizedAngle, 0)
 	--control:SetHidden(false)
-	
+
 	--if zo_abs(normalizedAngle) > 0.25 then
 	--	control:SetDimensions(36 - 16 * zo_abs(normalizedAngle), 36 - 16 * zo_abs(normalizedAngle))
 	--else
@@ -533,7 +533,7 @@ end
 
 function InRangePins:GetNewCompassControl(pinTypeId)
 	local pin, pinKey = self.compassControlPool:AcquireObject()
-	
+
 	layout = Harvest.GetMapPinLayout(pinTypeId)
 	pin:SetTexture(layout.texture)
 	pin:SetColor(layout.tint:UnpackRGB())
@@ -546,7 +546,7 @@ end
 
 function InRangePins:GetNewWorldControl(pinTypeId, worldX, worldY, worldZ)
 	local pin, pinKey = self.worldControlPool:AcquireObject()
-	
+
 	local beam = pin:GetNamedChild("Beam")
 	pin.beam = beam
 	local icon = pin:GetNamedChild("Icon")
@@ -560,23 +560,23 @@ function InRangePins:GetNewWorldControl(pinTypeId, worldX, worldY, worldZ)
 	pin:Set3DRenderSpaceUsesDepthBuffer(self.useDepth)
 	beam:Set3DRenderSpaceUsesDepthBuffer(self.useDepth)
 	icon:Set3DRenderSpaceUsesDepthBuffer(self.useDepth)
-	
+
 	local width = Harvest.GetWorldPinWidth() * 0.01
 	local height = Harvest.GetWorldPinHeight() * 0.01
 	icon:Set3DRenderSpaceOrigin(0, height + 0.125 * height + 0.25, 0)
 	icon:Set3DLocalDimensions(0.25 * height + 0.5, 0.25 * height + 0.5)
 	beam:Set3DRenderSpaceOrigin(0, 0.5 * height, 0)
 	beam:Set3DLocalDimensions(width, height)
-	
+
 	layout = Harvest.GetMapPinLayout(pinTypeId)
 	icon:SetTexture(layout.texture)
-	
+
 	beam:SetColor(layout.tint:UnpackRGBA())
 	icon:SetColor(layout.tint:UnpackRGBA())
 	pin.maxAlpha = layout.tint.a
-	
+
 	--local worldX, worldY = Lib3D:GlobalToWorld(globalX, globalY)
 	pin:Set3DRenderSpaceOrigin(worldX, worldZ, worldY)
-	
+
 	return pin, pinKey
 end

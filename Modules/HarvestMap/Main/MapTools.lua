@@ -34,7 +34,7 @@ function MapTools:GetMapFromTexture(textureName)
 	if textureName == "eyevea_base" then
 		textureName = "eyevea/" .. textureName
 	end
-	
+
 	return textureName
 end
 
@@ -54,7 +54,7 @@ function MapTools:SetMapToPlayerLocation()
 	local localX, localY, heading = GetMapPlayerPosition("player")
 	local playerZoneIndex = GetUnitZoneIndex("player")
 	local mapZoneIndex = GetCurrentMapZoneIndex()
-	
+
 	-- if we can click on the player location, then we are probably erroneously viewing a zone map
 	-- (exception is hew's bane where we can click outside of abahs landing and it will open abahs landing)
 	if WouldProcessMapClick(localX, localY) and playerZoneIndex == mapZoneIndex then
@@ -63,7 +63,7 @@ function MapTools:SetMapToPlayerLocation()
 		ProcessMapClick(localX, localY)
 		localX, localY, heading = GetMapPlayerPosition("player")
 	end
-	
+
 	if localX < 0 or localX > 1 or localY < 0 or localY > 1 then
 		self:Warn("Player coordinates out of bound: %s, %f, %f", GetMapTileTexture(), localX, localY )
 		-- the player is not visible on the current map,
@@ -88,21 +88,21 @@ function MapTools:GetPlayerMapMetaDataAndGlobalPosition()
 
 	self:SetMapToPlayerLocation()
 	local mapMetaData, globalX, globalY, heading = self:GetViewedMapMetaDataAndPlayerGlobalPosition()
-	
+
 	if GetMapTileTexture() ~= originalMap then
 		CALLBACK_MANAGER:FireCallbacks("OnWorldMapChanged")
 	end
-	
+
 	if GetUnitZoneIndex("player") ~= mapMetaData.zoneIndex then
 		self:Warn("Player map meta data zone id does not match: %s, %d, %d", mapMetaData.map, GetZoneId(GetUnitZoneIndex("player")), mapMetaData.zoneId)
 		error(string.format("Player map meta data zone id does not match: %s, %d, %d", mapMetaData.map, GetZoneId(GetUnitZoneIndex("player")), mapMetaData.zoneId))
 	end
-	
+
 	return mapMetaData, globalX, globalY, heading
 end
 
 function MapTools:GetViewedMapMetaDataAndPlayerGlobalPosition()
-	
+
 	local localX, localY, heading = GetMapPlayerPosition("player")
 	local globalX, globalY = GPS:LocalToGlobal(localX, localY)
 	local map = self:GetMap()
@@ -112,7 +112,7 @@ function MapTools:GetViewedMapMetaDataAndPlayerGlobalPosition()
 	end
 	local mapMetaData = self:GetMapMetaDataForZoneIndexAndMap(zoneIndex, map)
 	mapMetaData.mapMeasurement = GPS:GetCurrentMapMeasurements()
-	
+
 	return mapMetaData, globalX, globalY, heading
 end
 
@@ -122,7 +122,7 @@ function MapTools:GetMapMetaDataForZoneIndexAndMap(zoneIndex, map)
 	if not mapMetaData then
 		local zoneId = GetZoneId(zoneIndex)
 		local zoneMeasurement = Lib3D:GetZoneMeasurementForZoneId(zoneId)
-		mapMetaData = {map = map, zoneIndex = zoneIndex, zoneId = zoneId, zoneMeasurement = zoneMeasurement}
+		mapMetaData = {map = map, zoneIndex = zoneIndex, zoneId = zoneId, zoneMeasurement = zoneMeasurement, isBlacklisted = self.mapBlacklist[map]}
 		self.mapMetaData[zoneIndex][map] = mapMetaData
 	end
 	return mapMetaData

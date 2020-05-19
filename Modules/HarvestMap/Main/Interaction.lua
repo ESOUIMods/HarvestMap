@@ -8,6 +8,7 @@ Harvest:RegisterModule("interaction", Interaction)
 local GetInteractionType = GetInteractionType
 
 function Interaction.Initialize()
+	Interaction.lastInteractionTimeInMs = 0
 	-- harvesting interaction takes 2 seconds, or 1 second with the champion perk
 	-- so choose a delay that is a bit less than 1 second
 	local delayInMs = 750
@@ -15,7 +16,7 @@ function Interaction.Initialize()
 	EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_BEGIN_LOCKPICK, Interaction.BeginLockpicking)
 	EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_LOOT_RECEIVED, Interaction.OnLootReceived)
 	EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_LOOT_UPDATED, Interaction.OnLootUpdated)
-	
+
 	-- this hack saves the name of the object that was last interacted with
 	local oldInteract = FISHING_MANAGER.StartInteraction
 	FISHING_MANAGER.StartInteraction = function(...)
@@ -24,7 +25,7 @@ function Interaction.Initialize()
 		Interaction.lastInteractableName = name
 		Interaction.lastInteractableTimeInMs = GetGameTimeMilliseconds()
 		Interaction.wasLastInteractableOwned = isOwned
-		
+
 		-- there is no EVENT_BEGIN_FISHING, so we have to use this hack instead
 		-- here we check if the action is called "Fish"
 		if action == GetString(SI_GAMECAMERAACTIONTYPE16) then
@@ -34,10 +35,10 @@ function Interaction.Initialize()
 			EVENT_MANAGER:UnregisterForUpdate("HarvestMap-FishState")
 			EVENT_MANAGER:RegisterForUpdate("HarvestMap-FishState", delayInMs, Interaction.CheckFishingState)
 		end
-		
+
 		return oldInteract(...)
 	end
-	
+
 end
 
 function Interaction.OnLootReceived( eventCode, receivedBy, itemLink, stackCount, soundCategory, lootType, lootedBySelf )
@@ -57,32 +58,32 @@ function Interaction.OnLootReceived( eventCode, receivedBy, itemLink, stackCount
 		end
 	end
 	if not (wasHarvesting or wasContainer) then return end
-	
+
 	local itemId = select(4, ZO_LinkHandler_ParseLink( itemLink ))
 	itemId = tonumber(itemId) or 0
 	-- get the pin type depending on the item we looted and the name of the harvest node
 	local pinTypeId = Harvest.GetPinTypeId(itemId, Interaction.lastInteractableName)
 	-- abort if we couldn't find a matching pin type
 	if pinTypeId == nil then
-		Interaction:Debug(
+		Interaction:Info(
 				"OnLootReceived failed: pin type id is nil for itemlink %s and interactable '%s'",
 				itemLink, Interaction.lastInteractableName )
 		return
 	end
-	
+
 	local mapMetaData, globalX, globalY = Harvest.mapTools:GetPlayerMapMetaDataAndGlobalPosition()
 	local worldX, worldY, worldZ = Harvest.GetPlayer3DPosition()
-	
+
 	Interaction:Info("Discovered a new node. pintypeid: %d, map: %s, global: %f, %f, world: %f, %f, %f",
 			pinTypeId, mapMetaData.map, globalX, globalY, worldX, worldY, worldZ )
 	CallbackManager:FireCallbacks(Events.NODE_DISCOVERED, mapMetaData, worldX, worldY, worldZ, globalX, globalY, pinTypeId)
-	
+
 	-- reset the interaction state, so we do not fire the event again for other items in the same container/node
 	Interaction.lastInteractionType = nil
 	-- reset the interactable name variable
 	-- otherwise looting a container item after opening heavy sacks, thieves troves, stashes etc can cause wrong pins
 	Interaction.lastInteractableName = ""
-	
+
 end
 
 -- neded for those players that play without auto loot
@@ -109,7 +110,7 @@ function Interaction.UpdateInteractionType(timeInMs)
 	-- this is because lag can cause the loot window to open a bit after
 	-- the harvesting interaction has ended
 	local currentInteractionType = GetInteractionType()
-	if currentInteractionType then
+	if currentInteractionType ~= 0 then
 		Interaction.lastInteractionType = currentInteractionType
 		Interaction.lastInteractionTimeInMs = timeInMs
 	elseif timeInMs - Interaction.lastInteractionTimeInMs > 2000 then
@@ -138,7 +139,7 @@ function Interaction.BeginLockpicking()
 		Interaction:Debug("detected pintype %d, but interaction camera is inactive", pinTypeId)
 		return
 	end
-	
+
 	-- lockpicking has its own interaction camera, which is different from the player position
 	local worldX, worldY, worldZ
 	if IsInteractionUsingInteractCamera() then
@@ -147,7 +148,7 @@ function Interaction.BeginLockpicking()
 		-- this function returns wrong height values, if the interaction camera is active
 		worldX, worldY, worldZ = Harvest.GetPlayer3DPosition()
 	end
-	
+
 	local mapMetaData, globalX, globalY = Harvest.mapTools:GetPlayerMapMetaDataAndGlobalPosition()
 	Interaction:Info("Discovered a new node. pintypeid: %d, map: %s, global: %f, %f, world: %f, %f, %f",
 			pinTypeId, mapMetaData.map, globalX, globalY, worldX, worldY, worldZ )
@@ -165,4 +166,3 @@ function Interaction.CheckFishingState()
 		CallbackManager:FireCallbacks(Events.NODE_DISCOVERED, mapMetaData, worldX, worldY, worldZ, globalY, globalY, pinTypeId)
 	end
 end
-	
