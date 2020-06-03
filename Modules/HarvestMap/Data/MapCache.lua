@@ -228,15 +228,21 @@ function MapCache:Move(nodeId, worldX, worldY, worldZ, globalX, globalY)
 
 end
 
-function MapCache:GetMergeableNode(pinTypeId, worldX, worldY)
+function MapCache:GetMergeableNode(pinTypeId, worldX, worldY, worldZ)
 	self.time = GetFrameTimeSeconds()
+
+	local useWorldZ = 1
+	if not worldZ then
+		worldZ = 0
+		useWorldZ = 0
+	end
 
 	local divisionX = zo_floor(worldX / self.DivisionWidthInMeters)
 	local divisionY = zo_floor(worldY / self.DivisionWidthInMeters)
 	local divisions = self.divisions[pinTypeId]
 	if not divisions then return end
 
-	local division, dx, dy, distance
+	local division, dx, dy, dz, distance
 	local startJ = divisionY - 1
 	local endJ = divisionY + 1
 
@@ -250,7 +256,8 @@ function MapCache:GetMergeableNode(pinTypeId, worldX, worldY)
 				for _, nodeId in pairs(division) do
 					dx = self.worldX[nodeId] - worldX
 					dy = self.worldY[nodeId] - worldY
-					distance = dx * dx + dy * dy
+					dz = self.worldZ[nodeId] - worldZ
+					distance = dx * dx + dy * dy + dz * dz * useWorldZ
 					--d(distance)
 					--if distance < self.mergeDistanceInLocalSquared then
 						if distance < bestDistance then

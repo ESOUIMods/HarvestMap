@@ -11,12 +11,12 @@ Harvest.defaultLocalizedStrings = {
 	["sendgold"] = "Send <<1>> gold",
 	["debuginfodescription"] = "If you want to report a bug on the esoui.com comment page, please also add the following debug information:",
 	["printdebuginfo"] = "Copy Debug Information",
-	
+
 	["notifications"] = "Notifications and Warnings",
 	["notificationstooltip"] = "Displays notifications and warnings in the top right corner of the screen.",
 	["moduleerrorload"] = "The addon <<1>> is disabled.\nNo data available for this area.",
 	["moduleerrorsave"] = "The addon <<1>> is disabled.\nThe location of the node was not saved.",
-	
+
 	-- outdated data settings
 	["outdateddata"] = "Outdated Data Settings",
 	["outdateddatainfo"] = "These data related settings are shared between all accounts and characters on this computer.",
@@ -25,12 +25,12 @@ Harvest.defaultLocalizedStrings = {
 	["timedifference"] = "Keep only recent data",
 	["timedifferencetooltip"] = "HarvestMap will only keep data from the last X days.\nThis prevents displaying old data which may already be outdated.\nSet to 0 to keep any data regardless of its age.",
 	["applywarning"] = "Once old data has been removed, it can not be restored!",
-	
+
 	-- account wide settings
 	["account"] = "Account-wide Settings",
 	["accounttooltip"] = "All the settings below will be the same for each of your characters.",
 	["accountwarning"] = "Changing this setting will reload the UI.",
-	
+
 	-- map pin settings
 	["mapheader"] = "Map Pin Settings",
 	["mappins"] = "Enable pins on main map",
@@ -60,7 +60,7 @@ Does not work if another addon hides or rescales the compass.]],
 	["minimapcompatibilitymodedescription"] = "To improve the performance when displaying thousands of resource locations on the map, HarvestMap creates its very own light-weight variant of map pins. These light-weight map pins are not compatible with rotating minimaps.\nIf you use a rotating minimap, you can enable the 'Minimap Compatibility Mode'. When this mode is enabled, HarvestMap will use default map pins instead of the light-weight pins. These default pins will work with rotating minimaps, but they can result in low FPS and the game freezing for several seconds, whenever a map with many known resource locations is displayed.",
 	["minimapcompatibilitymode"] = "Minimap Compatibility Mode",
 	["minimapcompatibilitymodewarning"] = "Enabling this option will negatively impact the game's performance, when many pins are displayed on the map.\n\nChanging the setting will reload the UI!",
-	
+
 	-- compass settings
 	["compassheader"] = "Compass Settings",
 	["compass"] = "Enable compass",
@@ -68,7 +68,7 @@ Does not work if another addon hides or rescales the compass.]],
 	compassspawnfilter = "Display only spawned resources",
 	["compassdistance"] = "Max pin distance",
 	["compassdistancetooltip"] = "The maximum distance for pins in meters that appear on the compass.",
-	
+
 	-- 3d pin settings
 	["worldpinsheader"] = "3D Pin Settings",
 	["worldpins"] = "Enable 3D pins",
@@ -83,8 +83,8 @@ Does not work if another addon hides or rescales the compass.]],
 	["worldpinsdepth"] = "Use depth-buffer for 3D pins",
 	["worldpinsdepthtooltip"] = "When disabled, the 3d pins will not be hidden behind other objects.",
 	["worldpinsdepthwarning"] = "Because of a game bug, this option does not work, when a SubSampling quality of medium or low is selected in the game's video options.",
-	
-	
+
+
 	-- respawn timer settings
 	["farmandrespawn"] = "Respawn Timer and Farming Helper",
 	["rangemultiplier"] = "Visited node range",
@@ -96,8 +96,8 @@ Does not work if another addon hides or rescales the compass.]],
 	["hiddenonharvestwarning"] = "Turning this option off could negatively impact the game's performance.",
 	["hiddenonharvest"] = "Hide nodes only after harvesting",
 	["hiddenonharvesttooltip"] = "Enable to hide pins only, when you harvested them. When disabled pins will also be hidden if you visit them.",
-	
-	
+
+
 	-- pin type options
 	["pinoptions"] = "Pin Type Options",
 	["pinsize"] = "Pin size",
@@ -107,18 +107,18 @@ Does not work if another addon hides or rescales the compass.]],
 	["extendedpinoptions"] = "Usually the pins on map, compass and in the 3d world are synced. So if you hide a certain type of resource on the map, it will also remove the compass and world pins. However, in the extended pin filter menu you can set compass and world pins to be independent of the map pins.",
 	["extendedpinoptionsbutton"] = "Open extended pin filter",
 	["override"] = "Override map pin filter",
-	
+
 	["pincolor"] = "Pin color",
 	["pincolortooltip"] = "Set the color of the pins on map and compass.",
 	["savepin"] = "Save locations",
 	["savetooltip"] = "Enable to save the locations of this resource when you discover them.",
 	["pintexture"] = "Pin icon",
-	
+
 	-- debug output setting
 	["debugoptions"] = "Debug",
 	["debug"] = "Display debug messages",
 	["debugtooltip"] = "Enable to display debug messages in the chat.",
-	
+
 	-- pin type names
 	["pintype1"] = "Smithing and Jewelry",
 	["pintypetooltip1"] = "Display ore and dust on the map and compass.",
@@ -150,14 +150,17 @@ Does not work if another addon hides or rescales the compass.]],
 	["pintypetooltip12"] = "Display hidden stashes like 'Loose Panels' on the map and compass.",
 	["pintype15"] = "Giant Clams",
 	["pintypetooltip15"] = "Display giant clams on the map and compass.",
-	
+
 	["pintype18"] = "Unknown harvest node",
 	["pintypetooltip18"] = "HarvestMap can detect nearby crafting material, but it can not detect the type of material unless you discovered the location beforehand.",
+
+	["pintype19"] = "Crimson Nirnroot",
+	["pintypetooltip19"] = "Display crimson nirnroot on the map and compass.",
 
 	-- extra map filter buttons
 	["deletepinfilter"] = "Delete HarvestMap pins",
 	["filterheatmap"] = "Heatmap mode",
-	
+
 	-- localization for the farming helper
 	["goldperminute"] = "Gold per minute:",
 	["farmresult"] = "HarvestFarm Result",
@@ -195,7 +198,7 @@ Does not work if another addon hides or rescales the compass.]],
 	["loaderror"] = "The tour could not be loaded.",
 	["removepintype"] = "Do you want to remove <<1>> from the tour?",
 	["removepintypetitle"] = "Confirm Removal",
-	
+
 	-- extra harvestmap menu
 	["pinvisibilitymenu"] = "Extended Pin Filter Menu",
 	["menu"] = "HarvestMap Menu",
@@ -210,7 +213,7 @@ The green tour will now be inserted into the red tour.]],
 	["editorstats"] = [[Number of nodes: <<1>>
 Length: <<2>> m
 Nodes per kilometer: <<3>>]],
-	
+
 	-- SI names to fit with ZOS api
 	["SI_BINDING_NAME_SKIP_TARGET"] = "Skip Target",
 	["SI_BINDING_NAME_TOGGLE_WORLDPINS"] = "Toggle 3D pins",

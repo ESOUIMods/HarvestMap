@@ -26,6 +26,7 @@ Settings.availableTextures = {
 	[Harvest.PSIJIC]      = { "HarvestMap/Textures/Map/stash.dds", "HarvestMap/Textures/Map/circle.dds", "HarvestMap/Textures/Map/diamond.dds", },
 	[Harvest.JEWELRY]     = { "HarvestMap/Textures/Map/stash.dds", "HarvestMap/Textures/Map/circle.dds", "HarvestMap/Textures/Map/diamond.dds", },
 	[Harvest.TOUR]        = { "HarvestMap/Textures/Map/tour.dds", "HarvestMap/Textures/Map/circle.dds", "HarvestMap/Textures/Map/diamond.dds", },
+	[Harvest.CRIMSON]  = { "HarvestMap/Textures/Map/waterplant.dds", "HarvestMap/Textures/Map/circle.dds", "HarvestMap/Textures/Map/diamond.dds", },
 }
 
 Settings.defaultSettings = {
@@ -50,8 +51,9 @@ Settings.defaultSettings = {
 		[Harvest.CLAM]        = true,
 		[Harvest.PSIJIC]      = true,
 		[Harvest.JEWELRY]     = true,
+		[Harvest.CRIMSON]     = true,
 	},
-	
+
 	isWorldFilterActive = false,
 	isWorldPinTypeVisible = {
 		[Harvest.UNKNOWN]     = false,
@@ -73,8 +75,9 @@ Settings.defaultSettings = {
 		[Harvest.CLAM]        = false,
 		[Harvest.PSIJIC]      = false,
 		[Harvest.JEWELRY]     = false,
+		[Harvest.CRIMSON]     = false,
 	},
-	
+
 	isCompassFilterActive = false,
 	isCompassPinTypeVisible = {
 		[Harvest.UNKNOWN]     = false,
@@ -96,6 +99,7 @@ Settings.defaultSettings = {
 		[Harvest.CLAM]        = false,
 		[Harvest.PSIJIC]      = false,
 		[Harvest.JEWELRY]     = false,
+		[Harvest.CRIMSON]     = false,
 	},
 	-- which pin types are skipped when gathered
 	isPinTypeSavedOnGather = {
@@ -117,6 +121,7 @@ Settings.defaultSettings = {
 		[Harvest.CLAM]           = true,
 		[Harvest.PSIJIC]         = true,
 		[Harvest.JEWELRY]        = true,
+		[Harvest.CRIMSON]        = true,
 	},
 
 	pinLayouts = {
@@ -139,6 +144,7 @@ Settings.defaultSettings = {
 		[Harvest.PSIJIC]      = { texture = "HarvestMap/Textures/Map/stash.dds", size = 20, minsize = 8, tint = ZO_ColorDef:New(1, 1, 1, 1) },
 		[Harvest.JEWELRY]      = { texture = "HarvestMap/Textures/Map/stash.dds", size = 20, minsize = 8, tint = ZO_ColorDef:New(1, 1, 1, 1) },
 		[Harvest.TOUR]        = { texture = "HarvestMap/Textures/Map/tour.dds", size = 32, minsize = 8, tint = ZO_ColorDef:New(1, 0, 0, 1) },
+		[Harvest.CRIMSON]  = { texture = "HarvestMap/Textures/Map/waterplant.dds", size = 20, minsize = 8, tint = ZO_ColorDef:New(0.9333333373, 0.3450980484, 0.5372549295, 1) },
 	},
 
 	displayCompassPins = true,
@@ -146,12 +152,12 @@ Settings.defaultSettings = {
 	displayMapPins = true,
 	displayMinimapPins = true,
 	displayNotifications = true,
-	
+
 	compassSpawnFilter = false,
 	worldSpawnFilter = false,
 	mapSpawnFilter = false,
 	minimapSpawnFilter = false,
-	
+
 	showDebugOutput = false,
 	visitedRangeInMeters = 10,
 	hiddenTime = 1,
@@ -159,7 +165,7 @@ Settings.defaultSettings = {
 	useHiddenTime = false,
 	maxVisibleDistanceInMeters = 300,
 	hasMaxVisibleDistance = false,
-	
+
 	compassDistanceInMeters = 100,
 	worldDistanceInMeters = 100,
 	worldPinDepth = true,

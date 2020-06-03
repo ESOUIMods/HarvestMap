@@ -180,6 +180,7 @@ end
 function MapPins:AddResourceCheckbox(panel, pinTypeId)
 	local text = Harvest.GetLocalization( "pintype" .. pinTypeId )
 	local checkbox = self:AddCheckbox(panel, text)
+	--self.checkboxForPinType[pinTypeId] = checkbox
 	-- on mouse over the color is switched to "highlight"
 	-- this removed the color of the texture, so we have to change the setColor behaviour
 	local label = checkbox.label

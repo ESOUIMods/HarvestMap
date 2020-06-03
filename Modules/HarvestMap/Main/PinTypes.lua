@@ -22,6 +22,7 @@ Harvest.PSIJIC = 16
 -- jewelry material spawns at blacksmithing location
 Harvest.JEWELRY = 17
 Harvest.UNKNOWN = 18
+Harvest.CRIMSON = 19
 
 Harvest.TOUR = 100 -- pin which displays the next resource of the farming tour
 
@@ -30,11 +31,20 @@ Harvest.PINTYPES = {
 	Harvest.BLACKSMITH, Harvest.CLOTHING,
 	Harvest.WOODWORKING, Harvest.ENCHANTING,
 	Harvest.MUSHROOM, Harvest.FLOWER,
-	Harvest.WATERPLANT, Harvest.WATER, Harvest.CLAM,
+	Harvest.WATERPLANT, Harvest.CRIMSON, Harvest.WATER, Harvest.CLAM,
 	Harvest.JEWELRY, Harvest.CHESTS,
 	Harvest.HEAVYSACK, Harvest.PSIJIC,
 	Harvest.TROVE, Harvest.JUSTICE, Harvest.STASH,
 	Harvest.FISHING, Harvest.UNKNOWN, Harvest.TOUR,
+}
+
+Harvest.ZONES_FOR_PINTYPE = {
+	[Harvest.CRIMSON] = {[1161] = true}, -- blackreach
+	[Harvest.CLAM] = {[1011] = true}, -- summerset
+	[Harvest.STASH] = {
+		[816] = true, -- hews bane
+		[823] = true, -- gold coast
+	},
 }
 
 -- pinTypes that can be detected via eso's MAP_PIN_TYPE_HARVEST_NODE api
@@ -47,6 +57,7 @@ Harvest.HARVEST_NODES = {
 	[Harvest.FLOWER] = true,
 	[Harvest.WATERPLANT] = true,
 	[Harvest.WATER] = true,
+	[Harvest.CRIMSON] = true,
 }
 
 -- translates pintypes, e.g. LibNodeDetection.pinTypes.BLACKSMITH to Harvest.BLACKSMITH
@@ -70,6 +81,7 @@ Harvest.HIDDEN_PINTYPES = {
 	[Harvest.TOUR] = true,
 	[Harvest.PSIJIC] = true,
 	[Harvest.JEWELRY] = true,
+	[Harvest.CRIMSON] = true,
 }
 
 local interactableName2PinTypeId = {
@@ -80,14 +92,14 @@ local interactableName2PinTypeId = {
 	["Т�?жeлый мeшoк"] = Harvest.HEAVYSACK, -- russian
 	["Тяжелый мешок"] = Harvest.HEAVYSACK, -- updated russian
 	["тяжелый мешок"] = Harvest.HEAVYSACK, -- updated russian
-	
+
 	["thieves trove"] = Harvest.TROVE,
 	["diebesgut"] = Harvest.TROVE,
 	["trésor des voleurs"] = Harvest.TROVE,
 	["Вopoвcкoй тaйник"] = Harvest.TROVE,  -- russian
 	["Воровской тайник"] = Harvest.TROVE, -- updated russian
 	["воровской тайник"] = Harvest.TROVE, -- updated russian
-	
+
 	["loose panel"] = Harvest.STASH,
 	["loose tile"] = Harvest.STASH,
 	["loose stone"] = Harvest.STASH,
@@ -99,11 +111,11 @@ local interactableName2PinTypeId = {
 	["loser stein"] = Harvest.STASH,
 	["Податливая панель"] = Harvest.STASH, -- russian
 	["Податливый камень"] = Harvest.STASH, -- loose tile is not translated in the ru.lang file of RuESO
-	
+
 	["psijic portal"] = Harvest.PSIJIC,
 	["portail psijique"] = Harvest.PSIJIC,
 	["psijik-portal"] = Harvest.PSIJIC,
-	
+
 	["giant clam"] = Harvest.CLAM,
 	["riesenmuschel"] = Harvest.CLAM,
 	["palourde géante"] = Harvest.CLAM,
@@ -263,7 +275,7 @@ Harvest.itemId2PinType = {
 	[23268] = Harvest.WATER,
 	[64500] = Harvest.WATER,
 	[64501] = Harvest.WATER,
-	
+
 	[135137] = Harvest.JEWELRY,
 	[135139] = Harvest.JEWELRY,
 	[135141] = Harvest.JEWELRY,
@@ -282,4 +294,6 @@ Harvest.itemId2PinType = {
 	[135159] = Harvest.JEWELRY,
 	[135160] = Harvest.JEWELRY,
 	[135161] = Harvest.JEWELRY,
+
+	[150672] = Harvest.CRIMSON,
 }

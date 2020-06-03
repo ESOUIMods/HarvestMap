@@ -11,6 +11,7 @@ PinTypes.MUSHROOM = 5
 PinTypes.FLOWER = 6
 PinTypes.WATERPLANT = 7
 PinTypes.WATER = 8
+PinTypes.CRIMSON = 9
 
 PinTypes.UNKNOWN = 100
 
@@ -19,7 +20,8 @@ PinTypes.ALL_PINTYPES = {
 	PinTypes.BLACKSMITH, PinTypes.CLOTHING,
 	PinTypes.WOODWORKING, PinTypes.ENCHANTING,
 	PinTypes.MUSHROOM, PinTypes.FLOWER,
-	PinTypes.WATERPLANT, PinTypes.WATER
+	PinTypes.WATERPLANT, PinTypes.CRIMSON,
+	PinTypes.WATER,
 }
 
 -- returns the pin type based on the interactable name

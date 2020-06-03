@@ -34,7 +34,7 @@ function ZoneCache:AddCache(cache)
 		for nodeId = 1, cache.lastNodeId do
 			pinTypeId = cache.pinTypeId[nodeId]
 			if pinTypeId then
-				otherNode = otherCache:GetMergeableNode(pinTypeId, cache.worldX[nodeId], cache.worldY[nodeId])
+				otherNode = otherCache:GetMergeableNode(pinTypeId, cache.worldX[nodeId], cache.worldY[nodeId], cache.worldZ[nodeId])
 				if otherNode then
 					-- nodes can be merged, delete node from ancestor map
 					if isCacheLarger then

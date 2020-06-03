@@ -41,7 +41,7 @@ function Harvest.IsWorldSpawnFilterEnabled()
 	return LibNodeDetection and Settings.savedVars.settings.worldSpawnFilter
 end
 
-	
+
 function Harvest.AreNotificationsEnabled()
 	return Settings.savedVars.settings.displayNotifications
 end
@@ -469,12 +469,12 @@ function Harvest.SetCompassPinTypeVisible( pinTypeId, visible )
 end
 
 function Harvest.IsMapPinTypeVisible( pinTypeId )
-	if Harvest.PINTYPE_ALIAS[pinTypeId] then return false end
+	if Harvest.PINTYPE_ALIAS[pinTypeId] or Harvest.HIDDEN_PINTYPES[pinTypeId] then return false end
 	return Settings.savedVars.settings.isPinTypeVisible[ pinTypeId ]
 end
 
 function Harvest.IsInRangePinTypeVisible( pinTypeId )
-	if Harvest.PINTYPE_ALIAS[pinTypeId] then return false end
+	if Harvest.PINTYPE_ALIAS[pinTypeId] or Harvest.HIDDEN_PINTYPES[pinTypeId] then return false end
 	local checkMap = not Harvest.IsCompassFilterActive() or not Harvest.IsWorldFilterActive()
 	if Harvest.IsCompassFilterActive() and Harvest.IsCompassPinTypeVisible( pinTypeId ) then
 		return true
@@ -486,7 +486,7 @@ function Harvest.IsInRangePinTypeVisible( pinTypeId )
 end
 
 function Harvest.IsPinTypeVisible( pinTypeId )
-	if Harvest.PINTYPE_ALIAS[pinTypeId] then return false end
+	if Harvest.PINTYPE_ALIAS[pinTypeId] or Harvest.HIDDEN_PINTYPES[pinTypeId] then return false end
 	if Harvest.IsMapPinTypeVisible( pinTypeId ) then
 		return true
 	end
