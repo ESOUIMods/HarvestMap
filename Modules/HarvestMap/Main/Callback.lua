@@ -2,7 +2,6 @@
 -- Contains names of events which used by Harvest and its submodules.
 --
 
-local Harvest = _G["Harvest"]
 Harvest.events = {}
 Harvest.callbackManager = {}
 local Events = Harvest.events

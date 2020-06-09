@@ -1,4 +1,5 @@
-Harvest = Harvest or {}
+
+Harvest = {}
 
 local logFunctions = {}
 if LibDebugLogger then
@@ -13,7 +14,7 @@ else
 		logFunctions[logFunctionName] = function(...) end
 	end
 end
-	
+
 Harvest.modules = {}
 function Harvest:RegisterModule(moduleName, moduleTable)
 	self[moduleName] = moduleTable
@@ -38,11 +39,11 @@ function Harvest:InitializeModules()
 end
 
 function Harvest.OnLoad(eventCode, addOnName)
-		
+
 	if addOnName ~= "HarvestMap" then
 		return
 	end
-	
+
 
 	if HarvestImport then
 		Harvest.notifications:Initialize()
@@ -53,14 +54,14 @@ It is not compatible with HarvestMap, please uninstall the HarvestMap-Import add
 ]])
 		return
 	end
-	
+
 	Harvest:InitializeModules()
-	
+
 	-- initialize bonus features
 	if Harvest.IsHeatmapActive() then
 		HarvestHeat.Initialize()
 	end
-	
+
 end
 
 EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_ADD_ON_LOADED, Harvest.OnLoad)

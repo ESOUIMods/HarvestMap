@@ -35,7 +35,6 @@ local function kernel(i,j)
 end
 
 function HarvestHeat.CalculateHeatMap()
-	local harvest = Harvest
 	-- only do this costly calculation if we are on a zone map
 	-- the heatmap won't be displayed on other map types
 	--if not (GetMapType() == MAPTYPE_ZONE) then
@@ -54,8 +53,8 @@ function HarvestHeat.CalculateHeatMap()
 	local mapMetaData, x, y = Harvest.mapTools:GetViewedMapMetaDataAndPlayerGlobalPosition()
 	local mapCache = Harvest.Data:GetMapCache(mapMetaData)
 	if mapCache then
-		for _, pinTypeId in ipairs(harvest.PINTYPES) do
-			if harvest.IsMapPinTypeVisible( pinTypeId ) then
+		for _, pinTypeId in ipairs(Harvest.PINTYPES) do
+			if Harvest.IsMapPinTypeVisible( pinTypeId ) then
 				for _, nodeId in pairs(mapCache.nodesOfPinType[pinTypeId]) do
 					x, y = GPS:GlobalToLocal(mapCache.globalX[nodeId], mapCache.globalY[nodeId])
 					x = zo_max(0, zo_min(zo_floor(x * HarvestHeat.numSubdivisions * 5), HarvestHeat.numSubdivisions * 5 - 1))

@@ -163,6 +163,6 @@ function Interaction.CheckFishingState()
 		local pinTypeId = Harvest.FISHING
 		Interaction:Info("Discovered a new node. pintypeid: %d, map: %s, global: %f, %f, world: %f, %f, %f",
 			pinTypeId, mapMetaData.map, globalX, globalY, worldX, worldY, worldZ )
-		CallbackManager:FireCallbacks(Events.NODE_DISCOVERED, mapMetaData, worldX, worldY, worldZ, globalY, globalY, pinTypeId)
+		CallbackManager:FireCallbacks(Events.NODE_DISCOVERED, mapMetaData, worldX, worldY, worldZ, globalX, globalY, pinTypeId)
 	end
 end

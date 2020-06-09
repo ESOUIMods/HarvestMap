@@ -1,6 +1,4 @@
 
-Harvest = Harvest or {}
-
 -- constants/enums for the pin types
 Harvest.BLACKSMITH = 1 -- also jewelry
 Harvest.CLOTHING = 2

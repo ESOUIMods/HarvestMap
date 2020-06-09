@@ -10,7 +10,6 @@ local ipairs = _G["ipairs"]
 Each MapCache stores deserialized nodes for the given map.
 --]]
 local MapCache = ZO_Object:Subclass()
-Harvest = Harvest or {}
 Harvest.MapCache = MapCache
 
 MapCache.DivisionWidthInMeters = 100

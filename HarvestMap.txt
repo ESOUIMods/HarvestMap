@@ -1,6 +1,6 @@
 ## Title: |cFF0000HarvestMap|r
 ## Author: Shinni
-## APIVersion: 100029 100030
+## APIVersion: 100031 100032
 ## AddOnVersion: 31300
 ## Description: The AddOn was installed incorrectly.
 

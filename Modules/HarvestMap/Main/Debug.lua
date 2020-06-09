@@ -1,6 +1,4 @@
 
-Harvest = Harvest or {}
-
 function Harvest.ShowDebugInfo()
 	local infoText = Harvest.GenerateDebugInfo()
 	HarvestDebugInformation:SetHidden(false)
@@ -19,7 +17,7 @@ function Harvest.GenerateDebugInfo()
 	table.insert(list, "Version:")
 	table.insert(list, Harvest.displayVersion)
 	table.insert(list, "\n")
-	
+
 	for key, value in pairs(Harvest.settings.defaultGlobalSettings) do
 		value = Harvest.settings.savedVars.global[key]
 		if type(value) ~= table then
@@ -29,7 +27,7 @@ function Harvest.GenerateDebugInfo()
 			table.insert(list, "\n")
 		end
 	end
-	
+
 	for key, value in pairs(Harvest.settings.defaultSettings) do
 		value = Harvest.settings.savedVars.settings[key]
 		if type(value) ~= "table" then

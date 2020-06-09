@@ -158,6 +158,12 @@ function Serialization:Load()
 				end
 			end
 
+			if valid then
+				if (globalX == globalY) and (pinTypeId == Harvest.FISHING) then
+					valid = false
+				end
+			end
+
 			if valid and mapMeasurement then
 				localX, localY = mapMeasurement:ToLocal(globalX, globalY)
 				if localX > 1 or localX < 0 or localY > 1 or localY < 0 then

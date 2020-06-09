@@ -1,6 +1,4 @@
 
-Harvest = Harvest or {}
-
 local function CopyMissingDefaultValues(result, template)
 	for key, value in pairs(template) do
 		if type(value) == "table" then

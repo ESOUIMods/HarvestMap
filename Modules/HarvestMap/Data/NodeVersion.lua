@@ -1,6 +1,4 @@
 
-Harvest = Harvest or {}
-
 -- addon version history:
 -- 0 or nil = before this number was introduced
 -- 1 = filter local nodes which were saved with their global coords instead of local ones
@@ -44,7 +42,8 @@ Harvest = Harvest or {}
 -- 38 3.13.9 dungeon dlc after elsweyr
 -- 39 3.14.0 save per zone id
 -- 40 3.14.6 verify zone id
-local addonVersion = 40
+-- 41 3.14.8 fixed fishing globalX <= globalY bug
+local addonVersion = 41
 
 -- node version which is saved for each node
 -- the node version encodes the current game and addon version
