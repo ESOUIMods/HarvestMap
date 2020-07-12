@@ -17,7 +17,7 @@ function Harvest.GenerateDebugInfo()
 	table.insert(list, "Version:")
 	table.insert(list, Harvest.displayVersion)
 	table.insert(list, "\n")
-
+	
 	for key, value in pairs(Harvest.settings.defaultGlobalSettings) do
 		value = Harvest.settings.savedVars.global[key]
 		if type(value) ~= table then
@@ -27,7 +27,7 @@ function Harvest.GenerateDebugInfo()
 			table.insert(list, "\n")
 		end
 	end
-
+	
 	for key, value in pairs(Harvest.settings.defaultSettings) do
 		value = Harvest.settings.savedVars.settings[key]
 		if type(value) ~= "table" then
@@ -61,5 +61,44 @@ function Harvest.GenerateDebugInfo()
 		end
 	end
 	table.insert(list, "[/code][/spoiler]")
+	return table.concat(list)
+end
+
+function Harvest.GenerateSettingList()
+	list = {}
+	
+	for key, value in pairs(Harvest.settings.defaultGlobalSettings) do
+		value = Harvest.settings.savedVars.global[key]
+		if type(value) ~= "table" then
+			table.insert(list, key)
+			table.insert(list, ":")
+			table.insert(list, tostring(value))
+			table.insert(list, "\n")
+		end
+	end
+	
+	for key, value in pairs(Harvest.settings.defaultSettings) do
+		value = Harvest.settings.savedVars.settings[key]
+		if type(value) ~= "table" then
+			table.insert(list, key)
+			table.insert(list, ":")
+			table.insert(list, tostring(value))
+			table.insert(list, "\n")
+		else
+			local k, v = next(value)
+			if type(v) == "boolean" then
+				table.insert(list, key)
+				table.insert(list, ":")
+				for k, v in ipairs(value) do
+					if v then
+						table.insert(list, "y")
+					else
+						table.insert(list, "n")
+					end
+				end
+				table.insert(list, "\n")
+			end
+		end
+	end
 	return table.concat(list)
 end

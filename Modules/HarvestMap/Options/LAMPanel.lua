@@ -139,7 +139,7 @@ function Settings:InitializeLAM()
 		text = Harvest.GetLocalization("exchangedescription"),
 		width = "full",
 	})
-	
+	--[[
 	optionsTable:insert({
 		type = "header",
 		name = "",
@@ -158,6 +158,7 @@ function Settings:InitializeLAM()
 		func = Harvest.ShowDebugInfo,
 		width = "half",
 	})
+	--]]
 	
 	--[[
 	optionsTable:insert({

@@ -41,7 +41,7 @@ function Harvest.IsWorldSpawnFilterEnabled()
 	return LibNodeDetection and Settings.savedVars.settings.worldSpawnFilter
 end
 
-
+	
 function Harvest.AreNotificationsEnabled()
 	return Settings.savedVars.settings.displayNotifications
 end

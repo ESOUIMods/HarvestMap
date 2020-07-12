@@ -1,34 +1,34 @@
 
 local Farm = Harvest.farm
 Farm.loader = {}
-local Loader = Farm.loader
+local Loader = Farm.loader 
 
 local CallbackManager = Harvest.callbackManager
 local Events = Harvest.events
 
 function Loader:Initialize(fragment)
-
+	
 	fragment:RegisterCallback("StateChange", function(oldState, newState)
 		if(newState == SCENE_FRAGMENT_SHOWING) then
 			self:BuildTourList()
 		end
 	end)
-
+	
 	CallbackManager:RegisterCallback(Events.MAP_CHANGE, function()
 		if fragment:IsHidden() then return end
 		self:BuildTourList()
 	end)
-
+	
 	HarvestFarmLoaderSaveTitle:SetText(GetString(SI_SAVE))
 	HarvestFarmLoaderNameTitle:SetText(Harvest.GetLocalization( "tourname" ))
 	HarvestFarmLoaderNameField:SetText(Harvest.GetLocalization( "defaultname" ))
 	HarvestFarmLoaderSaveButton:SetText(GetString(SI_SAVE))
 	HarvestFarmLoaderLoadTitle:SetText(Harvest.GetLocalization( "savedtours" ))
 	HarvestFarmLoaderNoTour:SetText(Harvest.GetLocalization( "notourformap" ))
-
+	
 	Harvest_SavedVars.tours = Harvest_SavedVars.tours or {}
 	self.savedVars = Harvest_SavedVars.tours
-
+	
 	local pathDialog = {
 		title = { text = GetString(SI_PROMPT_TITLE_ERROR) },
 		mainText = { text = Harvest.GetLocalization( "savenotour" ) },
@@ -39,7 +39,7 @@ function Loader:Initialize(fragment)
 		}
 	}
 	ZO_Dialogs_RegisterCustomDialog("HARVESTFARM_SAVE_ERROR", pathDialog)
-
+	
 	pathDialog = {
 		title = { text = Harvest.GetLocalization( "saveexiststitle" ) },
 		mainText = { text = Harvest.GetLocalization( "saveexists" ) },
@@ -56,7 +56,7 @@ function Loader:Initialize(fragment)
 		}
 	}
 	ZO_Dialogs_RegisterCustomDialog("HARVESTFARM_SAVE_CONFIRM", pathDialog)
-
+	
 	pathDialog = {
 		title = { text = GetString(SI_PROMPT_TITLE_ERROR) },
 		mainText = { text = Harvest.GetLocalization( "loaderror" ) },
@@ -67,8 +67,8 @@ function Loader:Initialize(fragment)
 		}
 	}
 	ZO_Dialogs_RegisterCustomDialog("HARVESTFARM_LOAD_ERROR", pathDialog)
-
-
+	
+	
 	self.loadFunction = function(button)
 		local parent = button
 		while not parent.tourName do
@@ -77,7 +77,7 @@ function Loader:Initialize(fragment)
 		self:Load(parent.tourName)
 		self:BuildTourList()
 	end
-
+	
 	self.deleteFunction = function(button)
 		local parent = button
 		while not parent.tourName do
@@ -87,7 +87,7 @@ function Loader:Initialize(fragment)
 		tours[parent.tourName] = nil
 		self:BuildTourList()
 	end
-
+	
 	self.entryPool = ZO_ControlPool:New("SaveEntry", HarvestFarmLoaderPaneScrollChild, "Entry")
 end
 
@@ -96,7 +96,7 @@ function Loader:Save()
 		ZO_Dialogs_ShowDialog("HARVESTFARM_SAVE_ERROR", {}, { mainTextParams = {} } )
 		return
 	end
-
+	
 	local savedTours = self:GetSavedTours()
 	local tourName = HarvestFarmLoaderNameField:GetText()
 	if savedTours[tourName] then
@@ -109,7 +109,7 @@ end
 function Loader:ConfirmSave()
 	local tour = {}
 	local path = Farm.path
-
+	
 	local result = {{}}
 	local counter = 1
 	local format = string.format
@@ -126,13 +126,13 @@ function Loader:ConfirmSave()
 	for index, entry in pairs(result) do
 		result[index] = table.concat(entry, ",")
 	end
-
+	
 	tour.nodes = result
 	tour.numNodes = path.numNodes
 	tour.length = path.length
 	tour.ratio = zo_round(path.numNodes / path.length * 1000 * 100) / 100
 	tour.worldCoords = true
-
+	
 	local savedTours = self:GetSavedTours()
 	local tourName = HarvestFarmLoaderNameField:GetText()
 	savedTours[tourName] = tour
@@ -143,7 +143,7 @@ function Loader:Load(tourName)
 	HarvestFarmLoaderNameField:SetText(tourName)
 	local savedTours = self:GetSavedTours()
 	local tour = savedTours[tourName]
-
+	
 	local loadError = false
 	local iter
 	local pinTypes = {}
@@ -159,7 +159,7 @@ function Loader:Load(tourName)
 			num = num + 1
 		end
 	end
-
+	
 	if not tour.worldCoords then
 		local zoneId = Harvest.mapPins.mapCache.mapMetaData.zoneId
 		local measurement = Lib3D:GetZoneMeasurementForZoneId(zoneId)
@@ -171,7 +171,7 @@ function Loader:Load(tourName)
 			loadError = true
 		end
 	end
-
+	
 	if not loadError then
 		local path = Harvest.path:New(Harvest.mapPins.mapCache)
 		path:GenerateFromCoordinates(pinTypes, xList, yList)
@@ -201,7 +201,7 @@ end
 function Loader:BuildTourList()
 	self.entryPool:ReleaseAllObjects()
 	self.numEntries = 0
-
+	
 	local lastControl
 	local control
 	for tourName, tour in pairs(self:GetSavedTours()) do
@@ -212,7 +212,7 @@ function Loader:BuildTourList()
 			control:SetAnchor(TOPLEFT, HarvestFarmLoaderPaneScrollChild, TOPLEFT, 0, 0)
 		end
 		control.tourName = tourName
-
+		
 		control:GetNamedChild("Name"):SetText(Harvest.GetLocalization("tourname") .. tourName)
 		control:GetNamedChild("Stats"):SetText(zo_strformat( Harvest.GetLocalization( "editorstats" ), tour.numNodes, tour.length, tour.ratio))
 		control:GetNamedChild("LoadButton"):SetText( Harvest.GetLocalization( "load" ) )
@@ -222,7 +222,7 @@ function Loader:BuildTourList()
 		lastControl = control
 		self.numEntries = self.numEntries + 1
 	end
-
+	
 	HarvestFarmLoaderNoTour:SetHidden(self.numEntries > 0)
-
+	
 end

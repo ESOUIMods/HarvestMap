@@ -14,7 +14,7 @@ local TYPES = {
 	REM_DIVISION = 3,
 	REM_NODE = 4,
 }
-PinQueue.TYPES = TYPES
+PinQueue.TYPES = TYPES 
 
 PinQueue.commands = {length=0, index=1}
 
@@ -56,7 +56,7 @@ function PinQueue:AddNode(nodeId, pinTypeId)
 				QuickPin:CreatePin(pinTypeId, nodeId, x, y)
 			--end
 		end
-	end
+	end	
 end
 
 function PinQueue:RemoveNode(nodeId, pinTypeId)
@@ -78,22 +78,22 @@ local GetGameTimeMilliseconds = GetGameTimeMilliseconds
 local GetFrameTimeMilliseconds = GetFrameTimeMilliseconds
 -- Creates and removes a bunch of queued pins.
 function PinQueue:PerformActions()
-
+	
 	local GetGameTimeMilliseconds = GetGameTimeMilliseconds
 	local FrameTime = GetFrameTimeMilliseconds()
 	local commands = self.commands
 	local mapCache = self.mapPins.mapCache
-
+	
 	local Type, id, x, y, defaultPinTypeId, pinTypeName, pin, index, pinManager, pinType
 	index = commands.index
 	pinManager = QuickPin
-
+	
 	if index > commands.length then
 		self:Clear()
 		CallbackManager:FireCallbacks(Events.PIN_QUEUE_EMPTY)
 		return
 	end
-
+	
 	-- perform the update until timeout, but at least 10 entries from the queue
 	local shouldRenderUnspawnedNodes = not Harvest.IsMapSpawnFilterEnabled()
 	if Harvest.mapMode:IsInMinimapMode() then
@@ -115,10 +115,10 @@ function PinQueue:PerformActions()
 						pinManager:CreatePin(pinTypeId, id, x, y)
 					end
 				end
-			end
+			end	
 		elseif Type == TYPES.REM_NODE then
 			pinManager:RemovePin(pinTypeId, id)
-
+			
 		elseif Type == TYPES.ADD_DIVISION then]]
 		if Type == TYPES.ADD_DIVISION then
 			for _, nodeId in pairs(mapCache.divisions[pinTypeId][id]) do
@@ -131,13 +131,13 @@ function PinQueue:PerformActions()
 					end
 				end
 			end
-
+			
 		elseif Type == TYPES.REM_DIVISION then
 			for _, nodeId in pairs(mapCache.divisions[pinTypeId][id]) do
 				pinManager:RemovePin(pinTypeId, nodeId)
 			end
 		end
-
+		
 		if index > commands.length then
 			self:Clear()
 			CallbackManager:FireCallbacks(Events.PIN_QUEUE_EMPTY)

@@ -16,20 +16,16 @@ Harvest.CopyMissingDefaultValues = CopyMissingDefaultValues
 
 -- construct display version based on manifest addon version
 local AddOnManager = GetAddOnManager()
-if AddOnManager.GetAddOnVersion then -- in case we test the addon on live instead of PTS
-	Harvest.displayVersion = ""
-	for addonIndex = 1, AddOnManager:GetNumAddOns() do
-		local name = AddOnManager:GetAddOnInfo(addonIndex)
-		if name == "HarvestMap" then
-			local versionInt = AddOnManager:GetAddOnVersion(addonIndex)
-			local rev = versionInt % 100
-			local version = zo_floor(versionInt / 100) % 100
-			local major = zo_floor(versionInt / 10000) % 100
-			Harvest.displayVersion = string.format("%d.%d.%d", major, version, rev)
-		end
+Harvest.displayVersion = ""
+for addonIndex = 1, AddOnManager:GetNumAddOns() do
+	local name = AddOnManager:GetAddOnInfo(addonIndex)
+	if name == "HarvestMap" then
+		local versionInt = AddOnManager:GetAddOnVersion(addonIndex)
+		local rev = versionInt % 100
+		local version = zo_floor(versionInt / 100) % 100
+		local major = zo_floor(versionInt / 10000) % 100
+		Harvest.displayVersion = string.format("%d.%d.%d", major, version, rev)
 	end
-else
-	Harvest.displayVersion = "3.13.0"
 end
 
 function Harvest.GetPlayer3DPosition()

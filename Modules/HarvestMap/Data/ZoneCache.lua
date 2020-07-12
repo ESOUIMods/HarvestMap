@@ -24,13 +24,13 @@ function ZoneCache:AddCache(cache)
 		prevCache.accessed = prevCache.accessed - 1
 		self.mapCaches[cache.map] = nil
 	end
-
+	
 	-- check if some nodes exist on both caches
 	local pinTypeId, globalX, globalY, otherNode
 	for map, otherCache in pairs(self.mapCaches) do
 		assert(cache ~= otherCache)
 		local isCacheLarger = cache.lastNodeId > otherCache.lastNodeId
-
+		
 		for nodeId = 1, cache.lastNodeId do
 			pinTypeId = cache.pinTypeId[nodeId]
 			if pinTypeId then

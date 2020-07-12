@@ -48,6 +48,8 @@ function Hidden.UnhidePin(mapCache, nodeId)
 end
 
 function Hidden.ConfigureForSettings(isHiddenTimeUsed, hiddenTimeInMinutes, hiddenOnHarvest)
+	Hidden:Info("configure hidden pins for isHiddenTimeUsed %s, hiddenTimeInMinutes %d, hiddenOnHarvest %s",
+		tostring(isHiddenTimeUsed), hiddenTimeInMinutes, tostring(hiddenOnHarvest))
 	if hiddenTimeInMinutes > 0 and isHiddenTimeUsed then
 		-- since we hide pins in the order of minutes, we can call this function very rarely
 		EVENT_MANAGER:RegisterForUpdate("HarvestMap-UnhidePins", 10 * 1000, Hidden.UnhideHiddenPins)

@@ -79,7 +79,6 @@ Harvest.HIDDEN_PINTYPES = {
 	[Harvest.TOUR] = true,
 	[Harvest.PSIJIC] = true,
 	[Harvest.JEWELRY] = true,
-	[Harvest.CRIMSON] = true,
 }
 
 local interactableName2PinTypeId = {
@@ -90,14 +89,14 @@ local interactableName2PinTypeId = {
 	["Т�?жeлый мeшoк"] = Harvest.HEAVYSACK, -- russian
 	["Тяжелый мешок"] = Harvest.HEAVYSACK, -- updated russian
 	["тяжелый мешок"] = Harvest.HEAVYSACK, -- updated russian
-
+	
 	["thieves trove"] = Harvest.TROVE,
 	["diebesgut"] = Harvest.TROVE,
 	["trésor des voleurs"] = Harvest.TROVE,
 	["Вopoвcкoй тaйник"] = Harvest.TROVE,  -- russian
 	["Воровской тайник"] = Harvest.TROVE, -- updated russian
 	["воровской тайник"] = Harvest.TROVE, -- updated russian
-
+	
 	["loose panel"] = Harvest.STASH,
 	["loose tile"] = Harvest.STASH,
 	["loose stone"] = Harvest.STASH,
@@ -109,11 +108,11 @@ local interactableName2PinTypeId = {
 	["loser stein"] = Harvest.STASH,
 	["Податливая панель"] = Harvest.STASH, -- russian
 	["Податливый камень"] = Harvest.STASH, -- loose tile is not translated in the ru.lang file of RuESO
-
+	
 	["psijic portal"] = Harvest.PSIJIC,
 	["portail psijique"] = Harvest.PSIJIC,
 	["psijik-portal"] = Harvest.PSIJIC,
-
+	
 	["giant clam"] = Harvest.CLAM,
 	["riesenmuschel"] = Harvest.CLAM,
 	["palourde géante"] = Harvest.CLAM,
@@ -273,7 +272,7 @@ Harvest.itemId2PinType = {
 	[23268] = Harvest.WATER,
 	[64500] = Harvest.WATER,
 	[64501] = Harvest.WATER,
-
+	
 	[135137] = Harvest.JEWELRY,
 	[135139] = Harvest.JEWELRY,
 	[135141] = Harvest.JEWELRY,
@@ -292,6 +291,6 @@ Harvest.itemId2PinType = {
 	[135159] = Harvest.JEWELRY,
 	[135160] = Harvest.JEWELRY,
 	[135161] = Harvest.JEWELRY,
-
+	
 	[150672] = Harvest.CRIMSON,
 }

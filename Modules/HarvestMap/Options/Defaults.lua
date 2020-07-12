@@ -53,7 +53,7 @@ Settings.defaultSettings = {
 		[Harvest.JEWELRY]     = true,
 		[Harvest.CRIMSON]     = true,
 	},
-
+	
 	isWorldFilterActive = false,
 	isWorldPinTypeVisible = {
 		[Harvest.UNKNOWN]     = false,
@@ -77,7 +77,7 @@ Settings.defaultSettings = {
 		[Harvest.JEWELRY]     = false,
 		[Harvest.CRIMSON]     = false,
 	},
-
+	
 	isCompassFilterActive = false,
 	isCompassPinTypeVisible = {
 		[Harvest.UNKNOWN]     = false,
@@ -152,12 +152,12 @@ Settings.defaultSettings = {
 	displayMapPins = true,
 	displayMinimapPins = true,
 	displayNotifications = true,
-
+	
 	compassSpawnFilter = false,
 	worldSpawnFilter = false,
 	mapSpawnFilter = false,
 	minimapSpawnFilter = false,
-
+	
 	showDebugOutput = false,
 	visitedRangeInMeters = 10,
 	hiddenTime = 1,
@@ -165,7 +165,7 @@ Settings.defaultSettings = {
 	useHiddenTime = false,
 	maxVisibleDistanceInMeters = 300,
 	hasMaxVisibleDistance = false,
-
+	
 	compassDistanceInMeters = 100,
 	worldDistanceInMeters = 100,
 	worldPinDepth = true,

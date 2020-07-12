@@ -11,10 +11,10 @@ local MapCache = Harvest.MapCache
 function MapCache:ForNearbyNodes(worldX, worldY, callback, ...)
 	if self.mapMetaData.isBlacklisted then return end
 	self.time = GetFrameTimeSeconds()
-
+	
 	local minDistance = Harvest.GetVisitedRangeInMeters()
 	local minDistanceSquared = minDistance * minDistance
-
+	
 	local divisionX = zo_floor(worldX / self.DivisionWidthInMeters)
 	local divisionY = zo_floor(worldY / self.DivisionWidthInMeters)
 
@@ -49,7 +49,7 @@ function PinQueue:New(...)
 end
 
 function PinQueue:Initialize()
-
+	
 end
 
 function PinQueue:AddDivision(divisionIndex, pinTypeId)
@@ -64,22 +64,22 @@ function MapCache:GetVisibleNodes(x, y, pinTypeId, visibleDistanceInMeters, queu
 	if not Harvest.AreAnyMapPinsVisible() then return end
 	self.time = GetFrameTimeSeconds()
 	if self.mapMetaData.isBlacklisted then return end
-
+	
 	if visibleDistanceInMeters > 0 then
-
+		
 		local maxDistance = visibleDistanceInMeters
 		local maxDistanceSquared = maxDistance * maxDistance
-
+		
 		local divisionX = zo_floor(x / self.DivisionWidthInMeters)
 		local divisionY = zo_floor(y / self.DivisionWidthInMeters)
-
+		
 		local range = zo_ceil(visibleDistanceInMeters / self.DivisionWidthInMeters)
 
 		local division, dx, dy, divisions
 		local centerX, centerY
 		local startJ = divisionY - range
 		local endJ = divisionY + range
-
+		
 		divisions = self.divisions[pinTypeId]
 		for i = divisionX - range, divisionX + range do
 			centerX = (i+0.5) * self.DivisionWidthInMeters
@@ -111,10 +111,10 @@ function MapCache:SetPrevAndCurVisibleNodesToTable(previousX, previousY, current
 	if not Harvest.AreAnyMapPinsVisible() then return end
 	self.time = GetFrameTimeSeconds()
 	if self.mapMetaData.isBlacklisted then return end
-
+	
 	local maxDistance = visibleDistanceInMeters
 	local maxDistanceSquared = maxDistance * maxDistance
-
+	
 	local prevDivX = zo_floor(previousX / self.DivisionWidthInMeters)
 	local prevDivY = zo_floor(previousY / self.DivisionWidthInMeters)
 	local divX = zo_floor(currentX / self.DivisionWidthInMeters)
@@ -130,7 +130,7 @@ function MapCache:SetPrevAndCurVisibleNodesToTable(previousX, previousY, current
 	local centerX, centerY
 	local startJ = divY - range
 	local endJ = divY + range
-
+	
 	for i = divX - range, divX + range do
 		centerX = (i+0.5) * self.DivisionWidthInMeters
 		dx = centerX - currentX
@@ -153,10 +153,10 @@ function MapCache:SetPrevAndCurVisibleNodesToTable(previousX, previousY, current
 			end
 		end
 	end
-
+	
 	startJ = prevDivY - range
 	endJ = prevDivY + range
-
+	
 	for i = prevDivX - range, prevDivX + range do
 		centerX = (i+0.5) * self.DivisionWidthInMeters
 		dx = centerX - currentX
@@ -185,24 +185,24 @@ end
 function MapCache:ForNodesInRange(worldX, worldY, heading, visibleDistanceInMeters, validPinTypes, callback, ...)
 	if self.mapMetaData.isBlacklisted then return end
 	if not self.zoneMeasurement then return end
-
+	
 	local maxDistance = visibleDistanceInMeters + 0.5 * self.DivisionWidthInMeters
 	local maxDistanceSquared = maxDistance * maxDistance
 	local distToCenter = 0.71 * self.DivisionWidthInMeters
-
+	
 	local divisionX = zo_floor(worldX / self.DivisionWidthInMeters)
 	local divisionY = zo_floor(worldY / self.DivisionWidthInMeters)
 
 	local range = zo_ceil(visibleDistanceInMeters / self.DivisionWidthInMeters)
-
+	
 	local dirX = math.sin(heading)
 	local dirY = math.cos(heading)
-
+	
 	local division, dx, dy, divisions
 	local centerX, centerY, index
 	local startJ = divisionY - range
 	local endJ = divisionY + range
-
+	
 	for i = divisionX - range, divisionX + range do
 		centerX = (i+0.5) * self.DivisionWidthInMeters
 		dx = centerX - worldX
