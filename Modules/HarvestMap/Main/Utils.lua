@@ -21,9 +21,9 @@ for addonIndex = 1, AddOnManager:GetNumAddOns() do
 	local name = AddOnManager:GetAddOnInfo(addonIndex)
 	if name == "HarvestMap" then
 		local versionInt = AddOnManager:GetAddOnVersion(addonIndex)
-		local rev = versionInt % 100
-		local version = zo_floor(versionInt / 100) % 100
-		local major = zo_floor(versionInt / 10000) % 100
+		local rev = versionInt % 1000
+		local version = zo_floor(versionInt / 1000) % 100
+		local major = zo_floor(versionInt / 100000) % 100
 		Harvest.displayVersion = string.format("%d.%d.%d", major, version, rev)
 	end
 end

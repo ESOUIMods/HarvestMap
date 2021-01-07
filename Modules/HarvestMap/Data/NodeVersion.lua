@@ -43,7 +43,8 @@
 -- 39 3.14.0 save per zone id
 -- 40 3.14.6 verify zone id
 -- 41 3.14.8 fixed fishing globalX <= globalY bug
-local addonVersion = 41
+-- 42 3.14.11 move data to DLC
+local addonVersion = 42
 
 -- node version which is saved for each node
 -- the node version encodes the current game and addon version

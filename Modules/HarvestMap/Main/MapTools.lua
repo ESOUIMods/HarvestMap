@@ -8,9 +8,10 @@ local CallbackManager = Harvest.callbackManager
 local Events = Harvest.events
 
 function MapTools:Initialize()
-	self.mapBlacklist = {
-		["tamriel/tamriel"] = true,
-		["tamriel/mundus_base"] = true,
+	self.mapBlacklistPatterns = {
+		["^tamriel/"] = true,
+		["^battlegrounds/"] = true,
+		["^housing/"] = true,
 	}
 	self.mapMetaData = {}
 	GPS:ClearMapMeasurements() -- someone has a broken gps measurement on kenarthis roost and submits broken data
@@ -34,16 +35,21 @@ function MapTools:GetMapFromTexture(textureName)
 	if textureName == "eyevea_base" then
 		textureName = "eyevea/" .. textureName
 	end
-	
+
 	return textureName
 end
 
-function MapTools:IsMapBlacklisted( map )
-	return self.mapBlacklist[map]
+function MapTools:IsMapBlacklisted(map)
+	for pattern in pairs(self.mapBlacklistPatterns) do
+		if map:match(pattern) then
+			return true
+		end
+	end
+	return false
 end
 
 function MapTools:SetMapToPlayerLocation()
-	self:Debug("SetMapToPlayerLocation") 
+	self:Debug("SetMapToPlayerLocation")
 	--[[
 	There is a bug that can happen when you traverse city/zone borders.
 	Reproduction:
@@ -55,7 +61,7 @@ function MapTools:SetMapToPlayerLocation()
 	local localX, localY, heading = GetMapPlayerPosition("player")
 	local playerZoneIndex = GetUnitZoneIndex("player")
 	local mapZoneIndex = GetCurrentMapZoneIndex()
-	
+
 	-- if we can click on the player location, then we are probably erroneously viewing a zone map
 	-- (exception is hew's bane where we can click outside of abahs landing and it will open abahs landing)
 	if WouldProcessMapClick(localX, localY) and playerZoneIndex == mapZoneIndex then
@@ -64,7 +70,7 @@ function MapTools:SetMapToPlayerLocation()
 		ProcessMapClick(localX, localY)
 		localX, localY, heading = GetMapPlayerPosition("player")
 	end
-	
+
 	if localX < 0 or localX > 1 or localY < 0 or localY > 1 then
 		self:Warn("Player coordinates out of bound: %s, %f, %f", GetMapTileTexture(), localX, localY )
 		-- the player is not visible on the current map,
@@ -89,19 +95,19 @@ function MapTools:GetPlayerMapMetaDataAndGlobalPosition()
 	self:SetMapToPlayerLocation()
 	self:Debug("get player map position. old map: ", originalMap)
 	self:Debug("new map: ", GetMapTileTexture())
-	
+
 	local mapMetaData, globalX, globalY, heading = self:GetViewedMapMetaDataAndPlayerGlobalPosition()
-	
+
 	if GetMapTileTexture() ~= originalMap then
 		self:Debug("fire 'OnWorldMapChanged' callback")
 		CALLBACK_MANAGER:FireCallbacks("OnWorldMapChanged")
 	end
-	
+
 	if GetUnitZoneIndex("player") ~= mapMetaData.zoneIndex then
 		self:Warn("Player map meta data zone id does not match: %s, %d, %d", mapMetaData.map, GetZoneId(GetUnitZoneIndex("player")), mapMetaData.zoneId)
 		error(string.format("Player map meta data zone id does not match: %s, %d, %d", mapMetaData.map, GetZoneId(GetUnitZoneIndex("player")), mapMetaData.zoneId))
 	end
-	
+
 	return mapMetaData, globalX, globalY, heading
 end
 
@@ -116,7 +122,7 @@ function MapTools:GetViewedMapMetaDataAndPlayerGlobalPosition()
 	self:Debug("viewed map position: local %d, %d, global %d, %d, map %s zoneIndex %d", localX, localY, globalX, globalY, map, zoneIndex)
 	local mapMetaData = self:GetMapMetaDataForZoneIndexAndMap(zoneIndex, map)
 	mapMetaData.mapMeasurement = GPS:GetCurrentMapMeasurements()
-	
+
 	return mapMetaData, globalX, globalY, heading
 end
 
@@ -128,7 +134,7 @@ function MapTools:GetMapMetaDataForZoneIndexAndMap(zoneIndex, map)
 		local zoneId = GetZoneId(zoneIndex)
 		local zoneMeasurement = Lib3D:GetZoneMeasurementForZoneId(zoneId)
 		self:Info("create new map meta data for zone index %d, id %d and map %s", zoneIndex, zoneId, map)
-		mapMetaData = {map = map, zoneIndex = zoneIndex, zoneId = zoneId, zoneMeasurement = zoneMeasurement, isBlacklisted = self.mapBlacklist[map]}
+		mapMetaData = {map = map, zoneIndex = zoneIndex, zoneId = zoneId, zoneMeasurement = zoneMeasurement, isBlacklisted = self:IsMapBlacklisted(map)}
 		self.mapMetaData[zoneIndex][map] = mapMetaData
 	end
 	return mapMetaData

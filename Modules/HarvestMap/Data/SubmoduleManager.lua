@@ -24,7 +24,7 @@ local addOnNameToPotentialSubmodule = {
 			["grahtwood"] = true,
 			["greenshade"] = true,
 			["malabaltor"] = true,
-			["reapersmarch"] = true
+			["reapersmarch"] = true,
 		},
 	},
 	HarvestMapEP = {
@@ -36,7 +36,8 @@ local addOnNameToPotentialSubmodule = {
 			["deshaan"] = true,
 			["shadowfen"] = true,
 			["eastmarch"] = true,
-			["therift"] = true
+			["therift"] = true,
+			["balfoyen"] = true,
 		},
 	},
 	HarvestMapDC = {
@@ -47,39 +48,33 @@ local addOnNameToPotentialSubmodule = {
 			["stormhaven"] = true,
 			["rivenspire"] = true,
 			["alikr"] = true,
-			["bangkorai"] = true
+			["bangkorai"] = true,
 		},
 	},
 	HarvestMapDLC = {
 		displayName = "HarvestMap-DLC-Zones",
 		savedVarsName = "HarvestDLC_SavedVars",
-		zones = {
-			--imperialcity, part of cyrodiil
-			["wrothgar"] = true,
-			["thievesguild"] = true,
-			["darkbrotherhood"] = true,
-			["vvardenfell"] = true,
-			["clockwork"] = true,
-			["summerset"] = true,
-			["murkmire"] = true,
-			["elsweyr"] = true,
-			["southernelsweyr"] = true,
-		},
 	},
 	HarvestMapNF = {
 		displayName = "HarvestMap-NoFaction-Zones",
 		savedVarsName = "HarvestNF_SavedVars",
+		zones = {
+			["cyrodiil"] = true,
+			["craglorn"] = true,
+			["coldharbor"] = true,
+			["main"] = true,
+		},
 	},
 }
 
 function SubmoduleManager:Initialize()
 	self.submodules = {}
-	
+
 	EVENT_MANAGER:RegisterForEvent("HarvestMap-Submodules", EVENT_PLAYER_ACTIVATED,
 		function()
 			self:InformUserAboutMissingSubmodules()
 		end)
-		
+
 	EVENT_MANAGER:RegisterForEvent("HarvestMap-Submodules", EVENT_ADD_ON_LOADED,
 		function(event, addOnName)
 			self:TryToRegisterAddOnAsSubmodule(addOnName)
@@ -89,20 +84,20 @@ end
 function SubmoduleManager:TryToRegisterAddOnAsSubmodule(addOnName)
 	local submodule = addOnNameToPotentialSubmodule[addOnName]
 	if not submodule then return end
-	
+
 	self.submodules[addOnName] = submodule
-	
+
 	-- load the savedVars
 	_G[submodule.savedVarsName] = _G[submodule.savedVarsName] or {}
 	submodule.savedVars = _G[submodule.savedVarsName]
 	Harvest.CopyMissingDefaultValues(submodule.savedVars, dataDefault)
-	
+
 	self:CleanUpSavedVarsForSubmodule(submodule)
 end
 
 function SubmoduleManager:InformUserAboutMissingSubmodules()
 	EVENT_MANAGER:UnregisterForEvent("HarvestMap-Submodules", EVENT_PLAYER_ACTIVATED)
-	
+
 	-- collect missing submodules
 	local missingSubmodules = {}
 	for addOnName, submodule in pairs(addOnNameToPotentialSubmodule) do
@@ -110,7 +105,7 @@ function SubmoduleManager:InformUserAboutMissingSubmodules()
 			missingSubmodules[submodule.displayName] = true
 		end
 	end
-	
+
 	if next(missingSubmodules) then -- if the table is not empty
 		d(ZO_NORMAL_TEXT:Colorize("HarvestMap v" .. Harvest.displayVersion .. " initialized"))
 		d(ZO_NORMAL_TEXT:Colorize("The following modules are disabled and their data was not loaded:"))
@@ -123,10 +118,10 @@ end
 -- returns the correct table for the map (HarvestMap, HarvestMapAD/DC/EP save file tables)
 -- may return nil if the submodule for the given map is not loaded
 function SubmoduleManager:GetSubmoduleForMap(map)
-	
+
 	-- split of the zone prefic of the given map name
 	local zoneName = string.gsub(map, "/.*$", "" )
-	
+
 	-- check if the zone belongs to one of the submodules
 	for addOnName, submodule in pairs(addOnNameToPotentialSubmodule) do
 		if submodule.zones and submodule.zones[zoneName] then
@@ -139,17 +134,17 @@ function SubmoduleManager:GetSubmoduleForMap(map)
 			end
 		end
 	end
-	
+
 	-- otherwise return the NF module
 	-- note that this may be nil if the NF module is not loaded
-	return self.submodules["HarvestMapNF"]
-	
+	return self.submodules["HarvestMapDLC"]
+
 end
 
 -- imports all the nodes on 'map' from the table 'data' into the save file table 'saveFile'
 -- if checkPinType is true, data will be skipped if Harvest.IsPinTypeSavedOnImport(pinTypeId) returns false
 function SubmoduleManager:ImportMapDataIntoSubmodule(zoneId, map, newMapData, submodule)
-	
+
 	submodule.savedVars[zoneId] = submodule.savedVars[zoneId] or {}
 	local existingData = submodule.savedVars[zoneId]
 	-- nothing to merge, data can simply be copied
@@ -158,7 +153,7 @@ function SubmoduleManager:ImportMapDataIntoSubmodule(zoneId, map, newMapData, su
 		return
 	end
 	local existingMapData = existingData[map]
-	
+
 	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
 		if newMapData[pinTypeId] then
 			if existingMapData[pinTypeId] then
@@ -172,7 +167,7 @@ function SubmoduleManager:ImportMapDataIntoSubmodule(zoneId, map, newMapData, su
 			end
 		end
 	end
-	
+
 end
 
 function SubmoduleManager:CleanUpSavedVarsForSubmodule(submodule)
@@ -180,7 +175,7 @@ function SubmoduleManager:CleanUpSavedVarsForSubmodule(submodule)
 	-- HarvestMap-NF until HarvestMap is updated
 	-- Here we move old data from NF to the correct submodule
 	if not HarvestNF_SavedVars then return end -- NF might be deactivated
-	
+
 	if submodule.savedVars == HarvestNF_SavedVars then
 		-- move data from newly loaded NF module to previously loaded modules
 		for zoneId, zoneData in pairs(HarvestNF_SavedVars) do
@@ -188,19 +183,10 @@ function SubmoduleManager:CleanUpSavedVarsForSubmodule(submodule)
 				for map, mapData in pairs(zoneData) do
 					local submodule = self:GetSubmoduleForMap(map)
 					if submodule and submodule.savedVars ~= HarvestNF_SavedVars then
+						self:Info("move data for map %s from NF to %s", map, submodule.displayName)
 						self:ImportMapDataIntoSubmodule(zoneId, map, mapData, submodule)
 						HarvestNF_SavedVars[zoneId][map] = nil
 					end
-				end
-			end
-		end
-		if HarvestNF_SavedVars.data then
-			local zoneId = "data"
-			for map, mapData in pairs(HarvestNF_SavedVars.data) do
-				local submodule = self:GetSubmoduleForMap(map)
-				if submodule and submodule.savedVars ~= HarvestNF_SavedVars then
-					self:ImportMapDataIntoSubmodule(zoneId, map, mapData, submodule)
-					HarvestNF_SavedVars[zoneId][map] = nil
 				end
 			end
 		end
@@ -211,6 +197,7 @@ function SubmoduleManager:CleanUpSavedVarsForSubmodule(submodule)
 				for map, mapData in pairs(zoneData) do
 					local zoneName = string.gsub(map, "/.*$", "")
 					if submodule.zones[zoneName] then
+						self:Info("move data for map %s from NF to %s", map, submodule.displayName)
 						self:ImportMapDataIntoSubmodule(zoneId, map, mapData, submodule)
 						HarvestNF_SavedVars[zoneId][map] = nil
 					end
