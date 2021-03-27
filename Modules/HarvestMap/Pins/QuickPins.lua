@@ -311,22 +311,7 @@ end
 
 function QP_WorldMapPins:UpdateSize()
 	local layout = self.m_Layout
-	local minSize = layout.minSize or MIN_PIN_SIZE
-	local zoom = lib.zoom:GetCurrentCurvedZoom() / lib.maxZoom
-	local scale = 1
-	if not ZO_WorldMap_IsWorldMapShowing() then -- minimap
-		if FyrMM then
-			scale = FyrMM.pScalePercent
-		end
-		if AUI and AUI.Minimap:IsEnabled() then
-			zoom = AUI.Minimap.GetCurrentZoomValue() / 15
-		end
-		if VOTANS_MINIMAP and VOTANS_MINIMAP.scale then
-			scale = VOTANS_MINIMAP.scale
-		end
-	end
-	local size = zo_max(layout.size * (0.4 * zoom + 0.6) / GetUICustomScale(), minSize)
-	size = size * scale
+	local size = layout.size / GetUICustomScale()
 	layout.currentPinSize = size
 end
 

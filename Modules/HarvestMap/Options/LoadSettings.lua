@@ -35,7 +35,7 @@ function Settings:LoadSavedVars()
 	
 	-- add default settings
 	Harvest.CopyMissingDefaultValues(self.savedVars.character, self.defaultSettings)
-	Harvest.CopyMissingDefaultValues(self.savedVars.account, self.defaultSettings)
+	Harvest.CopyMissingDefaultValues(self.savedVars.account, self.defaultAccountSettings)
 	
 	-- depending on the account wide setting, the settings may not be saved per character
 	if self.savedVars.account.accountWideSettings then
@@ -72,7 +72,6 @@ function Settings:FixPinLayout()
 				pinLayout.level = 20
 			end
 		end
-		pinLayout.minSize = self.savedVars.settings.mapPinMinSize
 	end
 end
 

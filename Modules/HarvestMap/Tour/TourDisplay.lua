@@ -1,6 +1,4 @@
 
-
-local GPS = LibGPS2
 local LAM = LibAddonMenu2
 
 local CallbackManager = Harvest.callbackManager
@@ -95,8 +93,8 @@ function TourDisplay:Refresh(path, selectedPins, selectedMapCache)
 		for index = 2, #selectedPins do
 			nodeId = selectedPins[index]
 			linkControl = self.linkPool:AcquireObject()
-			linkControl.startX, linkControl.startY = GPS:GlobalToLocal(selectedMapCache.globalX[nodeId], selectedMapCache.globalY[nodeId])
-			linkControl.endX, linkControl.endY = GPS:GlobalToLocal(selectedMapCache.globalX[lastNodeId], selectedMapCache.globalY[lastNodeId])
+			linkControl.startX, linkControl.startY = selectedMapCache:GetLocal(nodeId)
+			linkControl.endX, linkControl.endY = selectedMapCache:GetLocal(lastNodeId)
 			if linkControl.startX < linkControl.endX then
 				linkControl:SetTexture("HarvestMap/Textures/Map/tour_r.dds")
 			else

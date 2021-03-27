@@ -27,9 +27,7 @@ function Generator:InitializeCallbacks()
 	end)
 	
 	CallbackManager:RegisterForEvent(Events.TOUR_GENERATION_ERROR, function(event, errorCode)
-		if errorCode == 1 then
-			ZO_Dialogs_ShowDialog("HARVESTFARM_INVALID_MAP", {}, { mainTextParams = {} } )
-		elseif errorCode == 2 then
+		if errorCode == 2 then
 			ZO_Dialogs_ShowDialog("HARVESTFARM_NO_RESOURCES", {}, { mainTextParams = {} } )
 		else
 			ZO_Dialogs_ShowDialog("HARVESTFARM_ERROR", {}, { mainTextParams = {} } )
@@ -63,18 +61,6 @@ function Generator:InitializeReports()
 		}
 	}
 	ZO_Dialogs_RegisterCustomDialog("HARVESTFARM_NO_RESOURCES", pathDialog)
-	
-	-- error message if the current map can not be used (i.e. there is no measurement like the Aurbis map)
-	pathDialog = {
-		title = { text = Harvest.GetLocalization( "farmerror" ) },
-		mainText = { text = Harvest.GetLocalization( "farminvalidmap" ) },
-		buttons = {
-			[1] = {
-				text = GetString(SI_DIALOG_CLOSE),
-			},
-		}
-	}
-	ZO_Dialogs_RegisterCustomDialog("HARVESTFARM_INVALID_MAP", pathDialog)
 	
 	-- succes message which displays the resulting tour's stats (node per kilometer)
 	pathDialog = {

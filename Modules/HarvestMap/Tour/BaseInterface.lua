@@ -1,6 +1,4 @@
 
-local GPS = LibGPS2
-
 local Farm = {}
 Harvest:RegisterModule("farm", Farm)
 
@@ -8,16 +6,7 @@ local CallbackManager = Harvest.callbackManager
 local Events = Harvest.events
 
 function Farm:Initialize()
-	ZO_CreateStringId("SI_HARVEST_FARM_TITLE", Harvest.GetLocalization("farmmenu"))
-	
-	self.iconData = {
-		categoryName = SI_HARVEST_FARM_TITLE,
-		descriptor = "HarvestFarmScene",
-		normal = "EsoUI/Art/inventory/inventory_tabicon_crafting_up.dds",
-		pressed = "EsoUI/Art/inventory/inventory_tabicon_crafting_down.dds",
-		highlight = "EsoUI/Art/inventory/inventory_tabicon_crafting_over.dds",
-	}
-	Harvest.menu:Register(self.iconData)
+	self.sceneName = "HarvestFarmScene"
 	
 	CallbackManager:RegisterForEvent(Events.SETTING_CHANGED, function(event, setting, ...)
 		if not self.path then return end
@@ -40,7 +29,7 @@ function Farm:Initialize()
 			if Harvest.mapPins.mapCache.map == path.mapCache.map then
 				local x, y = path:GetLocalCoords(1)
 				if x and y then
-					GPS:PanToMapPosition(x, y)
+					ZO_WorldMap_GetPanAndZoom():PanToNormalizedPosition(x, y)
 				end
 			end
 		end
@@ -58,6 +47,31 @@ function Farm:Initialize()
 	self.display:Initialize()
 	self:InitializeTabs() -- creates the sub menus for generating, editing, saving etc
 	self:InitializeScene() -- creates the editor scene
+	self:InitializeMainMenuButton()
+end
+
+function Farm:InitializeMainMenuButton()
+	local LMM2 = LibMainMenu2
+	LMM2:Init()
+	
+	ZO_CreateStringId("SI_HARVEST_FARM_TITLE", Harvest.GetLocalization("farmmenu"))
+	
+	local categoryLayoutInfo =
+	{
+		binding = "HARVEST_SHOW_PANEL",
+		categoryName = SI_HARVEST_FARM_TITLE,
+		callback = function(buttonData)
+			if not SCENE_MANAGER:IsShowing(self.sceneName) then
+				SCENE_MANAGER:Show(self.sceneName)
+			end
+		end,
+		visible = function(buttonData) return true end,
+		normal = "EsoUI/Art/Inventory/inventory_tabicon_quest_up.dds",
+		pressed = "EsoUI/Art/Inventory/inventory_tabicon_quest_down.dds",
+		highlight = "EsoUI/Art/Inventory/inventory_tabicon_quest_over.dds",
+	}
+	local descriptor = self.sceneName
+	LMM2:AddMenuItem(descriptor, self.sceneName, categoryLayoutInfo)
 end
 
 function Farm:SetPath(path)
@@ -74,7 +88,7 @@ function Farm:PostInitialize()
 end
 
 function Farm:InitializeScene()
-	self.scene = ZO_Scene:New("HarvestFarmScene", SCENE_MANAGER)
+	self.scene = ZO_Scene:New(self.sceneName, SCENE_MANAGER)
 	
 	local heatmap
 	self.scene:RegisterCallback("StateChange", function(oldState, newState)

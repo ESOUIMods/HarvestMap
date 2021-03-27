@@ -161,15 +161,7 @@ function Loader:Load(tourName)
 	end
 	
 	if not tour.worldCoords then
-		local zoneId = Harvest.mapPins.mapCache.mapMetaData.zoneId
-		local measurement = Lib3D:GetZoneMeasurementForZoneId(zoneId)
-		if measurement:IsValid() then
-			for index in pairs(xList) do
-				xList[index], yList[index] = measurement:GlobalToWorld(GPS:LocalToGlobal(xList[index], yList[index]))
-			end
-		else
-			loadError = true
-		end
+		loadError = true
 	end
 	
 	if not loadError then

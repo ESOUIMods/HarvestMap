@@ -24,8 +24,8 @@ function Data:Initialize()
 	
 	-- save discovered nodes
 	CallbackManager:RegisterForEvent(Events.NODE_DISCOVERED,
-		function(event, mapMetaData, worldX, worldY, worldZ, globalX, globalY, pinTypeId)
-			self:SaveNode(mapMetaData, worldX, worldY, worldZ, globalX, globalY, pinTypeId)
+		function(event, mapMetaData, worldX, worldY, worldZ, pinTypeId)
+			self:SaveNode(mapMetaData, worldX, worldY, worldZ, pinTypeId)
 		end)
 	
 	CallbackManager:RegisterForEvent(Events.NEW_NODES_LOADED_TO_CACHE,
@@ -36,12 +36,10 @@ function Data:Initialize()
 			self.currentZoneCache:MergeNodesOfMapCacheAndPinType(mapCache, pinTypeId)
 		end)
 	
-	Lib3D:RegisterWorldChangeCallback("HarvestMap-Data",
-		function()
+	EVENT_MANAGER:RegisterForEvent("HarvestMap-Data", EVENT_PLAYER_ACTIVATED, function()
 			-- loading the zone cache is the last thing to complete
 			-- for the data module to have finished initialization
 			self:Info("lib3d world change callback fired")
-			self.isInitialized = true
 			self:RefreshZoneCacheForNewZone()
 			self:RemoveOldCaches()
 		end)
@@ -55,12 +53,10 @@ function Data:ClearCaches()
 	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "cacheCleared")
 end
 
-function Data:IsNodeDataValid(mapMetaData, worldX, worldY, worldZ, globalX, globalY, pinTypeId)
+function Data:IsNodeDataValid(mapMetaData, worldX, worldY, worldZ, pinTypeId)
 	assert(type(worldX) == "number")
 	assert(type(worldY) == "number")
-	--assert(type(worldZ) == "number")
-	assert(type(globalX) == "number")
-	assert(type(globalY) == "number")
+	assert(type(worldZ) == "number")
 	assert(type(pinTypeId) == "number")
 	assert(mapMetaData)
 	
@@ -74,16 +70,16 @@ end
 
 -- this function tries to save the given data
 -- this function is only used by the harvesting part of HarvestMap
-function Data:SaveNode(mapMetaData, worldX, worldY, worldZ, globalX, globalY, pinTypeId)
+function Data:SaveNode(mapMetaData, worldX, worldY, worldZ, pinTypeId)
 	local pinTypeIdAlias = Harvest.PINTYPE_ALIAS[pinTypeId]
 	if pinTypeIdAlias then
-		self:SaveNode(mapMetaData, worldX, worldY, worldZ, globalX, globalY, pinTypeIdAlias)
+		self:SaveNode(mapMetaData, worldX, worldY, worldZ, pinTypeIdAlias)
 	end
 	
 	self:Info("attempt to save node ", mapMetaData.map, mapMetaData.zoneId, 
-		worldX, worlY, worldZ, globalX, globalY, pinTypeId)
+		worldX, worlY, worldZ, pinTypeId)
 	
-	if not self:IsNodeDataValid(mapMetaData, worldX, worldY, worldZ, globalX, globalY, pinTypeId) then return end
+	if not self:IsNodeDataValid(mapMetaData, worldX, worldY, worldZ, pinTypeId) then return end
 	if not Harvest.IsPinTypeSavedOnGather(pinTypeId) then return end
 	if mapMetaData.zoneIndex ~= GetUnitZoneIndex("player") then
 		self:Warn("tried to save node in wrong zone: %d, %d, %s", 
@@ -113,41 +109,33 @@ function Data:SaveNode(mapMetaData, worldX, worldY, worldZ, globalX, globalY, pi
 	-- additional serialized data
 	local timestamp = GetTimeStamp()
 	local version = Harvest.nodeVersion
-	local flags = 0
-	local serializedNode = Serialization:Serialize(
-			worldX, worldY, worldZ, timestamp, version, globalX, globalY, flags)
+	local serializedNode = Serialization:Serialize(worldX, worldY, worldZ, timestamp, version)
 	
-	-- if the pintype is not already in the cache, just add the node to the savedVars
-	-- it will be merged the next time the pin type is loaded to the cache
+	-- always store node
+	-- it will be merged on next startup
+	local nodeIndex = (#savedVars[zoneId][map][pinTypeId]) + 1
+	savedVars[zoneId][map][pinTypeId][nodeIndex] = serializedNode
+	self:Info("data was added to savedVariables. nodeindex: %d, savedVar: %s", nodeIndex, submodule.displayName)
+	
+	-- add pin to cache if this pin type is loaded for the current map
 	local doesMapCacheHandlePinType = mapCache:DoesHandlePinType(pinTypeId)
 	if doesMapCacheHandlePinType then
 		-- If we have found this node already then we don't need to save it again
 		local nodeId = mapCache:GetMergeableNode(pinTypeId, worldX, worldY, worldZ)
 		if nodeId then
-			mapCache:Move(nodeId, worldX, worldY, worldZ, globalX, globalY)
-			-- serialize the node for the save file
-			local nodeIndex = mapCache.nodeIndex[nodeId]
-			savedVars[zoneId][map][pinTypeId][nodeIndex] = serializedNode
+			mapCache:Move(nodeId, worldX, worldY, worldZ)
 			self:Info("data was merged with a previous node. nodeId: %d", nodeId)
 			
 			CallbackManager:FireCallbacks(Events.NODE_UPDATED, mapCache, nodeId)
 			CallbackManager:FireCallbacks(Events.NODE_HARVESTED, mapCache, nodeId)
 			return
+		else
+			nodeId = mapCache:Add(pinTypeId, worldX, worldY, worldZ)
+			assert(nodeId, "could not save node to cache")
+			CallbackManager:FireCallbacks(Events.NODE_ADDED, mapCache, nodeId)
+			CallbackManager:FireCallbacks(Events.NODE_HARVESTED, mapCache, nodeId)
+			self:Info("data was added to cache. nodeid: %d, map: %s", nodeId, mapCache.map)
 		end
-	end
-	
-	-- we need to save the data in serialized form in the save file,
-	-- but also as deserialized table in the cache table for faster access.
-	local nodeIndex = (#savedVars[zoneId][map][pinTypeId]) + 1
-	savedVars[zoneId][map][pinTypeId][nodeIndex] = serializedNode
-	self:Info("data was added to savedVariables. nodeindex: %d, savedVar: %s", nodeIndex, submodule.displayName)
-	
-	if doesMapCacheHandlePinType then
-		local nodeId = mapCache:Add(pinTypeId, nodeIndex, worldX, worldY, worldZ, globalX, globalY)
-		assert(nodeId, "could not save node to cache")
-		CallbackManager:FireCallbacks(Events.NODE_ADDED, mapCache, nodeId)
-		CallbackManager:FireCallbacks(Events.NODE_HARVESTED, mapCache, nodeId)
-		self:Info("data was added to cache. nodeid: %d, map: %s", nodeId, mapCache.map)
 	end
 end
 
@@ -200,7 +188,6 @@ end
 
 -- loads the nodes to cache and returns them
 function Data:GetMapCache(mapMetaData)
-	if not self.isInitialized then return end
 	-- if the current map isn't in the cache, create the cache
 	local mapCache = self.mapCaches[mapMetaData]
 	if not mapCache then
@@ -209,13 +196,6 @@ function Data:GetMapCache(mapMetaData)
 	end
 	
 	assert(mapCache.mapMetaData == mapMetaData, "MapMetaData of the zone cache does not match!")
-	
-	-- make sure all the neccesary data exists
-	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
-		if Harvest.IsPinTypeVisible(pinTypeId) then
-			self:CheckPinTypeInCache(pinTypeId, mapCache)
-		end
-	end
 
 	return mapCache
 end
@@ -235,21 +215,19 @@ function Data:RefreshZoneCacheForNewZone()
 		self.currentZoneCache:Dispose()
 	end
 	
-	local zoneMeasurement = Lib3D:GetCurrentZoneMeasurement()
-	assert(zoneMeasurement, "no zone measurement for zone " .. tostring(GetZoneId(zoneIndex)))
-	self.currentZoneCache = self.ZoneCache:New(zoneMeasurement)
-	self:Info("new zone cache for zone id ", zoneMeasurement.zoneId)
+	self.currentZoneCache = self.ZoneCache:New(zoneIndex)
+	self:Info("new zone cache for zone id ", self.currentZoneCache.zoneId)
 	
 	-- add already loaded data, if it belongs to this zone
 	for mapMetaData, mapCache in pairs(self.mapCaches) do
-		if mapMetaData.zoneId == zoneMeasurement.zoneId then
+		if mapMetaData.zoneId == self.currentZoneCache.zoneId then
 			self.currentZoneCache:AddCache(mapCache)
 			self:Info("add map to zone cache ", mapCache.map)
 		end
 	end
 	
 	-- load data for current map
-	local mapMetaData = Harvest.mapTools:GetPlayerMapMetaDataAndGlobalPosition()
+	local mapMetaData = Harvest.mapTools:GetPlayerMapMetaData()
 	self:GetMapCache(mapMetaData)
 	
 	-- try to load data for other maps in this zone

@@ -1,4 +1,4 @@
-local GPS = LibGPS2
+
 local Path = ZO_Object:Subclass()
 Harvest.path = Path
 
@@ -23,9 +23,7 @@ function Path:Dispose()
 end
 
 function Path:GetLocalCoords(index)
-	local x = self.mapCache.globalX[self.nodeIndices[index]]
-	local y = self.mapCache.globalY[self.nodeIndices[index]]
-	return GPS:GlobalToLocal(x, y)
+	return self.mapCache:GetLocal(self.nodeIndices[index])
 end
 
 function Path:GetWorldCoords(index)

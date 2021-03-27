@@ -35,11 +35,13 @@ function Filters:InitializeControls()
 				type = "checkbox",
 				name = Harvest.GetLocalization( "pintype" .. pinTypeId ),
 				getFunc = function()
-					--d(pinTypeId, Harvest.IsMapPinTypeVisible(pinTypeId))
-					return Harvest.IsMapPinTypeVisible(pinTypeId)
+					local filterProfile = Harvest.mapPins.filterProfile
+					return filterProfile[pinTypeId]
 				end,
 				setFunc = function( value )
-					Harvest.SetMapPinTypeVisible(pinTypeId, value)
+					local filterProfile = Harvest.mapPins.filterProfile
+					filterProfile[pinTypeId] = value
+					CallbackManager:FireCallbacks(Events.FILTER_PROFILE_CHANGED, filterProfile, pinTypeId, value)
 				end,
 				disabled = disabledFunction,
 				width = "half",
@@ -54,28 +56,29 @@ function Filters:InitializeControls()
 end
 
 function Filters:InitializeCallbacks()
-	-- if some other interface (i.e. the map's filter tab) changed the visibility setting, we have to refresh the filter controls
-	CallbackManager:RegisterForEvent(Events.SETTING_CHANGED, function(event, setting, ...)
-		if setting ~= "mapPinTypeVisible" then return end
-		local pinTypeId, visible = ...
-		local control = self.filterControls[pinTypeId]
-		if control then
-			LAM.util.RequestRefreshIfNeeded(control)
-			CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", HarvestFarmFilterPaneScrollChild)
-		end
-	end)
-	
 	-- disable the filter settings if a tour is being generated
-	local callback = function(event, ...)
-		CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", HarvestFarmFilterPaneScrollChild)
-		--[[
+	local callback = function()
 		for pinTypeId, control in pairs(self.filterControls) do
 			if control then
-				LAM.util.RequestRefreshIfNeeded(control)
+				control:UpdateValue()--LAM.util.RequestRefreshIfNeeded(control)
+				control:UpdateDisabled()
 			end
 		end
-		--]]
 	end
+	-- if some other interface (i.e. the map's filter tab) changed the visibility setting, we have to refresh the filter controls
+	CallbackManager:RegisterForEvent(Events.FILTER_PROFILE_CHANGED, 
+		function(event, profile, pinTypeId, visible)
+			if profile == Harvest.mapPins.filterProfile then
+				callback()
+			end
+		end)
+		
+	CallbackManager:RegisterForEvent(Events.SETTING_CHANGED, 
+		function(event, setting)
+			if setting ~= "mapFilterProfile" then return end
+			callback()
+		end)
+	
 	CallbackManager:RegisterForEvent(Events.TOUR_GENERATION_STARTED, callback)
 	CallbackManager:RegisterForEvent(Events.TOUR_GENERATION_FINISHED, callback)
 	CallbackManager:RegisterForEvent(Events.TOUR_GENERATION_ERROR, callback)

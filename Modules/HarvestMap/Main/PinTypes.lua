@@ -30,8 +30,8 @@ Harvest.PINTYPES = {
 	Harvest.WOODWORKING, Harvest.ENCHANTING,
 	Harvest.MUSHROOM, Harvest.FLOWER,
 	Harvest.WATERPLANT, Harvest.CRIMSON, Harvest.WATER, Harvest.CLAM,
-	Harvest.JEWELRY, Harvest.CHESTS,
-	Harvest.HEAVYSACK, Harvest.PSIJIC,
+	Harvest.CHESTS,
+	Harvest.HEAVYSACK,
 	Harvest.TROVE, Harvest.JUSTICE, Harvest.STASH,
 	Harvest.FISHING, Harvest.UNKNOWN, Harvest.TOUR,
 }
@@ -89,6 +89,8 @@ local interactableName2PinTypeId = {
 	["Т�?жeлый мeшoк"] = Harvest.HEAVYSACK, -- russian
 	["Тяжелый мешок"] = Harvest.HEAVYSACK, -- updated russian
 	["тяжелый мешок"] = Harvest.HEAVYSACK, -- updated russian
+	["sacco pesante"] = Harvest.HEAVYSACK, -- italian
+	["cassa pesante"] = Harvest.HEAVYSACK, -- italian
 	
 	["thieves trove"] = Harvest.TROVE,
 	["diebesgut"] = Harvest.TROVE,
@@ -96,6 +98,7 @@ local interactableName2PinTypeId = {
 	["Вopoвcкoй тaйник"] = Harvest.TROVE,  -- russian
 	["Воровской тайник"] = Harvest.TROVE, -- updated russian
 	["воровской тайник"] = Harvest.TROVE, -- updated russian
+	["tesoro dei ladri"] = Harvest.TROVE, --italian
 	
 	["loose panel"] = Harvest.STASH,
 	["loose tile"] = Harvest.STASH,
@@ -108,14 +111,19 @@ local interactableName2PinTypeId = {
 	["loser stein"] = Harvest.STASH,
 	["Податливая панель"] = Harvest.STASH, -- russian
 	["Податливый камень"] = Harvest.STASH, -- loose tile is not translated in the ru.lang file of RuESO
+	["pannello mobile"] = Harvest.STASH, --italian
+	["mattonella traballante"] = Harvest.STASH, --italian
+	["pietra sporgente"] = Harvest.STASH, --italian
 	
 	["psijic portal"] = Harvest.PSIJIC,
 	["portail psijique"] = Harvest.PSIJIC,
 	["psijik-portal"] = Harvest.PSIJIC,
+	["portale psijic"] = Harvest.PSIJIC, --italian
 	
 	["giant clam"] = Harvest.CLAM,
 	["riesenmuschel"] = Harvest.CLAM,
 	["palourde géante"] = Harvest.CLAM,
+	["ostrica gigante"] = Harvest.CLAM,
 }
 function Harvest.IsInteractableAContainer( interactableName )
 	return interactableName2PinTypeId[zo_strlower( interactableName )] ~= nil

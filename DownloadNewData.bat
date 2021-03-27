@@ -1,9 +1,6 @@
 
 @echo off
 
-REM in case the bat is executed from somewhere else
-cd %~dp0
-
 echo .
 echo .
 
@@ -46,11 +43,11 @@ pause
 echo .
 echo Creating backup copy of your data
 
-copy /Y ..\..\SavedVariables\HarvestMapAD.lua ..\..\SavedVariables\HarvestMapAD-backup.lua"
-copy /Y ..\..\SavedVariables\HarvestMapEP.lua ..\..\SavedVariables\HarvestMapEP-backup.lua"
-copy /Y ..\..\SavedVariables\HarvestMapDC.lua ..\..\SavedVariables\HarvestMapDC-backup.lua"
-copy /Y ..\..\SavedVariables\HarvestMapDLC.lua ..\..\SavedVariables\HarvestMapDLC-backup.lua"
-copy /Y ..\..\SavedVariables\HarvestMapNF.lua ..\..\SavedVariables\HarvestMapNF-backup.lua"
+move /Y ..\..\SavedVariables\HarvestMapAD.lua ..\..\SavedVariables\HarvestMapAD-backup.lua"
+move /Y ..\..\SavedVariables\HarvestMapEP.lua ..\..\SavedVariables\HarvestMapEP-backup.lua"
+move /Y ..\..\SavedVariables\HarvestMapDC.lua ..\..\SavedVariables\HarvestMapDC-backup.lua"
+move /Y ..\..\SavedVariables\HarvestMapDLC.lua ..\..\SavedVariables\HarvestMapDLC-backup.lua"
+move /Y ..\..\SavedVariables\HarvestMapNF.lua ..\..\SavedVariables\HarvestMapNF-backup.lua"
 
 echo Connecting to database...
 

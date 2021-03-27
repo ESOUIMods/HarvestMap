@@ -1,16 +1,9 @@
 
 Harvest.defaultLocalizedStrings = {
-	-- conflict message for settings that don't work with Fyrakin's minimap
-	["minimapconflict"] = "This option is incompatible with Fyrakin's minimap.",
 	-- top level description
 	["esouidescription"] = "For the addon description and FAQ visit the addon's page on esoui.com",
 	["openesoui"] = "Open ESOUI",
 	["exchangedescription"] = "You can download the most recent HarvestMap data (positions of resources) by executing 'DownloadNewData.command' (MacOS)' or 'DownloadNewData.bat' (Windows) in the HarvestMap folder. More information regarding this is available in the ESOUI addon description.",
-	["feedback"] = "Feedback",
-	["feedbackdescription"] = "If you found a bug, have a request or a suggestion, or simply wish to donate, send a mail.\nYou can also leave feedback and bug reports in the HarvestMap comment section on esoui.com.",
-	["sendgold"] = "Send <<1>> gold",
-	["debuginfodescription"] = "If you want to report a bug on the esoui.com comment page, please also add the following debug information:",
-	["printdebuginfo"] = "Copy Debug Information",
 	
 	["notifications"] = "Notifications and Warnings",
 	["notificationstooltip"] = "Displays notifications and warnings in the top right corner of the screen.",
@@ -20,8 +13,6 @@ Harvest.defaultLocalizedStrings = {
 	-- outdated data settings
 	["outdateddata"] = "Outdated Data Settings",
 	["outdateddatainfo"] = "These data related settings are shared between all accounts and characters on this computer.",
-	["mingameversion"] = "Minimum game version",
-	["mingameversiontooltip"] = "HarvestMap will only keep data from this and newer versions of ESO.",
 	["timedifference"] = "Keep only recent data",
 	["timedifferencetooltip"] = "HarvestMap will only keep data from the last X days.\nThis prevents displaying old data which may already be outdated.\nSet to 0 to keep any data regardless of its age.",
 	["applywarning"] = "Once old data has been removed, it can not be restored!",
@@ -46,8 +37,6 @@ This option works only for harvestable crafting material, it does not work for c
 Does not work if another addon hides or rescales the compass.]],
 	nodedetectionmissing = "This option can only be enabled, if the 'NodeDetection' library is enabled.",
 	spawnfilterwarning = "Does not work if another addon hides or rescales the compass.",
-	--["minimaponly"] = "Display pins only on the minimap",
-	--["minimaponlytooltip"] = "When this option is enabled, there will be no pins on the default map. The pins will only be displayed on the minimap.",
 	["level"] = "Display map pins above POI pins.",
 	["leveltooltip"] = "Enable to display the pins of HarvestMap above the POI pins on the map.",
 	["hasdrawdistance"] = "Display only nearby map pins",
@@ -56,10 +45,6 @@ Does not work if another addon hides or rescales the compass.]],
 	["drawdistance"] = "Map pin distance",
 	["drawdistancetooltip"] = "The distance threshold for which map pins are drawn. This setting does also affect minimaps!",
 	["drawdistancewarning"] = "This setting does also affect minimaps!",
-	["rotatingcompatibility"] = "Rotating Minimap Compatibility",
-	["minimapcompatibilitymodedescription"] = "To improve the performance when displaying thousands of resource locations on the map, HarvestMap creates its very own light-weight variant of map pins. These light-weight map pins are not compatible with rotating minimaps.\nIf you use a rotating minimap, you can enable the 'Minimap Compatibility Mode'. When this mode is enabled, HarvestMap will use default map pins instead of the light-weight pins. These default pins will work with rotating minimaps, but they can result in low FPS and the game freezing for several seconds, whenever a map with many known resource locations is displayed.",
-	["minimapcompatibilitymode"] = "Minimap Compatibility Mode",
-	["minimapcompatibilitymodewarning"] = "Enabling this option will negatively impact the game's performance, when many pins are displayed on the map.\n\nChanging the setting will reload the UI!",
 	
 	-- compass settings
 	["compassheader"] = "Compass Settings",
@@ -102,29 +87,18 @@ Does not work if another addon hides or rescales the compass.]],
 	["pinoptions"] = "Pin Type Options",
 	["pinsize"] = "Pin size",
 	["pinsizetooltip"] = "Set the size of the pins on the map.",
-	["pinminsize"] = "Minimum map pin size",
-	["pinminsizetooltip"] = "When zooming out on the map, the pins will become smaller as well. You can use this option to set a minimum for the pins' size. Using small values prevents the map from being hidden behind pins, but the pins may become more difficult to see.",
-	["extendedpinoptions"] = "Usually the pins on map, compass and in the 3d world are synced. So if you hide a certain type of resource on the map, it will also remove the compass and world pins. However, in the extended pin filter menu you can set compass and world pins to be independent of the map pins.",
-	["extendedpinoptionsbutton"] = "Open extended pin filter",
-	["override"] = "Override map pin filter",
-	
 	["pincolor"] = "Pin color",
 	["pincolortooltip"] = "Set the color of the pins on map and compass.",
 	["savepin"] = "Save locations",
 	["savetooltip"] = "Enable to save the locations of this resource when you discover them.",
 	["pintexture"] = "Pin icon",
 	
-	-- debug output setting
-	["debugoptions"] = "Debug",
-	["debug"] = "Display debug messages",
-	["debugtooltip"] = "Enable to display debug messages in the chat.",
-	
 	-- pin type names
 	["pintype1"] = "Smithing and Jewelry",
 	["pintypetooltip1"] = "Display ore and dust on the map and compass.",
 	["pintype2"] = "Fibrous plants",
 	["pintypetooltip2"] = "Display clothing material on the map and compass.",
-	["pintype3"] = "Runestones and Psijic Portals",
+	["pintype3"] = "Runes and Psijic Portals",
 	["pintypetooltip3"] = "Display runestones and Psijic portals on the map and compass.",
 	["pintype4"] = "Mushrooms",
 	["pintypetooltip4"] = "Display mushrooms on the map and compass.",
@@ -150,15 +124,14 @@ Does not work if another addon hides or rescales the compass.]],
 	["pintypetooltip12"] = "Display hidden stashes like 'Loose Panels' on the map and compass.",
 	["pintype15"] = "Giant Clams",
 	["pintypetooltip15"] = "Display giant clams on the map and compass.",
-	
-	["pintype18"] = "Unknown harvest node",
+	-- pin type 16, 17 used to be jewlry and psijic portals 
+	-- but the locations are the same as smithing and runes
+	["pintype18"] = "Unknown node",
 	["pintypetooltip18"] = "HarvestMap can detect nearby crafting material, but it can not detect the type of material unless you discovered the location beforehand.",
-	
 	["pintype19"] = "Crimson Nirnroot",
 	["pintypetooltip19"] = "Display crimson nirnroot on the map and compass.",
 
 	-- extra map filter buttons
-	["deletepinfilter"] = "Delete HarvestMap pins",
 	["filterheatmap"] = "Heatmap mode",
 	
 	-- localization for the farming helper
@@ -167,7 +140,6 @@ Does not work if another addon hides or rescales the compass.]],
 	["farmnotour"] = "HarvestFarm was not able to calculate a good farming route with the given minimum route length.",
 	["farmerror"] = "HarvestFarm Error",
 	["farmnoresources"] = "No resources found.\nThere are no resources on this map or you don't have any resource types selected.",
-	["farminvalidmap"] = "The farming helper tool can not be used on this map.",
 	["farmsuccess"] = "HarvestFarm calculated a farming tour with <<1>> nodes per kilometer.\n\nClick on one of the tour's pins to set the tour's starting point.",
 	["farmdescription"] = "HarvestFarm will calculate a tour with a very high resource per time ratio.\nAfter generating a tour, click on one of the selected resources to set the tour's starting point.",
 	["farmminlength"] = "Minimum route length",
@@ -213,20 +185,27 @@ The green tour will now be inserted into the red tour.]],
 	["editorstats"] = [[Number of nodes: <<1>>
 Length: <<2>> m
 Nodes per kilometer: <<3>>]],
+
+	filterprofiledescription = [[In the filter profile menu, you can select which types of pins you want to display. You can create different profiles for map, compass and 3D pins.
+(You can assign a keybind in ESO's control settings to quickly open the filter profile menu.)]],
+	filterprofilebutton = "Open Filter Profile Menu",
+	filtertitle = "Filter Profile Menu",
+	filtermap = "Filter Profile for Map Pins",
+	filtercompass = "Filter Profile for Compass Pins",
+	filterworld = "Filter Profile for 3D Pins",
+	unnamedfilterprofile = "Unnamed Profile",
+	defaultprofilename = "Default Filter Profile",
 	
 	-- SI names to fit with ZOS api
 	["SI_BINDING_NAME_SKIP_TARGET"] = "Skip Target",
 	["SI_BINDING_NAME_TOGGLE_WORLDPINS"] = "Toggle 3D pins",
 	["SI_BINDING_NAME_TOGGLE_MAPPINS"] = "Toggle map pins",
-	["SI_BINDING_NAME_HARVEST_SHOW_PANEL"] = "Toggle HarvestMap Pin Menu",
-	["SI_HARVEST_CTRLC"] = "Press CTRL+C to copy the text",
+	["SI_BINDING_NAME_TOGGLE_MINIMAPPINS"] = "Toggle minimap pins",
+	["SI_BINDING_NAME_HARVEST_SHOW_PANEL"] = "Open HarvestMap Tour Editor",
+	["SI_BINDING_NAME_HARVEST_SHOW_FILTER"] = "Open HarvestMap Filter Menu",
 	["HARVESTFARM_GENERATOR"] = "Generate new tour",
 	["HARVESTFARM_EDITOR"] = "Edit tour",
 	["HARVESTFARM_SAVE"] = "Save/Load tour",
-
-	--Harvestmap menu (enhanced pin filters)
-	["3dPins"] = "3D pins",
-	["CompassPins"] = "Compass pins",
 }
 
 local default = Harvest.defaultLocalizedStrings
@@ -240,8 +219,8 @@ function Harvest.GetLocalization(tag)
 	return (current[ tag ] or default[ tag ]) or tag
 end
 
-local UIStrings = {"SI_BINDING_NAME_SKIP_TARGET", "SI_BINDING_NAME_TOGGLE_WORLDPINS", "SI_BINDING_NAME_TOGGLE_MAPPINS", "SI_BINDING_NAME_HARVEST_SHOW_PANEL",
-		"SI_HARVEST_CTRLC", "HARVESTFARM_GENERATOR","HARVESTFARM_EDITOR","HARVESTFARM_SAVE"}
+local UIStrings = {"SI_BINDING_NAME_HARVEST_SHOW_FILTER", "SI_BINDING_NAME_SKIP_TARGET", "SI_BINDING_NAME_TOGGLE_WORLDPINS", "SI_BINDING_NAME_TOGGLE_MAPPINS", "SI_BINDING_NAME_TOGGLE_MINIMAPPINS", "SI_BINDING_NAME_HARVEST_SHOW_PANEL",
+		"HARVESTFARM_GENERATOR","HARVESTFARM_EDITOR","HARVESTFARM_SAVE"}
 for _, str in pairs(UIStrings) do
 	ZO_CreateStringId(str, Harvest.GetLocalization(str))
 end

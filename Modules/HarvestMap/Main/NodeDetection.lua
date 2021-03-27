@@ -110,7 +110,7 @@ function Detection.LinkControlWithNode(event, control)
 			return
 		end
 		if not mapCache:DoesHandlePinType(Harvest.UNKNOWN) then mapCache:InitializePinType(Harvest.UNKNOWN) end
-		local nodeId = mapCache:Add(Harvest.UNKNOWN, nil, control.worldX, control.worldY, nil, control.globalX, control.globalY)
+		local nodeId = mapCache:Add(Harvest.UNKNOWN, control.worldX, control.worldY)
 		if nodeId then
 			control.nodeId = nodeId
 			control.mapCache = mapCache

@@ -24,9 +24,10 @@ try {
 				$SavedVariable="HarvestMap${Module}"
 				$SavedVariableFile="${SavedVarriablesPath}/${SavedVariable}.lua"
 				$SavedVariableBackup="${SavedVarriablesPath}/${SavedVariable}-backup.lua"
+				$OutputFile="${HarvestMapPath}/Modules/HarvestMap${Module}/HarvestMap${Module}.lua"
 
 				echo "Creating backup copy of ${SavedVariable}."
-				Copy-Item -Force "${SavedVariableFile}" "${SavedVariableBackup}" -ErrorAction SilentlyContinue
+				Move-Item -Force "${SavedVariableFile}" "${SavedVariableBackup}" -ErrorAction SilentlyContinue
 				# if the copy could not be created (e.g. the original doesn't exist)
 				# try to create an empty file that can be uploaded instead
 				if (!(Test-Path "${SavedVariableBackup}")) {
@@ -36,7 +37,7 @@ try {
 				echo "Merging file: ${SavedVariable}"
 				try {
 					#echo (cat "${SavedVariableBackup}")
-					Invoke-WebRequest -Uri "http://harvestmap.binaryvector.net:8080" -InFile "${SavedVariableBackup}" -OutFile "${SavedVariableFile}" -Method Post
+					Invoke-WebRequest -Uri "http://harvestmap.binaryvector.net:8081" -InFile "${SavedVariableBackup}" -OutFile "${OutputFile}" -Method Post
 					echo "Finished merging: ${SavedVariable}"
 				} catch {
 					# something went wrong while connecting to the server

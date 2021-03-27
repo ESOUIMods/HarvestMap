@@ -8,10 +8,9 @@ function ZoneCache:New(...)
 	return obj
 end
 
-function ZoneCache:Initialize(zoneMeasurement)
-	self.zoneMeasurement = zoneMeasurement
-	self.zoneIndex = zoneMeasurement.zoneIndex
-	self.zoneId = zoneMeasurement.zoneId
+function ZoneCache:Initialize(zoneIndex)
+	self.zoneIndex = zoneIndex
+	self.zoneId = GetZoneId(zoneIndex)
 	self.mapCaches = {}
 end
 
@@ -26,7 +25,7 @@ function ZoneCache:AddCache(cache)
 	end
 	
 	-- check if some nodes exist on both caches
-	local pinTypeId, globalX, globalY, otherNode
+	local pinTypeId, otherNode
 	for map, otherCache in pairs(self.mapCaches) do
 		assert(cache ~= otherCache)
 		local isCacheLarger = cache.lastNodeId > otherCache.lastNodeId

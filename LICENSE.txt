@@ -1,23 +1,11 @@
 
-Except otherwise noted, this add-on is © 2020 Shinni, under a Creative Commons Attribution-NonComercial-NoDerivatives license:
+Except otherwise noted, this add-on is © 2021 Shinni, under a Creative Commons Attribution-NonComercial-NoDerivatives license:
 https://creativecommons.org/licenses/by-nc-nd/4.0/
 https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 
-The library "LibAddonMenu" is © 2015 Ryan Lakanen (Seerah), used under The Artistic License 2.0:
-https://github.com/sirinsidiator/ESO-LibAddonMenu/blob/master/LICENSE
+The library "LibDebugLogger" are © sirinsidiator.
 
-The library "LibGPS" is © 2018 sirinsidiator, used under The Artistic License 2.0:
-see Libs/LibGPS/LICENSE
-
-The library "LibMapPing" is © 2016 sirinsidiator, used under The Artistic License 2.0:
-see Libs/LibMapPing/LICENSE
-
-The library "LibDebugLogger" and "LibChatMessage" are © sirinsidiator.
-
-The library "LibStub" is Public Domain, see Libs/LibAddonMenu-2.0/LibStub.lua
-
-The library "LibMainMenu" is © Ayantir, used under a Creative Commons Attribution-NonCommercial-ShareAlike license:
-http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
+The library "LibMainMenu-2.0" is © votan.
 
 The MacOS/Linux merge script is © 2018 @mojo66:
 see DownloadNewData.command

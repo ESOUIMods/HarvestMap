@@ -230,6 +230,7 @@ function Editor:OnPinClicked(pin)
 	
 	local pinType, nodeId = pin:GetPinTypeAndTag()
 	self.mapCache = Harvest.mapPins.mapCache
+	if self.mapCache.pinTypeId[nodeId] == Harvest.UNKNOWN then return end
 	
 	local path = Farm.path
 	-- the player creates a new tour from scratch

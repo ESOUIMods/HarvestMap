@@ -1,6 +1,4 @@
 
-local GPS = LibGPS2
-
 local CallbackManager = Harvest.callbackManager
 local Events = Harvest.events
 
@@ -16,7 +14,7 @@ function GeneratorLogic:Initialize()
 end
 
 function GeneratorLogic:IsPinTypeIncluded(pinTypeId)
-	return Harvest.IsMapPinTypeVisible(pinTypeId)
+	return Harvest.mapPins.filterProfile[pinTypeId]
 end
 
 -- most of the below code is copied from the old tour generation (version 3.4.15 and earlier)
@@ -49,7 +47,7 @@ do
 	end
 end
 
-local function generateEdges(num_data_points, points, measurement, maxLength)
+local function generateEdges(num_data_points, points, maxLength)
 	local dist, edge, pointA, pointB
 	local numEdges = 0
 	local edges = {}
@@ -84,13 +82,10 @@ local function constructGraph(maxLength)
 	num_data_points = 0
 
 	local viewedMap = true
-	local mapMetaData = Harvest.mapTools:GetViewedMapMetaDataAndPlayerGlobalPosition()
+	local mapMetaData = Harvest.mapTools:GetViewedMapMetaData()
 
-	-- to meters
 	GeneratorLogic.minLength = GeneratorLogic.minLengthKM * 1000
-	-- to local distance
-	--GeneratorLogic.minLength = GeneratorLogic.minLength / measurement.scaleX
-
+	
 	local mapCache = Harvest.Data:GetMapCache( mapMetaData )
 	if not mapCache then return 2 end
 	-- add selected resource nodes to the points/vertices list
@@ -102,7 +97,7 @@ local function constructGraph(maxLength)
 				-- each point/vertex consists of and x and y coordinate and a list of the neighbors/edges
 				table.insert(points, {
 					mapCache.worldX[nodeId], mapCache.worldY[nodeId],
-					0, 0, --mapCache.globalX[nodeId], mapCache.globalY[nodeId],
+					0, 0, -- used to be global coords
 					mapCache.worldZ[nodeId] or 0, pinTypeId, edges={}})
 				num_data_points = num_data_points + 1
 			end
@@ -116,7 +111,7 @@ local function constructGraph(maxLength)
 	-- create the edges
 	edges = nil
 	while not edges do
-		edges = generateEdges(num_data_points, points, measurement, maxLength)
+		edges = generateEdges(num_data_points, points, maxLength)
 		maxLength = maxLength / 2
 	end
 	for _, edge in pairs(edges) do

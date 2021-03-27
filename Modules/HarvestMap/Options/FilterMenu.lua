@@ -1,199 +1,268 @@
 
-local Filters = {}
-Harvest:RegisterModule("filters", Filters)
+local Settings = Harvest.settings
+local CallbackManager = Harvest.callbackManager
+local Events = Harvest.events
 
-function Filters:Initialize()
-	ZO_CreateStringId("SI_HARVEST_INRANGE_MENU_TITLE", Harvest.GetLocalization("pinvisibilitymenu"))
-	
-	self.iconData = {
-		categoryName = SI_HARVEST_INRANGE_MENU_TITLE,
-		descriptor = "HarvestInRangeScene",
-		normal = "EsoUI/Art/Inventory/inventory_tabicon_quest_up.dds",
-		pressed = "EsoUI/Art/Inventory/inventory_tabicon_quest_down.dds",
-		highlight = "EsoUI/Art/Inventory/inventory_tabicon_quest_over.dds",
-	}
-	Harvest.menu:Register(self.iconData)
-	
-	self:CreateControls()
-	self:InitializeScene()
-end
+local FilterProfiles = {}
+Harvest:RegisterModule("filterProfiles", FilterProfiles)
 
-function Filters:InitializeScene()
-	self.scene = ZO_Scene:New("HarvestInRangeScene", SCENE_MANAGER)   
-    
-	-- Mouse standard position and background
-	self.scene:AddFragmentGroup(FRAGMENT_GROUP.MOUSE_DRIVEN_UI_WINDOW)
-	self.scene:AddFragmentGroup(FRAGMENT_GROUP.FRAME_TARGET_STANDARD_RIGHT_PANEL)
-    
-	--  Background Right, it will set ZO_RightPanelFootPrint and its stuff.
-	self.scene:AddFragment(RIGHT_BG_FRAGMENT)
-    
-	-- The title fragment
-	self.scene:AddFragment(TITLE_FRAGMENT)
-    
-	-- Set Title
-	local TITLE_FRAGMENT = ZO_SetTitleFragment:New(SI_HARVEST_MAIN_MENU_TITLE)
-	self.scene:AddFragment(TITLE_FRAGMENT)
-    
-	-- Add the XML to our scene
-	local MAIN_WINDOW = ZO_FadeSceneFragment:New(HarvestMapInRangeMenu)
-	self.scene:AddFragment(MAIN_WINDOW)
-	
-	self.scene:AddFragment(MAIN_MENU_KEYBOARD.categoryBarFragment)
-	self.scene:AddFragment(TOP_BAR_FRAGMENT)
-end
-
-function Filters:CreateControls()
-	-- the descriptions and sliders of LibAddonMenu are nice, I'm gonna steal them :)
-	HarvestMapInRangeMenu.panel = HarvestMapInRangeMenu
-	HarvestMapInRangeMenu.panel.data = {registerForRefresh = true}
-	HarvestMapInRangeMenu.panel.controlsToRefresh = {}
-	
-	self:InitializeWorldControl()
-	self:InitializeCompassControl()
-	
-	local definition = {
-		type = "description",
-		title = nil,
-		text = Harvest.GetLocalization("extendedpinoptions"),
-		width = "half",
-	}
-	local control = LAMCreateControl.description(HarvestMapInRangeMenu, definition)
-	control:ClearAnchors()
-	control:SetAnchor(TOPLEFT, HarvestMapInRangeMenu, TOPLEFT, 640, 20)
-	--control:SetWidth(48)
-	control.desc:SetWidth(280)
-	
-	-- CODE FROM LAM
-	local function RefreshPanel(control)
-		local panel = LibAddonMenu2.util.GetTopPanel(control) --callback can be fired by a single control, by the panel showing or by a nested submenu
-		if HarvestMapInRangeMenu.panel ~= panel and HarvestFarmEditor.panel ~= panel then return end -- we refresh it later when the panel is opened
-
-		local panelControls = panel.controlsToRefresh
-
-		for i = 1, #panelControls do
-			local updateControl = panelControls[i]
-			if updateControl ~= control and updateControl.UpdateValue then
-				updateControl:UpdateValue()
-			end
-			if updateControl.UpdateDisabled then
-				updateControl:UpdateDisabled()
-			end
-			if updateControl.UpdateWarning then
-				updateControl:UpdateWarning()
-			end
+function FilterProfiles:Initialize()
+	self.filterProfiles = Settings.savedVars.settings.filterProfiles
+	-- sanity check. in case the chosen profile doesn't exist
+	for _, displayType in pairs({"map", "compass", "world"}) do
+		local tag = displayType .. "FilterProfile"
+		if not self.filterProfiles[Settings.savedVars.settings[tag]] then
+			self:Error("%s profile %d does not exist", displayType, Settings.savedVars.settings[tag])
+			Settings.savedVars.settings[tag] = 1
 		end
 	end
 	
-	CALLBACK_MANAGER:RegisterCallback("LAM-RefreshPanel", RefreshPanel)
+	self.fragment = ZO_SimpleSceneFragment:New(HarvestFilter)
+	
+	HarvestFilterTitle:SetText(Harvest.GetLocalization("filtertitle"))
+	HarvestFilterMapSelectLabel:SetText(Harvest.GetLocalization("filtermap"))
+	HarvestFilterCompassSelectLabel:SetText(Harvest.GetLocalization("filtercompass"))
+	HarvestFilterWorldSelectLabel:SetText(Harvest.GetLocalization("filterworld"))
+	
+	self:InitializeCheckBoxes()
+	
+	self:InitializeFilterDropDown(HarvestFilterProfileDropDown, self.LoadProfile)
+	self:InitializeFilterDropDown(HarvestFilterMapSelectDropDown, function(self, profile)
+		for index, filterProfile in pairs(self.filterProfiles) do
+			if filterProfile == profile then
+				Settings.savedVars.settings.mapFilterProfile = index
+				CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "mapFilterProfile", index)
+				return
+			end
+		end
+	end)
+	self:InitializeFilterDropDown(HarvestFilterCompassSelectDropDown, function(self, profile)
+		for index, filterProfile in pairs(self.filterProfiles) do
+			if filterProfile == profile then
+				Settings.savedVars.settings.compassFilterProfile = index
+				CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "compassFilterProfile", index)
+				return
+			end
+		end
+	end)
+	self:InitializeFilterDropDown(HarvestFilterWorldSelectDropDown, function(self, profile)
+		for index, filterProfile in pairs(self.filterProfiles) do
+			if filterProfile == profile then
+				Settings.savedVars.settings.worldFilterProfile = index
+				CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "worldFilterProfile", index)
+				return
+			end
+		end
+	end)
+	
+	self:LoadProfile(self.filterProfiles[1])
+	
+	local validSettings = {
+		mapFilterProfile = true,
+		compassFilterProfile = true,
+		worldFilterProfile = true,
+	}
+	CallbackManager:RegisterForEvent(Events.SETTING_CHANGED, function(event, setting, value)
+		if validSettings[setting] then self:RefreshControls() end
+	end)
+	
+	CallbackManager:RegisterForEvent(Events.FILTER_PROFILE_CHANGED, function(event, profile, pinTypeId, visible)
+		if profile == self.currentProfile then
+			self:RefreshControls()
+		end
+	end)
 end
 
-function Filters:InitializeCompassControl()
+function FilterProfiles:InitializeCheckBoxes()
+	self.checkboxes = {}
+	local checkboxParent = WINDOW_MANAGER:CreateControl(nil, HarvestFilter, CT_CONTROL)
+	checkboxParent:SetAnchor(TOPLEFT, HarvestFilterDivider, BOTTOMLEFT, 85, 0)
 	
-	local definition = {
-		type = "checkbox",
-		name = Harvest.GetLocalization("CompassPins"),
-		getFunc = Harvest.AreCompassPinsVisible,
-		setFunc = function(...)
-			Harvest.SetCompassPinsVisible(...)
-			CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", Harvest.optionsPanel)
-		end,
-	}
-	local control = LAMCreateControl.checkbox(HarvestMapInRangeMenu, definition)
-	control:ClearAnchors()
-	control:SetAnchor(TOPLEFT, HarvestMapInRangeMenu, TOPLEFT, 340, 20)
-	control:SetWidth(300)
-	control.container:SetWidth(64)
-	local lastControl = control
+	local previousBox = checkboxParent
+	for i = 1, zo_floor(#Harvest.PINTYPES/2)-1 do
+		local pinTypeId = Harvest.PINTYPES[i]
+		if not Harvest.HIDDEN_PINTYPES[pinTypeId] then
+			local box = WINDOW_MANAGER:CreateControlFromVirtual("HarvestFilterCheckbox" .. pinTypeId, HarvestFilter, "ZO_CheckButton")
+			box:SetAnchor(TOPLEFT, previousBox, BOTTOMLEFT, 0, 5)
+			self:InitializeCheckboxForPinType(box, pinTypeId)
+			previousBox = box
+			table.insert(self.checkboxes, box)
+		end
+	end
 	
-	definition = {
-		type = "checkbox",
-		name = Harvest.GetLocalization("override"),
-		--tooltip = Harvest.GetLocalization("overridetooltip"),
-		getFunc = Harvest.IsCompassFilterActive,
-		setFunc = Harvest.SetCompassFilterActive,
-	}
-	local control = LAMCreateControl.checkbox(HarvestMapInRangeMenu, definition)
-	control:ClearAnchors()
-	control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 40)
-	control:SetWidth(300)
-	control.container:SetWidth(64)
-	lastControl = control
-	
-	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
-		if pinTypeId ~= Harvest.UNKNOWN and not Harvest.HIDDEN_PINTYPES[pinTypeId] then
-			definition = {
-				type = "checkbox",
-				name = Harvest.GetLocalization( "pintype" .. pinTypeId ),
-				disabled = function() return not Harvest.IsCompassFilterActive() end,
-				getFunc = function()
-					return Harvest.IsCompassPinTypeVisible(pinTypeId)
-				end,
-				setFunc = function( value )
-					Harvest.SetCompassPinTypeVisible(pinTypeId, value)
-				end,
-			}
-			local control = LAMCreateControl.checkbox(HarvestMapInRangeMenu, definition)
-			control:ClearAnchors()
-			control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 20)
-			control:SetWidth(300)
-			control.container:SetWidth(64)
-			lastControl = control
+	local checkboxParent = WINDOW_MANAGER:CreateControl(nil, HarvestFilter, CT_CONTROL)
+	checkboxParent:SetAnchor(TOPLEFT, HarvestFilterDivider, BOTTOMLEFT, 325, 0)
+	local previousBox = checkboxParent
+	for i = zo_floor(#Harvest.PINTYPES/2), #Harvest.PINTYPES do
+		local pinTypeId = Harvest.PINTYPES[i]
+		if not Harvest.HIDDEN_PINTYPES[pinTypeId] then
+			local box = WINDOW_MANAGER:CreateControlFromVirtual("HarvestFilterCheckbox" .. pinTypeId, HarvestFilter, "ZO_CheckButton")
+			box:SetAnchor(TOPLEFT, previousBox, BOTTOMLEFT, 0, 5)
+			self:InitializeCheckboxForPinType(box, pinTypeId)
+			previousBox = box
+			table.insert(self.checkboxes, box)
 		end
 	end
 end
 
-function Filters:InitializeWorldControl()
+local function NewSetColor(self, r, g, b, a, ...)
+	local layout = Harvest.GetMapPinLayout(self.pinTypeId)
+	local newText = layout.tint:Colorize(zo_iconFormatInheritColor(layout.texture, 20, 20))
+	newText = newText .. string.format("|c%.2x%.2x%.2x%s|r", zo_round(r * 255), zo_round(g * 255), zo_round(b * 255), self.labelText)
+	self:SetText(newText)
+end
+
+function FilterProfiles:Show()
+	if self.currentProfile == nil then
+		self:LoadProfile(self:GetMapProfile())
+	else
+		self:LoadProfile(self.currentProfile)
+	end
+	HarvestFilter:SetHidden(false)
+	SCENE_MANAGER:SetInUIMode(true)
+	--if not IsGameCameraUIModeActive() then
+	--	SCENE_MANAGER:Show("hudui")
+	--end
+	--SCENE_MANAGER:AddFragment(self.fragment)
+	--SCENE_MANAGER:AddFragmentGroup(FRAGMENT_GROUP.MOUSE_DRIVEN_UI_WINDOW)
+end
+
+function FilterProfiles:InitializeCheckboxForPinType(checkbox, pinTypeId)
+	local labelText = Harvest.GetLocalization("pintype" .. pinTypeId)
+	ZO_CheckButton_SetLabelText(checkbox, labelText)
+	-- on mouse over the color is switched to "highlight"
+	-- this removed the color of the texture, so we have to change the setColor behaviour
+	local label = checkbox.label
+	label.labelText = labelText
+	label.SetColor = NewSetColor
+	label.pinTypeId = pinTypeId
+	checkbox.pinTypeId = pinTypeId
 	
-	local definition = {
-		type = "checkbox",
-		name = Harvest.GetLocalization("3dPins"),
-		getFunc = Harvest.AreWorldPinsVisible,
-		setFunc = function(...)
-			Harvest.SetWorldPinsVisible(...)
-			CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", Harvest.optionsPanel)
-		end,
-	}
-	local control = LAMCreateControl.checkbox(HarvestMapInRangeMenu, definition)
-	control:ClearAnchors()
-	control:SetAnchor(TOPLEFT, HarvestMapInRangeMenu, TOPLEFT, 0, 20)
-	control:SetWidth(300)
-	control.container:SetWidth(64)
-	local lastControl = control
+	ZO_CheckButton_SetToggleFunction(checkbox, function(button, isChecked)
+		self.currentProfile[pinTypeId] = isChecked
+		CallbackManager:FireCallbacks(Events.FILTER_PROFILE_CHANGED, self.currentProfile, pinTypeId, isChecked)
+	end)
+	ZO_CheckButtonLabel_ColorText(label, false)
 	
-	definition = {
-		type = "checkbox",
-		name = Harvest.GetLocalization("override"),
-		getFunc = Harvest.IsWorldFilterActive,
-		setFunc = Harvest.SetWorldFilterActive,
-	}
-	local control = LAMCreateControl.checkbox(HarvestMapInRangeMenu, definition)
-	control:ClearAnchors()
-	control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 40)
-	control:SetWidth(300)
-	control.container:SetWidth(64)
-	lastControl = control
-	
-	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
-		if pinTypeId ~= Harvest.UNKNOWN and not Harvest.HIDDEN_PINTYPES[pinTypeId] then
-			definition = {
-				type = "checkbox",
-				name = Harvest.GetLocalization( "pintype" .. pinTypeId ),
-				disabled = function() return not Harvest.IsWorldFilterActive() end,
-				getFunc = function()
-					return Harvest.IsWorldPinTypeVisible(pinTypeId)
-				end,
-				setFunc = function( value )
-					Harvest.SetWorldPinTypeVisible(pinTypeId, value)
-				end,
-			}
-			local control = LAMCreateControl.checkbox(HarvestMapInRangeMenu, definition)
-			control:ClearAnchors()
-			control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 20)
-			control:SetWidth(300)
-			control.container:SetWidth(64)
-			lastControl = control
-		end
+	return checkbox
+end
+
+function FilterProfiles:InitializeFilterDropDown(control, topCallback)
+	local comboBox = ZO_ComboBox_ObjectFromContainer(control)
+	control.comboBox = comboBox
+	comboBox.profileToComboboxEntry = {}
+	comboBox.topCallback = topCallback
+	for index, filterProfile in ipairs(self.filterProfiles) do
+		local callback = function() comboBox.topCallback(self, filterProfile) end
+		local entry = comboBox:CreateItemEntry(filterProfile.name, callback)
+		comboBox.profileToComboboxEntry[filterProfile] = entry
 	end
 end
 
+function FilterProfiles:LoadProfile(filterProfile)
+	self.currentProfile = filterProfile
+	self:RefreshControls()
+end
+
+function FilterProfiles:RebuildDroplist(comboBox)
+	comboBox:ClearItems()
+	for index, filterProfile in ipairs(self.filterProfiles) do
+		if not comboBox.profileToComboboxEntry[filterProfile] then
+			local callback = function() comboBox.topCallback(self, filterProfile) end
+			local entry = comboBox:CreateItemEntry(filterProfile.name, callback)
+			comboBox.profileToComboboxEntry[filterProfile] = entry
+		end
+		comboBox.profileToComboboxEntry[filterProfile].name = filterProfile.name
+		comboBox:AddItem(comboBox.profileToComboboxEntry[filterProfile])
+	end
+end
+
+function FilterProfiles:RefreshComboboxControlForSelectedProfile(comboboxControl, selectedProfile)
+	local combobox = ZO_ComboBox_ObjectFromContainer(comboboxControl)
+	self:RebuildDroplist(combobox)
+	combobox:SetSelectedItemText(selectedProfile.name)
+end
+
+function FilterProfiles:RefreshControls()
+	if self.currentProfile == nil then return end
+	
+	self:RefreshComboboxControlForSelectedProfile(
+		HarvestFilterMapSelectDropDown, self:GetMapProfile())
+	
+	self:RefreshComboboxControlForSelectedProfile(
+		HarvestFilterCompassSelectDropDown, self:GetCompassProfile())
+	
+	self:RefreshComboboxControlForSelectedProfile(
+		HarvestFilterWorldSelectDropDown, self:GetWorldProfile())
+	
+	self:RefreshComboboxControlForSelectedProfile(
+		HarvestFilterProfileDropDown, self.currentProfile)
+	
+	HarvestFilterRenameEdit:SetText(self.currentProfile.name)
+	HarvestFilterDelete:SetEnabled(#self.filterProfiles > 1)
+	
+	-- filter checkboxes
+	for _, checkbox in pairs(self.checkboxes) do
+		ZO_CheckButton_SetCheckState(checkbox, self.currentProfile[checkbox.pinTypeId])
+	end
+	
+end
+
+function FilterProfiles:RenameCurrentProfile(newName)
+	if newName == "" then 
+		newName = Harvest.GetLocalization("unnamedfilterprofile")
+	elseif newName == self.currentProfile.name then
+		return
+	end
+	self.currentProfile.name = newName
+	self:RefreshControls()
+end
+
+function FilterProfiles:GetMapProfile()
+	return self.filterProfiles[Settings.savedVars.settings.mapFilterProfile] 
+end
+
+function FilterProfiles:GetCompassProfile()
+	return self.filterProfiles[Settings.savedVars.settings.compassFilterProfile] 
+end
+
+function FilterProfiles:GetWorldProfile()
+	return self.filterProfiles[Settings.savedVars.settings.worldFilterProfile] 
+end
+
+function FilterProfiles:AddNewProfile()
+	local newProfile = {}
+	Harvest.CopyMissingDefaultValues(newProfile, Settings.defaultFilterProfile)
+	newProfile.name = "Unnamed Profile"
+	table.insert(Settings.savedVars.account.filterProfiles, newProfile)
+	
+	self:LoadProfile(newProfile)
+end
+
+function FilterProfiles:DeleteCurrentProfile()
+	if #self.filterProfiles <= 1 then return end
+	
+	local deletedProfile = self.currentProfile
+	local deletedProfileIndex = nil
+	for index, filterProfile in ipairs(self.filterProfiles) do
+		if filterProfile == deletedProfile then
+			table.remove(self.filterProfiles, index)
+			deletedProfileIndex = index
+			break
+		end
+	end
+	assert(deletedProfileIndex)
+	
+	self.currentProfile = nil
+	
+	for _, displayType in pairs({"map", "compass", "world"}) do
+		local tag = displayType .. "FilterProfile"
+		if Settings.savedVars.settings[tag] == deletedProfileIndex then
+			Settings.savedVars.settings[tag] = 1
+			CallbackManager:FireCallbacks(Events.SETTING_CHANGED, tag, 1)
+		end
+	end
+	
+	
+	self:LoadProfile(self.filterProfiles[1])
+end

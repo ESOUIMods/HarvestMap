@@ -1,10 +1,10 @@
 ## Title: HarvestMap
 ## Author: Shinni
-## Version: 3.14.11
-## APIVersion: 100033
-## AddOnVersion: 314011
+## Version: 3.15.1
+## APIVersion: 100034
+## AddOnVersion: 315001
 ## OptionalDependsOn: MiniMap VotansMiniMap AUI LibMapPins-1.0 NodeDetection
-## DependsOn: Lib3D LibAddonMenu-2.0 LibGPS LibMapPing LibMainMenu LibDebugLogger LibChatMessage
+## DependsOn: LibAddonMenu-2.0 LibDebugLogger LibMainMenu-2.0
 ## SavedVariables: Harvest_SavedVars
 
 Libs/LibUpdateNotification/LibUpdateNotification.lua
@@ -28,8 +28,8 @@ Options/LoadSettings.lua
 Options/Defaults.lua
 Options/GetterSetter.lua
 Options/LAMPanel.lua
-Options/MainMenu.lua
 Options/FilterMenu.lua
+Options/FilterMenu.xml
 
 Data/NodeVersion.lua
 Data/SubmoduleManager.lua

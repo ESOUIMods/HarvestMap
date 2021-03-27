@@ -2,8 +2,9 @@
 ## Author: Shinni
 ## Description: This HarvestMap-module is used to store data that do not belong into any of the other modules.
 ## DependsOn: HarvestMap
-## AddOnVersion: 31309
-## ValidateSavedVariables: 1
-## APIVersion: 100030 100031
+## AddOnVersion: 31500
+## APIVersion: 100034
 ## SavedVariables: HarvestNF_SavedVars
 ## DisableSavedVariablesAutoSaving: 1
+
+HarvestMapNF.lua

@@ -176,6 +176,11 @@ function HarvestHeat.Initialize()
 	Harvest.callbackManager:RegisterForEvent(Harvest.events.NODE_ADDED, OnNodeChanged)
 	Harvest.callbackManager:RegisterForEvent(Harvest.events.NODE_UPDATED, OnNodeChanged)
 	Harvest.callbackManager:RegisterForEvent(Harvest.events.NODE_DELETED, OnNodeChanged)
+	Harvest.callbackManager:RegisterForEvent(Harvest.events.FILTER_PROFILE_CHANGED, function(event, profile)
+		if profile == Harvest.mapPins.filterProfile then
+			HarvestHeat.RefreshHeatmap()
+		end
+	end)
 	-- the fade in animation of the world map messes up the alpha values of the heat map
 	-- so display the heatmap after the map finished its fade in animation
 	local mapscene = SCENE_MANAGER:GetScene("worldMap")

@@ -32,11 +32,7 @@ function MapCache:Initialize(mapMetaData)
 	self.mapMetaData = mapMetaData
 	
 	self.pinTypeId = {}
-	self.nodeIndex = {} -- index of the node in the saved variables table data[map][pinTypeId][nodeIndex]
 	
-	self.globalX = {}
-	self.globalY = {}
-
 	self.worldX = {}
 	self.worldY = {}
 	self.worldZ = {}
@@ -47,13 +43,12 @@ function MapCache:Initialize(mapMetaData)
 	self.nodesOfPinType = {}
 	self.nodesOfPinTypeSize = {}
 	
-	self:RefreshZoneMeasurementDependendFields()
+	self:RefreshNearestNeighborLookupTable()
 	
 end
 
-function MapCache:RefreshZoneMeasurementDependendFields()
+function MapCache:RefreshNearestNeighborLookupTable()
 	
-	self.zoneMeasurement = self.mapMetaData.zoneMeasurement
 	self.mergeDistanceSquared = self.MergeDistanceInMeters * self.MergeDistanceInMeters
 	
 	self.divisions = {}
@@ -69,9 +64,6 @@ end
 
 function MapCache:Dispose()
 	ZO_ClearTable(self.pinTypeId)
-	ZO_ClearTable(self.nodeIndex)
-	ZO_ClearTable(self.globalX)
-	ZO_ClearTable(self.globalY)
 	ZO_ClearTable(self.worldX)
 	ZO_ClearTable(self.worldY)
 	ZO_ClearTable(self.worldZ)
@@ -83,9 +75,6 @@ function MapCache:Dispose()
 	end
 	
 	self.pinTypeId = nil
-	self.nodeIndex = nil
-	self.globalX = nil
-	self.globalY = nil
 	self.worldX = nil
 	self.worldY = nil
 	self.worldZ = nil
@@ -142,7 +131,7 @@ end
 -- Methods to add, delete and update data in the cache
 -----------------------------------------------------------
 
-function MapCache:Add(pinTypeId, nodeIndex, worldX, worldY, worldZ, globalX, globalY)
+function MapCache:Add(pinTypeId, worldX, worldY, worldZ)
 	
 	self.lastNodeId = self.lastNodeId + 1
 	local nodeId = self.lastNodeId
@@ -152,9 +141,6 @@ function MapCache:Add(pinTypeId, nodeIndex, worldX, worldY, worldZ, globalX, glo
 	self.nodesOfPinType[pinTypeId][pinTypeSize] = nodeId
 	
 	self.pinTypeId[nodeId] = pinTypeId
-	self.nodeIndex[nodeId] = nodeIndex
-	self.globalX[nodeId] = globalX
-	self.globalY[nodeId] = globalY
 	self.worldX[nodeId] = worldX
 	self.worldY[nodeId] = worldY
 	self.worldZ[nodeId] = worldZ
@@ -186,9 +172,6 @@ function MapCache:Delete(nodeId)
 	self:RemoveNodeFromDivision(nodeId)
 
 	self.pinTypeId[nodeId] = nil
-	self.nodeIndex[nodeId] = nil
-	self.globalX[nodeId] = nil
-	self.globalY[nodeId] = nil
 	self.worldX[nodeId] = nil
 	self.worldY[nodeId] = nil
 	self.worldZ[nodeId] = nil
@@ -201,7 +184,7 @@ end
 -- merges the node corresponding to the nodeId with the given data
 -- returns the nodes data after merging
 -- the returned data may be the original data, if the given input data is too old or invalid
-function MapCache:Move(nodeId, worldX, worldY, worldZ, globalX, globalY)
+function MapCache:Move(nodeId, worldX, worldY, worldZ)
 	local oldWorldX, oldWorldY = self.worldX[nodeId], self.worldY[nodeId]
 	local oldDivisionIndex = zo_floor(oldWorldX / self.DivisionWidthInMeters)
 	oldDivisionIndex = oldDivisionIndex + zo_floor(oldWorldY / self.DivisionWidthInMeters) * self.numDivisions
@@ -215,8 +198,6 @@ function MapCache:Move(nodeId, worldX, worldY, worldZ, globalX, globalY)
 		self:RemoveNodeFromDivision(nodeId)
 	end
 		
-	self.globalX[nodeId] = globalX
-	self.globalY[nodeId] = globalY
 	self.worldX[nodeId] = worldX
 	self.worldY[nodeId] = worldY
 	self.worldZ[nodeId] = worldZ
@@ -225,6 +206,12 @@ function MapCache:Move(nodeId, worldX, worldY, worldZ, globalX, globalY)
 		self:InsertNodeIntoDivision(nodeId)
 	end
 	
+end
+
+local GetNormalizedWorldPosition = GetNormalizedWorldPosition
+function MapCache:GetLocal(nodeId)
+	local zoneId = self.mapMetaData.zoneId
+	return GetNormalizedWorldPosition(zoneId, self.worldX[nodeId] * 100, (self.worldZ[nodeId] or 0) * 100, self.worldY[nodeId] * 100)
 end
 
 function MapCache:GetMergeableNode(pinTypeId, worldX, worldY, worldZ)

@@ -82,16 +82,6 @@ function Harvest.SetMinimapOnly(value)
 	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "minimapOnly", value)
 end
 
-function Harvest.SetMinimapCompatibilityModeEnabled(value)
-	Settings.savedVars.settings.minimapCompatibility = value
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "minimapCompatibility", value)
-	ReloadUI("ingame")
-end
-
-function Harvest.IsMinimapCompatibilityModeEnabled()
-	return false--Settings.savedVars.settings.minimapCompatibility
-end
-
 function Harvest.GetPinTypeTexture(pinTypeId)
 	return Settings.savedVars.settings.pinLayouts[pinTypeId].texture
 end
@@ -136,36 +126,6 @@ end
 
 function Harvest.SetDisplayedMinGameVersion(version)
 	versionString = version
-end
-
-function Harvest.GetUIResolution()
-	local width, height = GuiRoot:GetDimensions()
-	d(width, height)
-	if GetSetting(SETTING_TYPE_UI, UI_SETTING_USE_CUSTOM_SCALE) ~= "0" then
-		local scale = tonumber(GetSetting(SETTING_TYPE_UI, UI_SETTING_CUSTOM_SCALE))
-		d(scale)
-		width = width * scale
-		height = height * scale
-	end
-	width = zo_round(width)
-	height = zo_round(height)
-	d(width, height)
-	return width, height
-end
-
-function Harvest.Get3DResolution()
-	return GetSetting(SETTING_TYPE_GRAPHICS, GRAPHICS_SETTING_RESOLUTION)
-end
-
-function Harvest.GetSubSampling()
-	local level = tostring(GetSetting(SETTING_TYPE_GRAPHICS, GRAPHICS_SETTING_SUB_SAMPLING, SUB_SAMPLING_MODE_NORMAL))
-	return GetString(_G["SI_SUBSAMPLINGMODE" .. level])
-end
-
-function Harvest.SetToCompatibleGraphicSettings()
-	local width, height = Harvest.GetUIResolution()
-	SetSetting(SETTING_TYPE_GRAPHICS, GRAPHICS_SETTING_RESOLUTION, tostring(width) .. "x" .. tostring(height))
-	SetSetting(SETTING_TYPE_GRAPHICS, GRAPHICS_SETTING_SUB_SAMPLING, SUB_SAMPLING_MODE_NORMAL)
 end
 
 function Harvest.GetWorldPinHeight()
@@ -230,34 +190,6 @@ function Harvest.SetVisitedRangeInMeters(value)
 	Settings.savedVars.settings.visitedRangeInMeters = value
 end
 
-function Harvest.IsDelayedWhenMapClosed()
-	return Settings.savedVars.settings.delayUntilMapOpen
-end
-
-function Harvest.SetDelayedWhenMapClosed(delayed)
-	Settings.savedVars.settings.delayUntilMapOpen = not not delayed
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "delayMapClosed", delayed)
-end
-
-function Harvest.IsDelayedWhenInFight()
-	return Settings.savedVars.settings.delayWhenInFight
-end
-
-function Harvest.SetDelayedWhenInFight(delayed)
-	Settings.savedVars.settings.delayWhenInFight = not not delayed
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "delayInFight", delayed)
-end
-
-function Harvest.GetDisplaySpeed()
-	return math.huge
-	--return Settings.savedVars.settings.displaySpeed
-end
-
-function Harvest.SetDisplaySpeed( speed )
-	Settings.savedVars.settings.displaySpeed = speed
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "displaySpeed", speed)
-end
-
 function Harvest.HasPinVisibleDistance()
 	return Settings.savedVars.settings.hasMaxVisibleDistance
 end
@@ -274,15 +206,6 @@ end
 function Harvest.SetPinVisibleDistance(distance)
 	Settings.savedVars.settings.maxVisibleDistanceInMeters = distance
 	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "visibleDistance", distance)
-end
-
-function Harvest.GetMaxCachedMaps()
-	return 5--Settings.savedVars.settings.maxCachedMaps
-end
-
-function Harvest.SetMaxCachedMaps( num )
-	Settings.savedVars.settings.maxCachedMaps = num
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "maxCachedMaps", num)
 end
 
 function Harvest.ArePinsAbovePOI()
@@ -391,28 +314,6 @@ function Harvest.SetDisplayedMaxTimeDifference(value)
 	difference = value
 end
 
-function Harvest.IsPinTypeSavedOnImport( pinTypeId )
-	return true
-	--return not (Settings.savedVars.settings.isPinTypeSavedOnImport[ pinTypeId ] == false)
-end
-
-function Harvest.SetPinTypeSavedOnImport( pinTypeId, value )
-	Settings.savedVars.settings.isPinTypeSavedOnImport[ pinTypeId ] = not not value
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "importPinType", pinTypeId, value)
-end
-
-function Harvest.IsZoneSavedOnImport( zone )
-	if Settings.savedVars.settings.isZoneSavedOnImport[ zone ] == nil then
-		return true
-	end
-	return Settings.savedVars.settings.isZoneSavedOnImport[ zone ]
-end
-
-function Harvest.SetZoneSavedOnImport( zone, value )
-	Settings.savedVars.settings.isZoneSavedOnImport[ zone ] = not not value
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "importZone", value)
-end
-
 function Harvest.AreCompassPinsVisible()
 	return Settings.savedVars.settings.displayCompassPins
 end
@@ -430,79 +331,6 @@ function Harvest.GetMapPinLayout(pinTypeId)
 	return Settings.savedVars.settings.pinLayouts[pinTypeId]
 end
 
-function Harvest.IsWorldFilterActive()
-	return Settings.savedVars.settings.isWorldFilterActive
-end
-
-function Harvest.SetWorldFilterActive(value)
-	Settings.savedVars.settings.isWorldFilterActive = not not value
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "worldFilterActive", value)
-	CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", HarvestMapInRangeMenu.panel)
-end
-
-function Harvest.IsWorldPinTypeVisible( pinTypeId )
-	return Settings.savedVars.settings.isWorldPinTypeVisible[ pinTypeId ]
-end
-
-function Harvest.SetWorldPinTypeVisible( pinTypeId, visible )
-	Settings.savedVars.settings.isWorldPinTypeVisible[ pinTypeId ] = not not visible
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "worldPinTypeVisible", pinTypeId, visible)
-end
-
-function Harvest.IsCompassFilterActive()
-	return Settings.savedVars.settings.isCompassFilterActive
-end
-
-function Harvest.SetCompassFilterActive(value)
-	Settings.savedVars.settings.isCompassFilterActive = not not value
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "compassFilterActive", value)
-	CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", HarvestMapInRangeMenu.panel)
-end
-
-function Harvest.IsCompassPinTypeVisible( pinTypeId )
-	return Settings.savedVars.settings.isCompassPinTypeVisible[ pinTypeId ]
-end
-
-function Harvest.SetCompassPinTypeVisible( pinTypeId, visible )
-	Settings.savedVars.settings.isCompassPinTypeVisible[ pinTypeId ] = not not visible
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "compassPinTypeVisible", pinTypeId, visible)
-end
-
-function Harvest.IsMapPinTypeVisible( pinTypeId )
-	if Harvest.PINTYPE_ALIAS[pinTypeId] or Harvest.HIDDEN_PINTYPES[pinTypeId] then return false end
-	return Settings.savedVars.settings.isPinTypeVisible[ pinTypeId ]
-end
-
-function Harvest.IsInRangePinTypeVisible( pinTypeId )
-	if Harvest.PINTYPE_ALIAS[pinTypeId] or Harvest.HIDDEN_PINTYPES[pinTypeId] then return false end
-	local checkMap = not Harvest.IsCompassFilterActive() or not Harvest.IsWorldFilterActive()
-	if Harvest.IsCompassFilterActive() and Harvest.IsCompassPinTypeVisible( pinTypeId ) then
-		return true
-	end
-	if Harvest.IsWorldFilterActive() and Harvest.IsWorldPinTypeVisible( pinTypeId ) then
-		return true
-	end
-	return checkMap and Harvest.IsMapPinTypeVisible( pinTypeId )
-end
-
-function Harvest.IsPinTypeVisible( pinTypeId )
-	if Harvest.PINTYPE_ALIAS[pinTypeId] or Harvest.HIDDEN_PINTYPES[pinTypeId] then return false end
-	if Harvest.IsMapPinTypeVisible( pinTypeId ) then
-		return true
-	end
-	if Harvest.IsCompassFilterActive() and Harvest.IsCompassPinTypeVisible( pinTypeId ) then
-		return true
-	end
-	return Harvest.IsWorldFilterActive() and Harvest.IsWorldPinTypeVisible( pinTypeId )
-end
-
-function Harvest.SetMapPinTypeVisible( pinTypeId, visible )
-	Settings.savedVars.settings.isPinTypeVisible[ pinTypeId ] = not not visible
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "mapPinTypeVisible", pinTypeId, visible)
-	-- todo via callback
-	HarvestHeat.RefreshHeatmap()
-end
-
 local debugEnabled = false
 function Harvest.IsPinDeletionEnabled()
 	return debugEnabled
@@ -511,15 +339,6 @@ end
 function Harvest.SetPinDeletionEnabled( value )
 	debugEnabled = value
 	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "debugModeEnabled", value)
-end
-
-function Harvest.AreDebugMessagesEnabled()
-	return false --Settings.savedVars.settings.showDebugOutput
-end
-
-function Harvest.SetDebugMessagesEnabled( value )
-	Settings.savedVars.settings.showDebugOutput = not not value
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "debugMsgEnabled", value)
 end
 
 function Harvest.IsPinTypeSavedOnGather( pinTypeId )
@@ -531,18 +350,6 @@ end
 function Harvest.SetPinTypeSavedOnGather( pinTypeId, value )
 	Settings.savedVars.settings.isPinTypeSavedOnGather[ pinTypeId ] = not not value
 	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "savePinType", pinTypeId, value)
-end
-
-function Harvest.SetMapPinMinSize(value)
-	Settings.savedVars.settings.mapPinMinSize = value
-	for pinTypeId, layout in pairs(Settings.savedVars.settings.pinLayouts) do
-		layout.minSize = value
-	end
-	CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "mapPinMinSize", value)
-end
-
-function Harvest.GetMapPinMinSize()
-	return Settings.savedVars.settings.mapPinMinSize
 end
 
 function Harvest.GetMapPinSize( pinTypeId )
