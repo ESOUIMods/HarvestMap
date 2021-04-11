@@ -44,7 +44,9 @@
 -- 40 3.14.6 verify zone id
 -- 41 3.14.8 fixed fishing globalX <= globalY bug
 -- 42 3.14.11 move data to DLC
-local addonVersion = 42
+-- 43 3.15.0 remove globalX, globalY, flags
+-- 44 3.15.2 added deletion nodes to savedvar
+local addonVersion = 44
 
 -- node version which is saved for each node
 -- the node version encodes the current game and addon version
@@ -56,3 +58,5 @@ local versionInteger = tonumber(version) * 10000 + tonumber(update) * 100 + tonu
 Harvest.nodeVersion = 1000 * versionInteger + addonVersion
 -- example: game version is 2.5.4, addon version is 2:
 -- node version is thus 20504002
+
+Harvest.deleteFlag = 2

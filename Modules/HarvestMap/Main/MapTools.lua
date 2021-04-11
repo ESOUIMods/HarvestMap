@@ -1,6 +1,4 @@
 
-local GPS = LibGPS2
-local Lib3D = Lib3D
 local MapTools = {}
 Harvest:RegisterModule("mapTools", MapTools)
 
@@ -14,7 +12,6 @@ function MapTools:Initialize()
 		["^housing/"] = true,
 	}
 	self.mapMetaData = {}
-	GPS:ClearMapMeasurements() -- someone has a broken gps measurement on kenarthis roost and submits broken data
 end
 
 function MapTools:GetMap()
@@ -90,40 +87,39 @@ function MapTools:SetMapToPlayerLocation()
 	end
 end
 
-function MapTools:GetPlayerMapMetaDataAndGlobalPosition()
+function MapTools:GetPlayerMapMetaData()
 	local originalMap = GetMapTileTexture()
 	self:SetMapToPlayerLocation()
 	self:Debug("get player map position. old map: ", originalMap)
 	self:Debug("new map: ", GetMapTileTexture())
 
-	local mapMetaData, globalX, globalY, heading = self:GetViewedMapMetaDataAndPlayerGlobalPosition()
+	local mapMetaData = self:GetViewedMapMetaData()
+
+	if GetUnitZoneIndex("player") ~= mapMetaData.zoneIndex then
+		self:Error("Player map meta data zone id does not match: %s, %d, %d", mapMetaData.map, GetZoneId(GetUnitZoneIndex("player")), mapMetaData.zoneId)
+		--LuaError(string.format("Player map meta data zone id does not match: %s, %d, %d", mapMetaData.map, GetZoneId(GetUnitZoneIndex("player")), mapMetaData.zoneId))
+		local forcePlayerZoneId = true
+		mapMetaData = self:GetViewedMapMetaData(forcePlayerZoneId)
+	end
 
 	if GetMapTileTexture() ~= originalMap then
 		self:Debug("fire 'OnWorldMapChanged' callback")
 		CALLBACK_MANAGER:FireCallbacks("OnWorldMapChanged")
 	end
 
-	if GetUnitZoneIndex("player") ~= mapMetaData.zoneIndex then
-		self:Warn("Player map meta data zone id does not match: %s, %d, %d", mapMetaData.map, GetZoneId(GetUnitZoneIndex("player")), mapMetaData.zoneId)
-		error(string.format("Player map meta data zone id does not match: %s, %d, %d", mapMetaData.map, GetZoneId(GetUnitZoneIndex("player")), mapMetaData.zoneId))
-	end
-
-	return mapMetaData, globalX, globalY, heading
+	return mapMetaData
 end
 
-function MapTools:GetViewedMapMetaDataAndPlayerGlobalPosition()
-	local localX, localY, heading = GetMapPlayerPosition("player")
-	local globalX, globalY = GPS:LocalToGlobal(localX, localY)
+function MapTools:GetViewedMapMetaData(forcePlayerZone)
 	local map = self:GetMap()
 	local zoneIndex = GetCurrentMapZoneIndex()
-	if DoesCurrentMapMatchMapForPlayerLocation() then
+	if forcePlayerZone or DoesCurrentMapMatchMapForPlayerLocation() then
 		zoneIndex = GetUnitZoneIndex("player")
 	end
-	self:Debug("viewed map position: local %d, %d, global %d, %d, map %s zoneIndex %d", localX, localY, globalX, globalY, map, zoneIndex)
+	self:Debug("viewed map position: map %s zoneIndex %d", map, zoneIndex)
 	local mapMetaData = self:GetMapMetaDataForZoneIndexAndMap(zoneIndex, map)
-	mapMetaData.mapMeasurement = GPS:GetCurrentMapMeasurements()
 
-	return mapMetaData, globalX, globalY, heading
+	return mapMetaData
 end
 
 function MapTools:GetMapMetaDataForZoneIndexAndMap(zoneIndex, map)
@@ -132,9 +128,8 @@ function MapTools:GetMapMetaDataForZoneIndexAndMap(zoneIndex, map)
 	local mapMetaData = self.mapMetaData[zoneIndex][map]
 	if not mapMetaData then
 		local zoneId = GetZoneId(zoneIndex)
-		local zoneMeasurement = Lib3D:GetZoneMeasurementForZoneId(zoneId)
 		self:Info("create new map meta data for zone index %d, id %d and map %s", zoneIndex, zoneId, map)
-		mapMetaData = {map = map, zoneIndex = zoneIndex, zoneId = zoneId, zoneMeasurement = zoneMeasurement, isBlacklisted = self:IsMapBlacklisted(map)}
+		mapMetaData = {map = map, zoneIndex = zoneIndex, zoneId = zoneId, isBlacklisted = self:IsMapBlacklisted(map)}
 		self.mapMetaData[zoneIndex][map] = mapMetaData
 	end
 	return mapMetaData

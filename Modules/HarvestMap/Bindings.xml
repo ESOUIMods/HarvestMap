@@ -10,7 +10,6 @@
 				<Up>
 					Harvest.SetWorldPinsVisible(not Harvest.AreWorldPinsVisible())
 					CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", Harvest.optionsPanel)
-					CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", HarvestMapInRangeMenu.panel)
 				</Up>
 			</Action>
 			<Action name="TOGGLE_MAPPINS">
@@ -20,9 +19,20 @@
 					CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", Harvest.optionsPanel)
 				</Up>
 			</Action>
+			<Action name="TOGGLE_MINIMAPPINS">
+				<Down></Down>
+				<Up>
+					Harvest.SetMinimapPinsVisible(not Harvest.AreMinimapPinsVisible())
+					CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", Harvest.optionsPanel)
+				</Up>
+			</Action>
 			<Action name="HARVEST_SHOW_PANEL">
 				<Down></Down>
-				<Up>Harvest.menu:Toggle()</Up>
+				<Up>LibMainMenu2:SelectMenuItem(Harvest.farm.sceneName)</Up>
+			</Action>
+			<Action name="HARVEST_SHOW_FILTER">
+				<Down></Down>
+				<Up>Harvest.filterProfiles:Show()</Up>
 			</Action>
 		</Category>
 	</Layer>

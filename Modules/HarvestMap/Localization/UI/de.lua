@@ -23,11 +23,6 @@ Harvest.localizedStrings = {
 	["accounttooltip"] = "Alle Einstellungen unterhalb sind dieselben für alle deine Figuren.",
 	["accountwarning"] = "Wenn diese Einstellung geändert wird, wird das Interface neu geladen und es kommt zu einem Ladebildschirm.",
 
-	--performance settings
-	["performance"] = "Performance und Kompatibilität",
-	["minimapcompatibilitymodedescription"] = "Um die Performance bei tausenden von Ressourcen auf der Karte zu verbessern, verwendet HarvestMap seine eigene Variante von Karten-Pinnen. Diese Karten-Pinne since nicht kompatibel mit rotierenden Minimaps.\nFalls du eine rotierende Minimap verwendest, kannst du den 'Minimap Kompatibilitätsmodus' aktivieren. Wenn dieser Modus aktiv ist, verwendet HarvestMap stattdessen die standard Karten-Pinne. Diese standard Karten-Pinne funktionieren mit rotierenden Minimaps, aber sie können in niedrigen FPS und kurzem einfrieren des Spieles resultieren, wann immer eine Karte mit vielen Ressourcen angezeigt wird.",
-	["minimapcompatibilitymode"] = "Minimap Kompatibilitätsmodus",
-	["minimapcompatibilitymodewarning"] = "Das Aktivieren dieser Option wird die Spielperformance negativ beeinflussen, wenn viele Ressourcen auf der Karte angezeigt werden.\n\nDas User-Interface wird neu geladen, wenn du diese Option änderst!",
 	["hasdrawdistance"] = "Zeige nur nahe Pinne",
 	["hasdrawdistancetooltip"] = "Falls aktiviert, wird HarvestMap nur Pinne in der Nähe des Spieler anzeigen.\nDiese Einstellung betrifft nur die Karte des Spieles. Auf MiniMaps wird diese Einstellung automatisch aktiviert!",
 	["hasdrawdistancewarning"] = "Diese Einstellung betrifft nur die Karte des Spieles. Auf MiniMaps wird diese Einstellung automatisch aktiviert!",
@@ -206,7 +201,7 @@ Unterstütze MiniMap AddOns: Votan, Fyrakin und AUI]],
 Wenn z.B. ein anderer Spieler diese Ressource eingesammelt hat, dann wird dieser Pin versteckt, bis die Ressouce dort wieder verfügbar ist.
 Diese Option funktioniert nur für einsammelbare Handwerksmaterialien! Sie funktioniert nicht für Behälter, Kisten oder Schwere Säcke!.
 Dies funktioniert nicht wenn ein anderes AddOn den Kompass versteckt oder in der größe verändert.]],
-	["pinminsize"] = "Minimale Krten Pin Größe",
+	["pinminsize"] = "Minimale Karten Pin Größe",
 	["pinminsizetooltip"] = "Wenn du aus der Karte heraus-zoomst werden die Pinne ebenfalls kleiner werden. Du kannst diese Option nutzen, um eine minimal größe der Pinne einzustellen. Kleine Werte verhindern, dass die Karten Inhalte hinter den Pinnen versteckt werden können, aber die Pinne können dadurch natürlich schwierig zu erkennen sein.",
 
 	--Harvestmap menu (enhanced pin filters)

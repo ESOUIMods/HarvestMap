@@ -27,7 +27,7 @@ function Detection:Initialize()
 	LibNodeDetection.callbackManager:RegisterCallback(
 			LibNodeDetection.events.HARVEST_NODE_HIDDEN,
 			self.UnlinkControlWithNode)
-	
+
 end
 
 function Detection.OnMapChanged()
@@ -42,7 +42,7 @@ function Detection.VerifyPinType(event, control)
 	if control.mapCache and control.nodeId then
 		local nodePinTypeId = control.mapCache.pinTypeId[control.nodeId]
 		local controlPinTypeId = Harvest.DETECTION_TO_HARVEST_PINTYPE[control.pinTypeId]
-		
+
 		if nodePinTypeId ~= controlPinTypeId and nodePinTypeId ~= Harvest.UNKNOWN then
 			Detection.LinkControlWithNode(event, control)
 		end
@@ -102,7 +102,7 @@ function Detection.LinkControlWithNode(event, control)
 			return
 		end
 	end
-	
+
 	if mapCache == nil and nodeId == nil then
 		mapCache = Harvest.mapPins.mapCache
 		if not mapCache then
@@ -110,7 +110,7 @@ function Detection.LinkControlWithNode(event, control)
 			return
 		end
 		if not mapCache:DoesHandlePinType(Harvest.UNKNOWN) then mapCache:InitializePinType(Harvest.UNKNOWN) end
-		local nodeId = mapCache:Add(Harvest.UNKNOWN, nil, control.worldX, control.worldY, nil, control.globalX, control.globalY)
+		local nodeId = mapCache:Add(Harvest.UNKNOWN, control.worldX, control.worldY)
 		if nodeId then
 			control.nodeId = nodeId
 			control.mapCache = mapCache
@@ -138,7 +138,7 @@ function Detection.OnNodeDeleted(mapCache, nodeId)
 	local control = mapCache.hasCompassPin[nodeId]
 	if not control then return end
 	Detection:Warn("A node was deleted while it had a compass pin assigned!")
-	
+
 	for _, control in pairs(LibNodeDetection.detection.knownPositionCompassPins) do
 		if control.mapCache == mapCache and control.nodeId == nodeId then
 			control.mapCache = nil

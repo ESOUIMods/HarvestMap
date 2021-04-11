@@ -35,7 +35,7 @@ end
 
 function QP_MapPin:New(layout)
     local pin = ZO_Object.New(self)
-	
+
     local control = CreateControlFromVirtual("QP_MapPin" .. self.pinId, lib.container, "QP_MapPin")--CT_TEXTURE)
 	control:SetPixelRoundingEnabled(false)
 	--control:SetMouseEnabled(true)
@@ -48,12 +48,12 @@ function QP_MapPin:New(layout)
 	control.OnMouseUp = QP_MapPin.OnMouseUp
 	control.OnMouseEnter = QP_MapPin.OnMouseEnter
 	control.OnMouseExit = QP_MapPin.OnMouseExit
-		
+
     control.m_Pin = pin
     pin.m_Control = control
 	pin.m_layout = layout
 	pin:RefreshLayout()
-	
+
     self.pinId = self.pinId + 1
 	lib.numCreatedPins = lib.numCreatedPins + 1
     return pin
@@ -80,7 +80,7 @@ function QP_MapPin:SetTargetScale(targetScale)
                 self.m_Control:SetScale(newScale)
             end
         end)
-		
+
     end
 end
 
@@ -258,7 +258,7 @@ AUI_MODE = {
 			lib.container:SetAnchor(TOPLEFT, AUI_MapContainer, TOPLEFT, 0, 0)
 			QP_MapPin.UpdateLocation = QP_MapPin.OriginalUpdateLocation
 		end
-		
+
 	end,
 	GetDimensions = function(self)
 		return AUI_MapContainer:GetDimensions()
@@ -311,22 +311,7 @@ end
 
 function QP_WorldMapPins:UpdateSize()
 	local layout = self.m_Layout
-	local minSize = layout.minSize or MIN_PIN_SIZE
-	local zoom = lib.zoom:GetCurrentCurvedZoom() / lib.maxZoom
-	local scale = 1
-	if not ZO_WorldMap_IsWorldMapShowing() then -- minimap
-		if FyrMM then
-			scale = FyrMM.pScalePercent
-		end
-		if AUI and AUI.Minimap:IsEnabled() then
-			zoom = AUI.Minimap.GetCurrentZoomValue() / 15
-		end
-		if VOTANS_MINIMAP and VOTANS_MINIMAP.scale then
-			scale = VOTANS_MINIMAP.scale
-		end
-	end
-	local size = zo_max(layout.size * (0.4 * zoom + 0.6) / GetUICustomScale(), minSize)
-	size = size * scale
+	local size = layout.size / GetUICustomScale()
 	layout.currentPinSize = size
 end
 
@@ -358,9 +343,9 @@ end
 function lib:UpdatePinsForMapSizeChange(width, height)
 	assert(width and height)
 	self.MAP_WIDTH, self.MAP_HEIGHT = width, height
-	
+
 	self:CheckMapMode()
-	
+
 	for pinType, pinManager in pairs(self.pinManagers) do
 		pinManager:UpdateSize()
 		local pins = pinManager:GetActiveObjects()
@@ -369,7 +354,7 @@ function lib:UpdatePinsForMapSizeChange(width, height)
 			pin:UpdateSize()
 		end
 	end
-	
+
 end
 
 function lib.RedrawPins()
@@ -426,7 +411,7 @@ end
 
 function lib:CreatePin(pinType, pinTag, x, y)
 	assert(self.pinManagers[pinType], pinType)
-	--if not (x and y) then 
+	--if not (x and y) then
 	--	local texture = GetMapTileTexture()
 	--	error("no x or y given on map " .. texture)
 	--end
@@ -450,12 +435,12 @@ lib.RemoveCustomPin = lib.RemovePin
 lib.FindCustomPin = function() end
 
 function lib.Init()
-	
+
 	if lib.initialized then return end
 	lib.initialized = true
 	EVENT_MANAGER:UnregisterForEvent(LIB_NAME, EVENT_PLAYER_ACTIVATED)
-	
-	
+
+
 	ZO_PreHook(ZO_WorldMapPins, "UpdatePinsForMapSizeChange", function() lib:UpdatePinsForMapSizeChange(ZO_WorldMapContainer:GetDimensions()) end)
 	ZO_PreHook("ZO_WorldMap_UpdateMap", lib.RedrawPins)
 	ZO_PreHook(lib.zoom, "SetZoomMinMax", function(self, min, max)
@@ -465,7 +450,7 @@ function lib.Init()
 		lib.maxZoom = max
 		lib:UpdatePinsForMapSizeChange(ZO_WorldMapContainer:GetDimensions())
 	end)
-	
+
 end
 
 function lib:HookMinimap(minimapContainer)
@@ -479,7 +464,7 @@ function lib:HookMinimap(minimapContainer)
 			end
 		end
 	end)
-			
+
 	local oldDimensions = minimapContainer.SetDimensions
 	minimapContainer.SetDimensions = function(self, width, height, ...)
 		if not ZO_WorldMap_IsWorldMapShowing() then
@@ -487,7 +472,7 @@ function lib:HookMinimap(minimapContainer)
 		end
 		oldDimensions(self, width, height, ...)
 	end
-	
+
 end
 
 local layout = { texture="", level = 0 }
@@ -518,33 +503,33 @@ end
 function lib:Load()
 	EVENT_MANAGER:UnregisterForEvent(LIB_NAME, EVENT_PLAYER_ACTIVATED)
 	EVENT_MANAGER:RegisterForEvent(LIB_NAME, EVENT_PLAYER_ACTIVATED, lib.Init)
-	
+
 	self.numCreatedPins = 0
 	self.numRequestedPins = 0
-	
+
 	self.MAP_WIDTH = 0
 	self.MAP_HEIGHT = 0
-	
+
 	self.PIN_LAYOUTS = self.PIN_LAYOUTS or {}
 	self.PIN_CALLBACKS = self.PIN_CALLBACKS or {}
 	self.lookUpTable = {}
 	self.pinManagers = {} -- todo implement a way to retrieve the previous pinmanager
-	
+
 	self.scroll = CreateControl("QP_Scroll" , ZO_WorldMap, CT_SCROLL)
 	self.scroll:SetAnchor(TOPLEFT, ZO_WorldMapScroll, TOPLEFT, 0, 0)
 	self.scroll:SetAnchor(BOTTOMRIGHT, ZO_WorldMapScroll, BOTTOMRIGHT, 0, 0)
-	
+
 	self.container = CreateControl("QP_Container" , self.scroll, CT_CONTROL)
 	self.container:SetAnchor(TOPLEFT, ZO_WorldMapContainer, TOPLEFT, 0, 0)
-	
+
 	if Fyr_MM then
 		self:HookMinimap(Fyr_MM_Scroll_Map)
-		
+
 		local orig = FyrMM.UpdateMapTiles
 		function FyrMM.UpdateMapTiles(...)
 			orig(...)
 			if self.activeMode == FYR_MODE and FyrMM.SV.RotateMap and FyrMM.currentMap.Heading then
-				
+
 				FYR_MODE.cos = math.cos(-FyrMM.currentMap.Heading)
 				FYR_MODE.sin = math.sin(-FyrMM.currentMap.Heading)
 				FYR_MODE.offsetX = FyrMM.currentMap.PlayerX
@@ -562,7 +547,7 @@ function lib:Load()
 	end
 	if AUI and AUI.Minimap then
 		self:HookMinimap(AUI_MapContainer)
-		
+
 		ZO_PreHook(AUI.Minimap.Pin, "UpdateAllLocations", function()
 			if self.activeMode == AUI_MODE and AUI.Settings.Minimap.rotate then
 				AUI_MODE.cos = math.cos(-AUI.MapData.heading)
@@ -578,10 +563,10 @@ function lib:Load()
 			end
 		end)
 	end
-	
+
 	self.zoom = ZO_WorldMap_GetPanAndZoom()
 	lib.minZoom, lib.maxZoom = self.zoom.minZoom, self.zoom.maxZoom
-	
+
 	self.unusedPins = {}
 	self.unusedPins.index = 0
 end

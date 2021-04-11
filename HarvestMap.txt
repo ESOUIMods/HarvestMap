@@ -1,7 +1,7 @@
 ## Title: |cFF0000HarvestMap|r
 ## Author: Shinni
-## APIVersion: 100033
-## AddOnVersion: 31300
+## APIVersion: 100034
+## AddOnVersion: 314999
 ## Description: The AddOn was installed incorrectly.
 
 Libs/LibDAU/LibDAU.lua

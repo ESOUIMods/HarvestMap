@@ -1,6 +1,4 @@
 
-local GPS = LibGPS2
-
 local CallbackManager = Harvest.callbackManager
 local Events = Harvest.events
 
@@ -8,9 +6,9 @@ local Hidden = {}
 Harvest:RegisterModule("hidden", Hidden)
 
 function Hidden.Initialize()
-	
+
 	Hidden.ConfigureForSettings(Harvest.IsHiddenTimeUsed(), Harvest.GetHiddenTime(), Harvest.IsHiddenOnHarvest())
-	
+
 	local validSettings = {
 		hiddenTime = true,
 		useHiddenTime = true,
@@ -21,7 +19,7 @@ function Hidden.Initialize()
 			Hidden.ConfigureForSettings(Harvest.IsHiddenTimeUsed(), Harvest.GetHiddenTime(), Harvest.IsHiddenOnHarvest())
 		end
 	end)
-	
+
 	local function hideNodeOnHarvest(event, mapCache, nodeId)
 		if Harvest.IsHiddenOnHarvest() and Harvest.IsHiddenTimeUsed() and Harvest.GetHiddenTime() > 0 then
 			Hidden.HidePin(mapCache, nodeId)
@@ -80,13 +78,13 @@ function Hidden.HideNearbyPins()
 			end
 		end
 	end
-	
+
 end
 
 function Hidden.UnhideHiddenPins( currentTimeInMs )
 	-- check every single hidden pin, if it was hidden 'hiddenTimeInMs' ms ago
 	-- if so, then unhide the pin
-	local hiddenTimeInMs = Hidden.hiddenTimeInMs 
+	local hiddenTimeInMs = Hidden.hiddenTimeInMs
 	for map, cache in pairs(Harvest.Data.mapCaches) do
 		for nodeId, timeWhenHiddenInMs in pairs(cache.hiddenTime) do
 			if currentTimeInMs - timeWhenHiddenInMs > hiddenTimeInMs then
@@ -94,5 +92,5 @@ function Hidden.UnhideHiddenPins( currentTimeInMs )
 			end
 		end
 	end
-	
+
 end

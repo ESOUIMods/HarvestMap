@@ -1,6 +1,4 @@
 
-
-local GPS = LibGPS2
 local LAM = LibAddonMenu2
 
 local CallbackManager = Harvest.callbackManager
@@ -24,7 +22,7 @@ function TourDisplay:Initialize()
 		end
 		oldDimensions(container, mapWidth, mapHeight, ...)
 	end
-	
+
 	self:InitializeCallbacks()
 end
 
@@ -33,11 +31,11 @@ function TourDisplay:InitializeCallbacks()
 	CallbackManager:RegisterForEvent(Events.TOUR_CHANGED, function(event, path)
 		self:Refresh(path, self.selectedPins, self.selectedMapCache)
 	end)
-	
+
 	CallbackManager:RegisterForEvent(Events.TOUR_NODE_CLICKED, function(event, selectedPins, selectedMapCache)
 		self:Refresh(self.path, selectedPins, selectedMapCache)
 	end)
-	
+
 	CALLBACK_MANAGER:RegisterCallback("OnWorldMapChanged", function() self:Refresh(self.path, self.selectedPins, self.selectedMapCache) end)
 end
 
@@ -87,7 +85,7 @@ function TourDisplay:Refresh(path, selectedPins, selectedMapCache)
 	if self.minimapPool then
 		self.minimapPool:ReleaseAllObjects()
 	end
-	
+
 	if selectedPins then
 		local linkControl, nodeId, startX, startY, endX, endY
 		local lastNodeId = selectedPins[1]
@@ -95,8 +93,8 @@ function TourDisplay:Refresh(path, selectedPins, selectedMapCache)
 		for index = 2, #selectedPins do
 			nodeId = selectedPins[index]
 			linkControl = self.linkPool:AcquireObject()
-			linkControl.startX, linkControl.startY = GPS:GlobalToLocal(selectedMapCache.globalX[nodeId], selectedMapCache.globalY[nodeId])
-			linkControl.endX, linkControl.endY = GPS:GlobalToLocal(selectedMapCache.globalX[lastNodeId], selectedMapCache.globalY[lastNodeId])
+			linkControl.startX, linkControl.startY = selectedMapCache:GetLocal(nodeId)
+			linkControl.endX, linkControl.endY = selectedMapCache:GetLocal(lastNodeId)
 			if linkControl.startX < linkControl.endX then
 				linkControl:SetTexture("HarvestMap/Textures/Map/tour_r.dds")
 			else
@@ -105,13 +103,13 @@ function TourDisplay:Refresh(path, selectedPins, selectedMapCache)
 			linkControl:SetColor(0,1,0,1)
 			linkControl:SetDrawLevel(10)
 			lastNodeId = nodeId
-			
+
 			startX, startY = linkControl.startX * mapWidth, linkControl.startY * mapHeight
 			endX, endY = linkControl.endX * mapWidth, linkControl.endY * mapHeight
 			ZO_Anchor_LineInContainer(linkControl, nil, startX, startY, endX, endY)
 		end
 	end
-	
+
 	if not path then
 		return
 	end
@@ -135,12 +133,12 @@ function TourDisplay:Refresh(path, selectedPins, selectedMapCache)
 			linkControl:SetColor(1,0,0,1)
 			linkControl:SetDrawLevel(10)
 			lastIndex = index
-			
+
 			startX, startY = linkControl.startX * mapWidth, linkControl.startY * mapHeight
 			endX, endY = linkControl.endX * mapWidth, linkControl.endY * mapHeight
 			ZO_Anchor_LineInContainer(linkControl, nil, startX, startY, endX, endY)
 		end
-		
+
 		if self.minimapPool then
 			for index = 1, path.numNodes do
 				linkControl = self.minimapPool:AcquireObject()
@@ -155,7 +153,7 @@ function TourDisplay:Refresh(path, selectedPins, selectedMapCache)
 				linkControl:SetDrawLevel(10)
 				lastIndex = index
 			end
-			
+
 			if Fyr_MM_Scroll_Map then
 				mapWidth, mapHeight = Fyr_MM_Scroll_Map:GetDimensions()
 			else

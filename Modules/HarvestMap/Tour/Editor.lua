@@ -7,12 +7,12 @@ local CallbackManager = Harvest.callbackManager
 local Events = Harvest.events
 
 function Editor:Initialize(fragment)
-	
+
 	self:InitializeControls()
-	
+
 	self.clickedNodes = {}
 	self.history = {}
-	
+
 	self.tourHandler = {
 		name = Harvest.mapPins.nameFunction,
 		callback = function(...) return self:OnPinClicked(...) end,
@@ -23,7 +23,7 @@ function Editor:Initialize(fragment)
 		Harvest.mapPins.clickHandler[n - i + 2] = Harvest.mapPins.clickHandler[n - i + 1]
 	end
 	Harvest.mapPins.clickHandler[1] = self.tourHandler
-	
+
 	fragment:RegisterCallback("StateChange", function(oldState, newState)
 		if(newState == SCENE_FRAGMENT_SHOWN) then
 			Harvest.farm.helper:Stop()
@@ -32,15 +32,15 @@ function Editor:Initialize(fragment)
 			self:Reset(keepUndo)
 		end
 	end)
-	
+
 	CallbackManager:RegisterForEvent(Events.SETTING_CHANGED, function(event, setting, ...)
 		if setting == "mapPinTypeVisible" then
 			local pinTypeId, visible = ...
 			if visible then return end
-			
+
 			local keepUndo = true
 			self:Reset(keepUndo)
-			
+
 			if Farm.path then
 				ZO_Dialogs_ShowDialog("HARVESTFARM_PINTYPE", {pinTypeId=pinTypeId}, { mainTextParams = { Harvest.GetLocalization("pintype" .. pinTypeId) } } )
 			end
@@ -50,18 +50,18 @@ function Editor:Initialize(fragment)
 		local keepUndo = false
 		self:Reset(keepUndo)
 	end)
-	
+
 	CallbackManager:RegisterForEvent(Events.TOUR_CHANGED, function(event, path)
 		CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", HarvestFarmEditor)
 	end)
-	
+
 	CALLBACK_MANAGER:RegisterCallback("OnWorldMapChanged", function()
 		if next(self.clickedNodes) then
 			local keepUndo = true
 			self:Reset(keepUndo)
 		end
 	end)
-	
+
 	local pathDialog = {
 		title = { text = Harvest.GetLocalization( "removepintypetitle" ) },
 		mainText = { text = Harvest.GetLocalization( "removepintype" ) },
@@ -127,7 +127,7 @@ function Editor:Undo()
 	if lastPath > 0 then
 		local path = self.history[lastPath]
 		self.history[lastPath] = nil
-		
+
 		Farm:SetPath(path)
 	end
 end
@@ -136,7 +136,7 @@ function Editor:InitializeControls()
 	HarvestFarmEditor.panel = HarvestFarmEditor
 	HarvestFarmEditor.panel.data = {registerForRefresh = true}
 	HarvestFarmEditor.panel.controlsToRefresh = {}
-	
+
 	local definition = {
 		type = "description",
 		title = "",
@@ -145,7 +145,7 @@ function Editor:InitializeControls()
 	local control = LAMCreateControl.description(HarvestFarmEditor, definition)
 	control:SetAnchor(TOPLEFT, HarvestFarmEditor, TOPLEFT, 0, 0)
 	local lastControl = control
-	
+
 	definition = {
 		type = "description",
 		title = "",
@@ -168,7 +168,7 @@ function Editor:InitializeControls()
 	control:ClearAnchors()
 	control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 10)
 	lastControl = control
-	
+
 	-- revert tour button
 	control = WINDOW_MANAGER:CreateControlFromVirtual(nil, HarvestFarmEditor, "ZO_DefaultButton")
 	control:SetText( Harvest.GetLocalization( "reverttour" ) )
@@ -185,7 +185,7 @@ function Editor:InitializeControls()
 	end)
 	self.revertButton = control
 	lastControl = control
-	
+
 	-- remove tour button
 	control = WINDOW_MANAGER:CreateControlFromVirtual(nil, HarvestFarmEditor, "ZO_DefaultButton")
 	control:SetText( Harvest.GetLocalization( "removetour" ) )
@@ -201,7 +201,7 @@ function Editor:InitializeControls()
 	end)
 	self.removeButton = control
 	lastControl = control
-	
+
 	control = WINDOW_MANAGER:CreateControlFromVirtual(nil, HarvestFarmEditor, "ZO_DefaultButton")
 	control:SetText( Harvest.GetLocalization( "undo" ) )
 	control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 20)
@@ -213,7 +213,7 @@ function Editor:InitializeControls()
 	self.undoButton = control
 	control:SetEnabled(false)
 	lastControl = control
-	
+
 end
 
 function Editor:AlreadyClicked(nodeId)
@@ -227,10 +227,11 @@ end
 
 function Editor:OnPinClicked(pin)
 	if Farm.generator:IsGeneratingTour() then return end
-	
+
 	local pinType, nodeId = pin:GetPinTypeAndTag()
 	self.mapCache = Harvest.mapPins.mapCache
-	
+	if self.mapCache.pinTypeId[nodeId] == Harvest.UNKNOWN then return end
+
 	local path = Farm.path
 	-- the player creates a new tour from scratch
 	if not path then
@@ -250,7 +251,7 @@ function Editor:OnPinClicked(pin)
 		end
 		return true
 	end
-	
+
 	-- the player edits an existing tour
 	local index = self:AlreadyClicked(nodeId)
 	if index then

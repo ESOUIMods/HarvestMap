@@ -1,0 +1,94 @@
+<GuiXml>
+	<Controls>
+		<Control name="HarvestFilterSelection" virtual="true" >
+			<Dimensions y="35" />
+			<Controls>
+				<Label name="$(parent)Label" text="Filter Profile for Map Pins" font="ZoFontGameBold">
+					<Anchor point="TOPLEFT" offsetX="5" />
+				</Label>
+				<Control name="$(parent)DropDown" inherits="ZO_ComboBox" >
+					<Dimensions x="230" y="35" />
+					<Anchor point="TOPRIGHT" offsetX="-5" />
+				</Control>
+			</Controls>
+		</Control>
+		
+		<TopLevelControl name="HarvestFilter" clampedToScreen="true" mouseEnabled="true" movable="true" hidden="true" >
+			<Dimensions x="480" y="480" />
+			<Anchor point="LEFT" offsetX="100" />
+			<Controls>
+				<Label name="$(parent)Title" inherits="ZO_WindowTitle" text="filtertitle" />
+				<Backdrop name="$(parent)Backdrop" inherits="ZO_DefaultBackdrop" />
+				<Button name="$(parent)Close" inherits="ZO_CloseButton">
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetY="3" />
+					<OnClicked>
+						HarvestFilter:SetHidden(true)
+					</OnClicked>
+				</Button>
+				
+				<Control name="$(parent)MapSelect" inherits="HarvestFilterSelection">
+					<Anchor point="TOPLEFT" offsetY="32" />
+					<Anchor point="TOPRIGHT" offsetY="32" />
+				</Control>
+				<Control name="$(parent)CompassSelect" inherits="HarvestFilterSelection">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)MapSelect" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)MapSelect" relativePoint="BOTTOMRIGHT" />
+				</Control>
+				<Control name="$(parent)WorldSelect" inherits="HarvestFilterSelection">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)CompassSelect" relativePoint="BOTTOMLEFT" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)CompassSelect" relativePoint="BOTTOMRIGHT" />
+				</Control>
+				
+				<Texture name="$(parent)TopDivider" inherits="ZO_HorizontalDivider">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)WorldSelect" relativePoint="BOTTOMLEFT" offsetX="-80" offsetY="10" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)WorldSelect" relativePoint="BOTTOMRIGHT" offsetX="80"offsetY="10" />
+				</Texture>
+				
+				<Label name="$(parent)Label" text="Edit Filter Profile" font="ZoFontGameBold">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)TopDivider" relativePoint="BOTTOMLEFT" offsetX="85" />
+				</Label>
+				<Control name="$(parent)ProfileDropDown" inherits="ZO_ComboBox" >
+					<Dimensions x="230" y="35" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)Label" relativePoint="BOTTOMLEFT" />
+				</Control>
+				<Button name="$(parent)New" inherits="ZO_DefaultButton" text="Add New Profile">
+					<Dimensions x="180"/>
+					<Anchor point="LEFT" relativeTo="$(parent)ProfileDropDown" relativePoint="RIGHT" offsetX="20" />
+					<OnClicked>
+						Harvest.filterProfiles:AddNewProfile()
+					</OnClicked>
+				</Button>
+				
+				<Backdrop name="$(parent)Rename" inherits="ZO_SingleLineEditBackdrop_Keyboard">
+					<Anchor point="TOPLEFT" relativeTo="$(parent)ProfileDropDown" relativePoint="BOTTOMLEFT" />
+					<Dimensions x="230" y="32"/>
+					<Controls>
+						<EditBox name="$(parent)Edit" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="MAX_EMAIL_LENGTH">
+							<OnInitialized>
+								ZO_EditDefaultText_Initialize(self, "New Profile Name")
+							</OnInitialized>
+							<OnTextChanged>
+								ZO_EditDefaultText_OnTextChanged(self)
+								Harvest.filterProfiles:RenameCurrentProfile(self:GetText())
+							</OnTextChanged>
+						</EditBox>
+					</Controls>
+				</Backdrop>
+				<Button name="$(parent)Delete" inherits="ZO_DefaultButton" text="Delete This Profile">
+					<Dimensions x="180"/>
+					<Anchor point="LEFT" relativeTo="$(parent)Rename" relativePoint="RIGHT" offsetX="20" />
+					<OnClicked>
+						Harvest.filterProfiles:DeleteCurrentProfile()
+					</OnClicked>
+				</Button>
+				
+				
+				
+				<Texture name="$(parent)Divider" inherits="ZO_HorizontalDivider">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Rename" relativePoint="BOTTOMLEFT" offsetX="-85" offsetY="10" />
+					<Anchor point="TOPRIGHT" relativeTo="$(parent)Delete" relativePoint="BOTTOMRIGHT" offsetX="80" offsetY="10" />
+                </Texture>
+			</Controls>
+		</TopLevelControl>
+	</Controls>
+</GuiXml>

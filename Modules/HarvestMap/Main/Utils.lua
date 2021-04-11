@@ -33,8 +33,13 @@ function Harvest.GetPlayer3DPosition()
 	return worldX/100, worldY/100, worldZ/100
 end
 
+-- control which is used to take 3d world coordinate measurements
+local measurementControl = CreateControl("HarvestMapMeasurementControl", GuiRoot, CT_CONTROL)
+measurementControl:Create3DRenderSpace()
+
 function Harvest.GetCamera3DPosition()
-	local worldX, worldZ, worldY = Lib3D:GetCameraRenderSpacePosition()
+	Set3DRenderSpaceToCurrentCamera(measurementControl:GetName())
+	local worldX, worldZ, worldY = measurementControl:Get3DRenderSpaceOrigin()
 	worldX, worldZ, worldY = GuiRender3DPositionToWorldPosition(worldX, worldZ, worldY)
 	return worldX/100, worldY/100, worldZ/100
 end

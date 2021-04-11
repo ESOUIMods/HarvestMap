@@ -30,8 +30,8 @@ Harvest.PINTYPES = {
 	Harvest.WOODWORKING, Harvest.ENCHANTING,
 	Harvest.MUSHROOM, Harvest.FLOWER,
 	Harvest.WATERPLANT, Harvest.CRIMSON, Harvest.WATER, Harvest.CLAM,
-	Harvest.JEWELRY, Harvest.CHESTS,
-	Harvest.HEAVYSACK, Harvest.PSIJIC,
+	Harvest.CHESTS,
+	Harvest.HEAVYSACK,
 	Harvest.TROVE, Harvest.JUSTICE, Harvest.STASH,
 	Harvest.FISHING, Harvest.UNKNOWN, Harvest.TOUR,
 }
@@ -86,36 +86,44 @@ local interactableName2PinTypeId = {
 	["heavy crate"] = Harvest.HEAVYSACK, -- special nodes in cold harbor
 	["schwerer sack"] = Harvest.HEAVYSACK,
 	["sac lourd"] = Harvest.HEAVYSACK,
-	["Т�?жeлый мeшoк"] = Harvest.HEAVYSACK, -- russian
-	["Тяжелый мешок"] = Harvest.HEAVYSACK, -- updated russian
-	["тяжелый мешок"] = Harvest.HEAVYSACK, -- updated russian
-	
+	["Ð¢Ñ?Ð¶eÐ»Ñ‹Ð¹ Ð¼eÑˆoÐº"] = Harvest.HEAVYSACK, -- russian
+	["Ð¢ÑÐ¶ÐµÐ»Ñ‹Ð¹ Ð¼ÐµÑˆÐ¾Ðº"] = Harvest.HEAVYSACK, -- updated russian
+	["Ñ‚ÑÐ¶ÐµÐ»Ñ‹Ð¹ Ð¼ÐµÑˆÐ¾Ðº"] = Harvest.HEAVYSACK, -- updated russian
+	["sacco pesante"] = Harvest.HEAVYSACK, -- italian
+	["cassa pesante"] = Harvest.HEAVYSACK, -- italian
+
 	["thieves trove"] = Harvest.TROVE,
 	["diebesgut"] = Harvest.TROVE,
-	["trésor des voleurs"] = Harvest.TROVE,
-	["Вopoвcкoй тaйник"] = Harvest.TROVE,  -- russian
-	["Воровской тайник"] = Harvest.TROVE, -- updated russian
-	["воровской тайник"] = Harvest.TROVE, -- updated russian
-	
+	["trÃ©sor des voleurs"] = Harvest.TROVE,
+	["Ð’opoÐ²cÐºoÐ¹ Ñ‚aÐ¹Ð½Ð¸Ðº"] = Harvest.TROVE,  -- russian
+	["Ð’Ð¾Ñ€Ð¾Ð²ÑÐºÐ¾Ð¹ Ñ‚Ð°Ð¹Ð½Ð¸Ðº"] = Harvest.TROVE, -- updated russian
+	["Ð²Ð¾Ñ€Ð¾Ð²ÑÐºÐ¾Ð¹ Ñ‚Ð°Ð¹Ð½Ð¸Ðº"] = Harvest.TROVE, -- updated russian
+	["tesoro dei ladri"] = Harvest.TROVE, --italian
+
 	["loose panel"] = Harvest.STASH,
 	["loose tile"] = Harvest.STASH,
 	["loose stone"] = Harvest.STASH,
 	["panneau mobile"] = Harvest.STASH,
-	["tuile descellée"] = Harvest.STASH,
-	["pierre délogée"] = Harvest.STASH,
+	["tuile descellÃ©e"] = Harvest.STASH,
+	["pierre dÃ©logÃ©e"] = Harvest.STASH,
 	["lose tafel"] = Harvest.STASH,
 	["lose platte"] = Harvest.STASH,
 	["loser stein"] = Harvest.STASH,
-	["Податливая панель"] = Harvest.STASH, -- russian
-	["Податливый камень"] = Harvest.STASH, -- loose tile is not translated in the ru.lang file of RuESO
-	
+	["ÐŸÐ¾Ð´Ð°Ñ‚Ð»Ð¸Ð²Ð°Ñ Ð¿Ð°Ð½ÐµÐ»ÑŒ"] = Harvest.STASH, -- russian
+	["ÐŸÐ¾Ð´Ð°Ñ‚Ð»Ð¸Ð²Ñ‹Ð¹ ÐºÐ°Ð¼ÐµÐ½ÑŒ"] = Harvest.STASH, -- loose tile is not translated in the ru.lang file of RuESO
+	["pannello mobile"] = Harvest.STASH, --italian
+	["mattonella traballante"] = Harvest.STASH, --italian
+	["pietra sporgente"] = Harvest.STASH, --italian
+
 	["psijic portal"] = Harvest.PSIJIC,
 	["portail psijique"] = Harvest.PSIJIC,
 	["psijik-portal"] = Harvest.PSIJIC,
-	
+	["portale psijic"] = Harvest.PSIJIC, --italian
+
 	["giant clam"] = Harvest.CLAM,
 	["riesenmuschel"] = Harvest.CLAM,
-	["palourde géante"] = Harvest.CLAM,
+	["palourde gÃ©ante"] = Harvest.CLAM,
+	["ostrica gigante"] = Harvest.CLAM,
 }
 function Harvest.IsInteractableAContainer( interactableName )
 	return interactableName2PinTypeId[zo_strlower( interactableName )] ~= nil
@@ -272,7 +280,7 @@ Harvest.itemId2PinType = {
 	[23268] = Harvest.WATER,
 	[64500] = Harvest.WATER,
 	[64501] = Harvest.WATER,
-	
+
 	[135137] = Harvest.JEWELRY,
 	[135139] = Harvest.JEWELRY,
 	[135141] = Harvest.JEWELRY,
@@ -291,6 +299,6 @@ Harvest.itemId2PinType = {
 	[135159] = Harvest.JEWELRY,
 	[135160] = Harvest.JEWELRY,
 	[135161] = Harvest.JEWELRY,
-	
+
 	[150672] = Harvest.CRIMSON,
 }

@@ -1,6 +1,4 @@
 
-local GPS = LibGPS2
-
 local CallbackManager = Harvest.callbackManager
 local Events = Harvest.events
 
@@ -16,7 +14,7 @@ function GeneratorLogic:Initialize()
 end
 
 function GeneratorLogic:IsPinTypeIncluded(pinTypeId)
-	return Harvest.IsMapPinTypeVisible(pinTypeId)
+	return Harvest.mapPins.filterProfile[pinTypeId]
 end
 
 -- most of the below code is copied from the old tour generation (version 3.4.15 and earlier)
@@ -40,16 +38,16 @@ do
 	end
 
 	realDistance = distance
-	
+
 	realDistanceWithHeight = function(a, b)
 		local dx = a[1] - b[1]
 		local dy = a[2] - b[2]
-		local dz = a[5] - b[5]	
+		local dz = a[5] - b[5]
 		return sqrt(dx * dx + dy * dy + dz * dz)
 	end
 end
 
-local function generateEdges(num_data_points, points, measurement, maxLength)
+local function generateEdges(num_data_points, points, maxLength)
 	local dist, edge, pointA, pointB
 	local numEdges = 0
 	local edges = {}
@@ -84,12 +82,9 @@ local function constructGraph(maxLength)
 	num_data_points = 0
 
 	local viewedMap = true
-	local mapMetaData = Harvest.mapTools:GetViewedMapMetaDataAndPlayerGlobalPosition()
+	local mapMetaData = Harvest.mapTools:GetViewedMapMetaData()
 
-	-- to meters
 	GeneratorLogic.minLength = GeneratorLogic.minLengthKM * 1000
-	-- to local distance
-	--GeneratorLogic.minLength = GeneratorLogic.minLength / measurement.scaleX
 
 	local mapCache = Harvest.Data:GetMapCache( mapMetaData )
 	if not mapCache then return 2 end
@@ -97,12 +92,12 @@ local function constructGraph(maxLength)
 	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
 		if GeneratorLogic:IsPinTypeIncluded( pinTypeId ) then
 			GeneratorLogic.mapCache = mapCache
-			
+
 			for _, nodeId in pairs(mapCache.nodesOfPinType[pinTypeId]) do
 				-- each point/vertex consists of and x and y coordinate and a list of the neighbors/edges
 				table.insert(points, {
 					mapCache.worldX[nodeId], mapCache.worldY[nodeId],
-					0, 0, --mapCache.globalX[nodeId], mapCache.globalY[nodeId],
+					0, 0, -- used to be global coords
 					mapCache.worldZ[nodeId] or 0, pinTypeId, edges={}})
 				num_data_points = num_data_points + 1
 			end
@@ -116,7 +111,7 @@ local function constructGraph(maxLength)
 	-- create the edges
 	edges = nil
 	while not edges do
-		edges = generateEdges(num_data_points, points, measurement, maxLength)
+		edges = generateEdges(num_data_points, points, maxLength)
 		maxLength = maxLength / 2
 	end
 	for _, edge in pairs(edges) do
@@ -194,12 +189,12 @@ function GeneratorLogic:Start()
 	self.bestPath = nil
 	self.finishTime = nil
 	self.numFarmedNodes = 0
-	
+
 	--if self.mapCache then
 	--	self.mapCache.accessed = self.mapCache.accessed - 1
 	--	self.mapCache = nil
 	--end
-	
+
 	lastPointIndex = nil
 	bestPath = nil
 	bestRatio = 0
@@ -329,7 +324,7 @@ function GeneratorLogic:Finish()
 			table.insert(bestPathPoints, point)
 			lastPoint = point
 		end
-		
+
 		assert(self.mapCache)
 		local path = Harvest.path:New(self.mapCache)
 		path:GenerateFromPoints(bestPathPoints)
@@ -343,6 +338,6 @@ function GeneratorLogic:Finish()
 	bestPath = nil
 	points = nil
 	edges = nil
-	
+
 	self.mapCache = nil
 end

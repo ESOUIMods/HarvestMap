@@ -1,72 +1,84 @@
-
+-- Provided by mychaelo
 local PinTypeLocalization = {}
 LibNodeDetection:RegisterModule("pinTypeLocalization", PinTypeLocalization)
 
 local PinTypes = LibNodeDetection.pinTypes
 
 local interactableName2PinTypeId = {
+
+	["Рунный камень"] = PinTypes.ENCHANTING,
 	
-	["Железная руда"] = PinTypes.BLACKSMITH,
-	["Высокожелезистая руда"] = PinTypes.BLACKSMITH,
-	["Orichalc Ore"] = PinTypes.BLACKSMITH,
-	["Орихалковая руда"] = PinTypes.BLACKSMITH,
-	["Двемерская руда"] = PinTypes.BLACKSMITH,
-	["Эбонитовая руда"] = PinTypes.BLACKSMITH,
-	["Кальциновая руда"] = PinTypes.BLACKSMITH,
-	["Галатитовая руда"] = PinTypes.BLACKSMITH,
-	["� тутная руда"] = PinTypes.BLACKSMITH,
-	["Пустотная руда"] = PinTypes.BLACKSMITH,
-	["� убедитовая руда"] = PinTypes.BLACKSMITH,
-	
-	["Хлопок"] = PinTypes.CLOTHING,
-	["Эбеновое волокно"] = PinTypes.CLOTHING,
-	["Лен"] = PinTypes.CLOTHING,
-	["Железная трава"] = PinTypes.CLOTHING,
-	["Джут"] = PinTypes.CLOTHING,
-	["Трава креша"] = PinTypes.CLOTHING,
-	["Серебряная трава"] = PinTypes.CLOTHING,
-	["Паучий шелк"] = PinTypes.CLOTHING,
-	["Пустоцвет"] = PinTypes.CLOTHING,
-	["Silver Weed"] = PinTypes.CLOTHING,
-	["Kresh Weed"] = PinTypes.CLOTHING,
-	["Шелк предков"] = PinTypes.CLOTHING,
-	
-	["� унный камень"] = PinTypes.ENCHANTING,
-	
-	["Благословенный чертополох"] = PinTypes.FLOWER,
-	["Энтолома"] = PinTypes.MUSHROOM,
+	["Кникус"] = PinTypes.FLOWER,
+	["Полынь"] = PinTypes.FLOWER,
+	["Луговой сердечник"] = PinTypes.FLOWER,
 	["Воловик"] = PinTypes.FLOWER,
+	["Драконий шип"] = PinTypes.FLOWER,
+	["Горноцвет"] = PinTypes.FLOWER,
 	["Водосбор"] = PinTypes.FLOWER,
 	["Василек"] = PinTypes.FLOWER,
-	["Драконий шип"] = PinTypes.FLOWER,
-	["Жгучеедкая сыроежка"] = PinTypes.MUSHROOM,
-	["Бесовский гриб"] = PinTypes.MUSHROOM,
-	["Луговой сердечник"] = PinTypes.FLOWER,
-	["Светящаяся сыроежка"] = PinTypes.MUSHROOM,
-	["Горноцвет"] = PinTypes.FLOWER,
-	["Гниль Намиры"] = PinTypes.MUSHROOM,
 	["Корень Нирна"] = PinTypes.WATERPLANT,
-	["Цветохвостник веретеновидный"] = PinTypes.MUSHROOM,
-	["Лиловый копринус"] = PinTypes.MUSHROOM,
-	["Violet Copninus"] = PinTypes.MUSHROOM,
 	["Водный гиацинт"] = PinTypes.WATERPLANT,
+	["Цветохвостник"] = PinTypes.MUSHROOM,
+	["Голубая энтолома"] = PinTypes.MUSHROOM,
+	["Жгучеедкая сыроежка"] = PinTypes.MUSHROOM,
+	["Лиловый копринус"] = PinTypes.MUSHROOM,
+	["Гниль Намиры"] = PinTypes.MUSHROOM,
 	["Белянка"] = PinTypes.MUSHROOM,
-	["Полынь"] = PinTypes.FLOWER,
+	["Светящаяся сыроежка"] = PinTypes.MUSHROOM,
+	["Бесовский гриб"] = PinTypes.MUSHROOM,
+	
 	["Паслен"] = PinTypes.FLOWER,
 	
-	["Ashtree"] = PinTypes.WOODWORKING,
-	["Бук"] = PinTypes.WOODWORKING,
-	["Береза"] = PinTypes.WOODWORKING,
-	["Гикори"] = PinTypes.WOODWORKING,
-	["Красное дерево"] = PinTypes.WOODWORKING,
-	["Клен"] = PinTypes.WOODWORKING,
-	["Ночное дерево"] = PinTypes.WOODWORKING,
-	["Дуб"] = PinTypes.WOODWORKING,
 	["Тис"] = PinTypes.WOODWORKING,
-	["� убиновый ясень"] = PinTypes.WOODWORKING,
+	["Эбеновое волокно"] = PinTypes.CLOTHING,
+	["Эбонитовая руда"] = PinTypes.BLACKSMITH,
+	
+	["Клен"] = PinTypes.WOODWORKING,
+	["Дуб"] = PinTypes.WOODWORKING,
+	["Бук"] = PinTypes.WOODWORKING,
+	["Орешник"] = PinTypes.WOODWORKING,
+	["Железная руда"] = PinTypes.BLACKSMITH,
+	["Высокожелезистая руда"] = PinTypes.BLACKSMITH,
+	["Орихалковая руда"] = PinTypes.BLACKSMITH,
+	["Двемерская руда"] = PinTypes.BLACKSMITH,
+	["Джут"] = PinTypes.CLOTHING,
+	["Лен"] = PinTypes.CLOTHING,
+	["Паучий шелк"] = PinTypes.CLOTHING,
+	["Хлопок"] = PinTypes.CLOTHING,
 	
 	["Чистая вода"] = PinTypes.WATER,
-	["Мешок с водой"] = PinTypes.WATER,
+	
+	["Пустоцвет"] = PinTypes.CLOTHING,
+	["Креш-трава"] = PinTypes.CLOTHING,
+	["Серебряная трава"] = PinTypes.CLOTHING,
+	["Железная трава"] = PinTypes.CLOTHING,
+	["Кальциновая руда"] = PinTypes.BLACKSMITH,
+	["Галатитовая руда"] = PinTypes.BLACKSMITH,
+	["Ртутная руда"] = PinTypes.BLACKSMITH,
+	["Пустотная руда"] = PinTypes.BLACKSMITH,
+	["Черное дерево"] = PinTypes.WOODWORKING,
+	["Ясень"] = PinTypes.WOODWORKING,
+	["Береза"] = PinTypes.WOODWORKING,
+	["Красное дерево"] = PinTypes.WOODWORKING,
+	
+	["Мех для воды"] = PinTypes.WATER,
+	
+	["Багряный ясень"] = PinTypes.WOODWORKING,
+	["Шелк предков"] = PinTypes.CLOTHING,
+	["Рубедитовая руда"] = PinTypes.BLACKSMITH,
+	
+	["Сумка травника"] = PinTypes.FLOWER,
+	["Обрывок ткани"] = PinTypes.CLOTHING,
+	["Деревянные обломки"] = PinTypes.WOODWORKING,
+	["Питьевая жидкость"] = PinTypes.WATER,
+	
+	["Оловянный пласт"] = PinTypes.BLACKSMITH,
+	["Платиновый пласт"] = PinTypes.BLACKSMITH,
+	["Медный пласт"] = PinTypes.BLACKSMITH,
+	["Серебряный пласт"] = PinTypes.BLACKSMITH,
+	["Электрумный пласт"] = PinTypes.BLACKSMITH,
+	
+	["Алый корень Нирна"] = PinTypes.CRIMSON,
 }
 
 function PinTypeLocalization:Initialize()

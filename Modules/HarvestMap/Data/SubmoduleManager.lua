@@ -19,6 +19,7 @@ local addOnNameToPotentialSubmodule = {
 	HarvestMapAD = {
 		displayName = "HarvestMap-AD-Zones",
 		savedVarsName = "HarvestAD_SavedVars",
+		downloadedVarsName = "HarvestAD_Data",
 		zones = {
 			["auridon"] = true,
 			["grahtwood"] = true,
@@ -30,6 +31,7 @@ local addOnNameToPotentialSubmodule = {
 	HarvestMapEP = {
 		displayName = "HarvestMap-EP-Zones",
 		savedVarsName = "HarvestEP_SavedVars",
+		downloadedVarsName = "HarvestEP_Data",
 		zones = {
 			["bleakrock"] = true,
 			["stonefalls"] = true,
@@ -43,6 +45,7 @@ local addOnNameToPotentialSubmodule = {
 	HarvestMapDC = {
 		displayName = "HarvestMap-DC-Zones",
 		savedVarsName = "HarvestDC_SavedVars",
+		downloadedVarsName = "HarvestDC_Data",
 		zones = {
 			["glenumbra"] = true,
 			["stormhaven"] = true,
@@ -54,10 +57,12 @@ local addOnNameToPotentialSubmodule = {
 	HarvestMapDLC = {
 		displayName = "HarvestMap-DLC-Zones",
 		savedVarsName = "HarvestDLC_SavedVars",
+		downloadedVarsName = "HarvestDLC_Data",
 	},
 	HarvestMapNF = {
 		displayName = "HarvestMap-NoFaction-Zones",
 		savedVarsName = "HarvestNF_SavedVars",
+		downloadedVarsName = "HarvestNF_Data",
 		zones = {
 			["cyrodiil"] = true,
 			["craglorn"] = true,
@@ -74,11 +79,19 @@ function SubmoduleManager:Initialize()
 		function()
 			self:InformUserAboutMissingSubmodules()
 		end)
-
+	--[[
 	EVENT_MANAGER:RegisterForEvent("HarvestMap-Submodules", EVENT_ADD_ON_LOADED,
 		function(event, addOnName)
 			self:TryToRegisterAddOnAsSubmodule(addOnName)
 		end)
+	]]
+	local AddOnManager = GetAddOnManager()
+	for addonIndex = 1, AddOnManager:GetNumAddOns() do
+		local name, _, _, _, enabled = AddOnManager:GetAddOnInfo(addonIndex)
+		if enabled then
+			self:TryToRegisterAddOnAsSubmodule(name)
+		end
+	end
 end
 
 function SubmoduleManager:TryToRegisterAddOnAsSubmodule(addOnName)
@@ -90,6 +103,7 @@ function SubmoduleManager:TryToRegisterAddOnAsSubmodule(addOnName)
 	-- load the savedVars
 	_G[submodule.savedVarsName] = _G[submodule.savedVarsName] or {}
 	submodule.savedVars = _G[submodule.savedVarsName]
+	submodule.downloadedVars = _G[submodule.downloadedVarsName] or {}
 	Harvest.CopyMissingDefaultValues(submodule.savedVars, dataDefault)
 
 	self:CleanUpSavedVarsForSubmodule(submodule)
@@ -141,8 +155,6 @@ function SubmoduleManager:GetSubmoduleForMap(map)
 
 end
 
--- imports all the nodes on 'map' from the table 'data' into the save file table 'saveFile'
--- if checkPinType is true, data will be skipped if Harvest.IsPinTypeSavedOnImport(pinTypeId) returns false
 function SubmoduleManager:ImportMapDataIntoSubmodule(zoneId, map, newMapData, submodule)
 
 	submodule.savedVars[zoneId] = submodule.savedVars[zoneId] or {}

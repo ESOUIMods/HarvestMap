@@ -1,5 +1,4 @@
 
-local GPS = LibGPS2
 local LAM = LibAddonMenu2
 
 local CallbackManager = Harvest.callbackManager
@@ -12,22 +11,22 @@ local Helper = Farm.helper
 function Helper:Initialize(fragment)
 	self.lastAnnouncement = 0
 	self.startTime = 0
-	
+
 	self:InitializeCallbacks(fragment)
 	self:InitializeControls()
 end
 
 function Helper:InitializeControls()
 	self.buttons = {}
-	
+
 	HarvestFarmHelper.panel = HarvestFarmHelper
 	HarvestFarmHelper.panel.data = {registerForRefresh = true}
 	HarvestFarmHelper.panel.controlsToRefresh = {}
-	
+
 	local disabledFunction = function() return Farm.path == nil end
-	
+
 	HarvestFarmHelperDescription:SetText(Harvest.GetLocalization( "helperdescriptiondisabled" ))
-	
+
 	local control = WINDOW_MANAGER:CreateControlFromVirtual(nil, HarvestFarmHelper, "ZO_DefaultButton")
 	control:SetText( Harvest.GetLocalization( "toggletour" ) )
 	control:SetAnchor(TOPLEFT, HarvestFarmHelperDescription, BOTTOMLEFT, 0, 20)
@@ -43,7 +42,7 @@ function Helper:InitializeControls()
 	control:SetEnabled(false)
 	local lastControl = control
 	table.insert(self.buttons, control)
-	
+
 	control = WINDOW_MANAGER:CreateControlFromVirtual(nil, HarvestFarmHelper, "ZO_DefaultButton")
 	control:SetText( Harvest.GetLocalization( "skiptarget" ) )
 	control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 20)
@@ -55,7 +54,7 @@ function Helper:InitializeControls()
 	control:SetEnabled(false)
 	lastControl = control
 	table.insert(self.buttons, control)
-	
+
 	control = WINDOW_MANAGER:CreateControlFromVirtual(nil, HarvestFarmHelper, "ZO_DefaultButton")
 	control:SetText( Harvest.GetLocalization( "showtourinterface" ) )
 	control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 20)
@@ -79,13 +78,13 @@ function Helper:PostInitialize()
 end
 
 function Helper:InitializeCallbacks(fragment)
-	
+
 	EVENT_MANAGER:RegisterForEvent("HarvestMap-FarmingHelper", EVENT_LOOT_RECEIVED, function( eventCode, receivedBy, itemLink, stackCount, soundCategory, lootType, lootedBySelf )
 		if lootedBySelf then
 			self:GainedItem(itemLink, stackCount)
 		end
 	end)
-	
+
 	CallbackManager:RegisterForEvent(Events.NODE_DISCOVERED, function()
 		Harvest.farm.helper:FarmedANode()
 	end)
@@ -95,19 +94,19 @@ function Helper:InitializeCallbacks(fragment)
 		if self.enabled == (path ~= nil) then
 			return
 		end
-		self.enabled = (path ~= nil) 
-		
+		self.enabled = (path ~= nil)
+
 		for _, button in pairs(self.buttons) do
 			button:SetEnabled(self.enabled)
 		end
-		
+
 		if self.enabled then
 			HarvestFarmHelperDescription:SetText(Harvest.GetLocalization( "helperdescription" ))
 		else
 			HarvestFarmHelperDescription:SetText(Harvest.GetLocalization( "helperdescriptiondisabled" ))
 		end
 	end)
-	
+
 	function self.MapCallback(pinmanager)
 		Farm:Debug("farm map refresh called")
 		if not Farm.path then return end
@@ -128,11 +127,11 @@ function Helper:InitializeCallbacks(fragment)
 		pinmanager:AddCustomPin( pinTag, Harvest.TOUR, range, x, y, z )
 		Farm:Debug("farm compass pins created")
 	end
-	
+
 	Harvest.InRangePins:RegisterCustomPinCallback(
 		Harvest.TOUR,
 		self.CompassCallback)
-	
+
 	self.tooltipCreator = {
 		creator = function( pin ) -- this function is called when the mouse is over a pin and a tooltip has to be displayed
 			local pinType, nodeId = pin:GetPinTypeAndTag()
@@ -143,14 +142,14 @@ function Helper:InitializeCallbacks(fragment)
 		end,
 		tooltip = 1
 	}
-	
+
 	local resizeCallback = nil
-	ZO_WorldMap_AddCustomPin("MAP_PIN_TYPE_HARVEST_TOUR", 
-		self.MapCallback, resizeCallback, 
-		Harvest.GetMapPinLayout( Harvest.TOUR ), 
+	ZO_WorldMap_AddCustomPin("MAP_PIN_TYPE_HARVEST_TOUR",
+		self.MapCallback, resizeCallback,
+		Harvest.GetMapPinLayout( Harvest.TOUR ),
 		self.tooltipCreator)
 	ZO_WorldMap_SetCustomPinEnabled(MAP_PIN_TYPE_HARVEST_TOUR, true)
-	
+
 	local sqrt = math.sqrt
 	local pi = math.pi
 	local atan2 = math.atan2
@@ -160,26 +159,26 @@ function Helper:InitializeCallbacks(fragment)
 	local GetPlayerCameraHeading = _G["GetPlayerCameraHeading"]
 	local GetMapPlayerPosition = _G["GetMapPlayerPosition"]
 	local lastTime = 0
-	
+
 	function self.OnUpdate(time)
-		
+
 		HarvestFarmCompassStats:SetText(format("%.2f", self.numFarmedNodes / (time - self.startTime) * 1000 * 60))
-		
+
 		local x, y, z = Harvest.GetPlayer3DPosition()
-		
+
 		local targetX, targetY, targetZ = Farm.path:GetWorldCoords(self.nextPathIndex)
 		local dx = x - targetX
 		local dy = y - targetY
 		local dz = z - targetZ
-		
+
 		local distanceInMeters = (dx * dx + dy * dy)^0.5
-		
+
 		if distanceInMeters < Harvest.GetVisitedRangeInMeters() then
 			self:UpdateToNextTarget()
 		end
-		
+
 		HarvestFarmCompassDistance:SetText(format("%d m", zo_round(distanceInMeters) ))
-		
+
 		if time - lastTime > 1000 then
 			HarvestFarmCompassVerticalDistance:SetHidden(false)
 			local str
@@ -190,7 +189,7 @@ function Helper:InitializeCallbacks(fragment)
 			end
 			HarvestFarmCompassVerticalDistance:SetText(str)
 		end
-		
+
 		local angle = -atan2(dx, dy)
 		angle = (angle + GetPlayerCameraHeading())
 		HarvestFarmCompassArrow:SetTextureRotation(-angle, 0.5, 0.5)
@@ -201,7 +200,7 @@ function Helper:InitializeCallbacks(fragment)
 		end
 		angle = zo_abs(angle / pi)
 		HarvestFarmCompassArrow:SetColor(2*angle-angle*angle, 1 - angle*angle, 0, 0.75)
-		
+
 	end
 end
 
@@ -218,7 +217,7 @@ function Helper:Start()
 	self.startTime = GetFrameTimeMilliseconds()
 	self.numFarmedNodes = 0
 	self.nextPathIndex = 1
-	
+
 	EVENT_MANAGER:RegisterForUpdate("HarvestFarmUpdatePosition", 50, self.OnUpdate)
 	self:SetCompassHidden(false)
 	ZO_WorldMap_RefreshCustomPinsOfType(MAP_PIN_TYPE_HARVEST_TOUR)
@@ -228,7 +227,7 @@ end
 function Helper:Stop()
 	self.startTime = 0
 	self.nextPathIndex = 1
-	
+
 	EVENT_MANAGER:UnregisterForUpdate("HarvestFarmUpdatePosition")
 	HarvestFarmCompass:SetHidden(true)
 	ZO_WorldMap_RefreshCustomPinsOfType(MAP_PIN_TYPE_HARVEST_TOUR)
@@ -241,16 +240,16 @@ end
 
 function Helper:OnPinClicked(pin)
 	local pinType, nodeId = pin:GetPinTypeAndTag()
-	
+
 	local index = Farm.path:GetIndex(nodeId)
 	if not index then return false end
-	
+
 	if not self:IsRunning() then
 		self:Start()
 	else
 		self:SetCompassHidden(false)
 	end
-	
+
 	self.nextPathIndex = index
 	ZO_WorldMap_RefreshCustomPinsOfType(MAP_PIN_TYPE_HARVEST_TOUR)
 	Harvest.InRangePins:RefreshCustomPins() -- todo, make this some callback?
@@ -261,7 +260,7 @@ function Helper:GainedItem(objectName, stackCount)
 	if not (self.startTime > 0) then
 		return
 	end
-	
+
 	if MasterMerchant then
 		local stats = MasterMerchant:itemStats(objectName)
 		if stats then
@@ -276,7 +275,7 @@ function Helper:FarmedANode(objectName, stackCount)
 	if not (self.startTime > 0) then
 		return
 	end
-	
+
 	if MasterMerchant then
 	--	self.numFarmedNodes = self.numFarmedNodes + (MasterMerchant:itemStats(objectName).avgPrice or 0) * stackCount
 	else

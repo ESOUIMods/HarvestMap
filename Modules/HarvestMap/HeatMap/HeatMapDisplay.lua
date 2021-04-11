@@ -16,7 +16,7 @@ HarvestHeat.needsRefresh = true
 -- The map will be divided into (numSubdivisions x numSubdivisions) sections.
 -- Each section has a heat value which is stored in HarvestHeat.heatMap.
 -- In order to create a gradient effect between two of such divisions, we create
--- rectangular tiles. 
+-- rectangular tiles.
 -- The corners of each tile are located at the center of 4 adjacent sections.
 -- This way we can create the fading effect by setting the vertex colors appropiate
 -- to the corner's section's heat value.
@@ -176,6 +176,11 @@ function HarvestHeat.Initialize()
 	Harvest.callbackManager:RegisterForEvent(Harvest.events.NODE_ADDED, OnNodeChanged)
 	Harvest.callbackManager:RegisterForEvent(Harvest.events.NODE_UPDATED, OnNodeChanged)
 	Harvest.callbackManager:RegisterForEvent(Harvest.events.NODE_DELETED, OnNodeChanged)
+	Harvest.callbackManager:RegisterForEvent(Harvest.events.FILTER_PROFILE_CHANGED, function(event, profile)
+		if profile == Harvest.mapPins.filterProfile then
+			HarvestHeat.RefreshHeatmap()
+		end
+	end)
 	-- the fade in animation of the world map messes up the alpha values of the heat map
 	-- so display the heatmap after the map finished its fade in animation
 	local mapscene = SCENE_MANAGER:GetScene("worldMap")

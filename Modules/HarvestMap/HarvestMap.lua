@@ -7,14 +7,16 @@ if LibDebugLogger then
 	local logFunctionNames = {"Verbose", "Debug", "Info", "Warn", "Error"}
 	for _, logFunctionName in pairs(logFunctionNames) do
 		logFunctions[logFunctionName] = function(self, ...) return self.logger[logFunctionName](self.logger, ...) end
+		Harvest[logFunctionName] = logFunctions[logFunctionName]
 	end
 else
 	local logFunctionNames = {"Verbose", "Debug", "Info", "Warn", "Error"}
 	for _, logFunctionName in pairs(logFunctionNames) do
 		logFunctions[logFunctionName] = function(...) end
+		Harvest[logFunctionName] = logFunctions[logFunctionName]
 	end
 end
-	
+
 Harvest.modules = {}
 function Harvest:RegisterModule(moduleName, moduleTable)
 	self[moduleName] = moduleTable
@@ -39,11 +41,11 @@ function Harvest:InitializeModules()
 end
 
 function Harvest.OnLoad(eventCode, addOnName)
-		
+
 	if addOnName ~= "HarvestMap" then
 		return
 	end
-	
+
 
 	if HarvestImport then
 		Harvest.notifications:Initialize()
@@ -54,16 +56,16 @@ It is not compatible with HarvestMap, please uninstall the HarvestMap-Import add
 ]])
 		return
 	end
-	
+
 	Harvest:InitializeModules()
-	
-	Harvest.logger:Info(Harvest.GenerateSettingList())
-	
+
+	Harvest:Info(Harvest.GenerateSettingList())
+
 	-- initialize bonus features
 	if Harvest.IsHeatmapActive() then
 		HarvestHeat.Initialize()
 	end
-	
+
 end
 
 EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_ADD_ON_LOADED, Harvest.OnLoad)

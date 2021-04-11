@@ -26,52 +26,44 @@ end
 function MapCache:Initialize(mapMetaData)
 	self.time = GetFrameTimeSeconds()
 	self.accessed = 0
-	
+
 	self.map = mapMetaData.map
 	self.lastNodeId = 0
 	self.mapMetaData = mapMetaData
-	
+
 	self.pinTypeId = {}
-	self.nodeIndex = {} -- index of the node in the saved variables table data[map][pinTypeId][nodeIndex]
-	
-	self.globalX = {}
-	self.globalY = {}
 
 	self.worldX = {}
 	self.worldY = {}
 	self.worldZ = {}
-	
+
 	self.hiddenTime = {}
 	self.hasCompassPin = {}
-	
+
 	self.nodesOfPinType = {}
 	self.nodesOfPinTypeSize = {}
-	
-	self:RefreshZoneMeasurementDependendFields()
-	
+
+	self:RefreshNearestNeighborLookupTable()
+
 end
 
-function MapCache:RefreshZoneMeasurementDependendFields()
-	
-	self.zoneMeasurement = self.mapMetaData.zoneMeasurement
+function MapCache:RefreshNearestNeighborLookupTable()
+
 	self.mergeDistanceSquared = self.MergeDistanceInMeters * self.MergeDistanceInMeters
-	
+
 	self.divisions = {}
 	for _, pinTypeId in pairs(Harvest.PINTYPES) do
 		self.divisions[pinTypeId] = {}
 	end
-	
+
 	for nodeId, pinTypeId in pairs(self.pinTypeId) do
 		self:InsertNodeIntoDivision(nodeId)
 	end
-	
+
 end
 
 function MapCache:Dispose()
 	ZO_ClearTable(self.pinTypeId)
-	ZO_ClearTable(self.nodeIndex)
-	ZO_ClearTable(self.globalX)
-	ZO_ClearTable(self.globalY)
 	ZO_ClearTable(self.worldX)
 	ZO_ClearTable(self.worldY)
 	ZO_ClearTable(self.worldZ)
@@ -81,11 +73,8 @@ function MapCache:Dispose()
 	for pinTypeId, list in pairs(self.nodesOfPinType) do
 		ZO_ClearTable(list)
 	end
-	
+
 	self.pinTypeId = nil
-	self.nodeIndex = nil
-	self.globalX = nil
-	self.globalY = nil
 	self.worldX = nil
 	self.worldY = nil
 	self.worldZ = nil
@@ -93,7 +82,7 @@ function MapCache:Dispose()
 	self.hasCompassPin = nil
 	self.nodesOfPinType = nil
 	self.nodesOfPinTypeSize = nil
-	
+
 	for pinTypeId, divisions in pairs(self.divisions) do
 		ZO_ClearTable(divisions)
 		self.divisions[pinTypeId] = nil
@@ -104,7 +93,7 @@ end
 function MapCache:InsertNodeIntoDivision(nodeId)
 	local pinTypeId = self.pinTypeId[nodeId]
 	local worldX, worldY = self.worldX[nodeId], self.worldY[nodeId]
-		
+
 	local index = (zo_floor(worldX / self.DivisionWidthInMeters) + zo_floor(worldY / self.DivisionWidthInMeters) * self.numDivisions) % self.TotalNumDivisions
 	local division = self.divisions[pinTypeId][index] or {}
 	self.divisions[pinTypeId][index] = division
@@ -114,10 +103,10 @@ end
 function MapCache:RemoveNodeFromDivision(nodeId)
 	local pinTypeId = self.pinTypeId[nodeId]
 	local worldX, worldY = self.worldX[nodeId], self.worldY[nodeId]
-		
+
 	local index = (zo_floor(worldX / self.DivisionWidthInMeters) + zo_floor(worldY / self.DivisionWidthInMeters) * self.numDivisions) % self.TotalNumDivisions
 	local division = self.divisions[pinTypeId][index]
-	
+
 	local wasNodeRemoved = false
 	for i, nId in pairs(division) do
 		if nId == nodeId then
@@ -142,23 +131,20 @@ end
 -- Methods to add, delete and update data in the cache
 -----------------------------------------------------------
 
-function MapCache:Add(pinTypeId, nodeIndex, worldX, worldY, worldZ, globalX, globalY)
-	
+function MapCache:Add(pinTypeId, worldX, worldY, worldZ)
+
 	self.lastNodeId = self.lastNodeId + 1
 	local nodeId = self.lastNodeId
 
 	local pinTypeSize = self.nodesOfPinTypeSize[pinTypeId] + 1
 	self.nodesOfPinTypeSize[pinTypeId] = pinTypeSize
 	self.nodesOfPinType[pinTypeId][pinTypeSize] = nodeId
-	
+
 	self.pinTypeId[nodeId] = pinTypeId
-	self.nodeIndex[nodeId] = nodeIndex
-	self.globalX[nodeId] = globalX
-	self.globalY[nodeId] = globalY
 	self.worldX[nodeId] = worldX
 	self.worldY[nodeId] = worldY
 	self.worldZ[nodeId] = worldZ
-	
+
 	self:InsertNodeIntoDivision(nodeId)
 
 	return nodeId
@@ -186,22 +172,19 @@ function MapCache:Delete(nodeId)
 	self:RemoveNodeFromDivision(nodeId)
 
 	self.pinTypeId[nodeId] = nil
-	self.nodeIndex[nodeId] = nil
-	self.globalX[nodeId] = nil
-	self.globalY[nodeId] = nil
 	self.worldX[nodeId] = nil
 	self.worldY[nodeId] = nil
 	self.worldZ[nodeId] = nil
 	self.hiddenTime[nodeId] = nil
 	self.hasCompassPin[nodeId] = nil
-	
+
 	return true
 end
 
 -- merges the node corresponding to the nodeId with the given data
 -- returns the nodes data after merging
 -- the returned data may be the original data, if the given input data is too old or invalid
-function MapCache:Move(nodeId, worldX, worldY, worldZ, globalX, globalY)
+function MapCache:Move(nodeId, worldX, worldY, worldZ)
 	local oldWorldX, oldWorldY = self.worldX[nodeId], self.worldY[nodeId]
 	local oldDivisionIndex = zo_floor(oldWorldX / self.DivisionWidthInMeters)
 	oldDivisionIndex = oldDivisionIndex + zo_floor(oldWorldY / self.DivisionWidthInMeters) * self.numDivisions
@@ -210,44 +193,48 @@ function MapCache:Move(nodeId, worldX, worldY, worldZ, globalX, globalY)
 	newDivisionIndex = newDivisionIndex + zo_floor(worldY / self.DivisionWidthInMeters) * self.numDivisions
 	newDivisionIndex = newDivisionIndex % self.TotalNumDivisions
 	local didDvisionChange = (oldDivisionIndex ~= newDivisionIndex)
-	
+
 	if didDvisionChange then
 		self:RemoveNodeFromDivision(nodeId)
 	end
-		
-	self.globalX[nodeId] = globalX
-	self.globalY[nodeId] = globalY
+
 	self.worldX[nodeId] = worldX
 	self.worldY[nodeId] = worldY
 	self.worldZ[nodeId] = worldZ
-		
+
 	if didDvisionChange then
 		self:InsertNodeIntoDivision(nodeId)
 	end
-	
+
 end
 
-function MapCache:GetMergeableNode(pinTypeId, worldX, worldY, worldZ)
+local GetNormalizedWorldPosition = GetNormalizedWorldPosition
+function MapCache:GetLocal(nodeId)
+	local zoneId = self.mapMetaData.zoneId
+	return GetNormalizedWorldPosition(zoneId, self.worldX[nodeId] * 100, (self.worldZ[nodeId] or 0) * 100, self.worldY[nodeId] * 100)
+end
+
+function MapCache:GetMergeableNode(pinTypeId, worldX, worldY, worldZ, bestDistance)
 	self.time = GetFrameTimeSeconds()
-	
+
 	local useWorldZ = 1
 	if not worldZ then
 		worldZ = 0
 		useWorldZ = 0
 	end
-	
+
 	local divisionX = zo_floor(worldX / self.DivisionWidthInMeters)
 	local divisionY = zo_floor(worldY / self.DivisionWidthInMeters)
 	local divisions = self.divisions[pinTypeId]
 	if not divisions then return end
-	
+
 	local division, dx, dy, dz, distance
 	local startJ = divisionY - 1
 	local endJ = divisionY + 1
-	
-	local bestDistance = math.huge
+
+	local bestDistance = bestDistance or math.huge
 	local bestNodeId = nil
-	
+
 	for i = divisionX - 1, divisionX + 1 do
 		for j = startJ, endJ do
 			division = divisions[(i + j * self.numDivisions) % self.TotalNumDivisions]
@@ -269,12 +256,12 @@ function MapCache:GetMergeableNode(pinTypeId, worldX, worldY, worldZ)
 			end
 		end
 	end
-	
+
 	--d(bestDistance)
 	if bestDistance < self.mergeDistanceSquared then
 		return bestNodeId, bestDistance
 	end
-	
+
 	return nil--bestNodeId
 end
 

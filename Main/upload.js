@@ -1,5 +1,6 @@
 
 var basePath = "../../SavedVariables/";
+var outputPath = "Modules/"
 var saveFiles = [
 	"HarvestMapAD",
 	"HarvestMapEP",
@@ -31,7 +32,7 @@ function getEmptySaveFile(savedVar) {
 
 function exchangeData(savedVar, input, outputFile, isSecondTry) {
 	var connection = WScript.CreateObject("Msxml2.XMLHTTP");
-	connection.open('post', "http://harvestmap.binaryvector.net:8080/", false);
+	connection.open('post', "http://harvestmap.binaryvector.net:8081/", false);
 	
 	connection.onreadystatechange = function() {
 		if (connection.readyState == 4) {
@@ -71,8 +72,8 @@ for (i = 0; i < saveFiles.length; i++) {
 	
 	var savedVar = saveFiles[i];
 	var saveFile = basePath + savedVar + "-backup.lua"
-	var outputFile = basePath + savedVar + ".lua"
-	
+	var outputFile = outputPath + savedVar + "/" + savedVar + ".lua"
+	WScript.Echo(outputFile)
 	if (reader.FileExists(saveFile)) {
 		WScript.Echo("Open file: " + savedVar);
 		var content = readSaveFile(saveFile);

@@ -1,4 +1,4 @@
-local GPS = LibGPS2
+
 local Path = ZO_Object:Subclass()
 Harvest.path = Path
 
@@ -11,7 +11,7 @@ end
 function Path:Initialize(mapCache)
 	self.mapCache = mapCache
 	self.mapCache.accessed = self.mapCache.accessed + 1
-	
+
 	self.length = 0
 	self.numNodes = 0
 	self.nodeIndices = {}
@@ -23,9 +23,7 @@ function Path:Dispose()
 end
 
 function Path:GetLocalCoords(index)
-	local x = self.mapCache.globalX[self.nodeIndices[index]]
-	local y = self.mapCache.globalY[self.nodeIndices[index]]
-	return GPS:GlobalToLocal(x, y)
+	return self.mapCache:GetLocal(self.nodeIndices[index])
 end
 
 function Path:GetWorldCoords(index)
@@ -43,36 +41,36 @@ end
 function Path:InsertAfter(nodeId, newNodeId)
 	local index = self:GetIndex(nodeId)
 	if not index then return end
-	
+
 	self.length = self.length - self:GetDistanceToPrevious(index+1)
-	
+
 	for i = 0, self.numNodes - index - 1 do
 		self.nodeIndices[self.numNodes - i + 1] = self.nodeIndices[self.numNodes - i]
 	end
 	self.numNodes =  self.numNodes + 1
 	self.nodeIndices[index+1] = newNodeId
-	
+
 	self.length = self.length + self:GetDistanceToPrevious(index+1) + self:GetDistanceToPrevious(index+2)
 end
 
 function Path:Insert(newNodeIds, endNodeId)
 	local startIndex = self:GetIndex(newNodeIds[1])
 	local endIndex = self:GetIndex(endNodeId)
-	
+
 	local newNodeIndices = {}
 	local newNumNodes = 0
-	
+
 	if startIndex < endIndex then
 		for i = 1, startIndex do
 			newNumNodes = newNumNodes + 1
 			newNodeIndices[newNumNodes] = self.nodeIndices[i]
 		end
-		
+
 		for i = 2, (#newNodeIds) do
 			newNumNodes = newNumNodes + 1
 			newNodeIndices[newNumNodes] = newNodeIds[i]
 		end
-		
+
 		for i = endIndex, self.numNodes do
 			newNumNodes = newNumNodes + 1
 			newNodeIndices[newNumNodes] = self.nodeIndices[i]
@@ -82,16 +80,16 @@ function Path:Insert(newNodeIds, endNodeId)
 			newNumNodes = newNumNodes + 1
 			newNodeIndices[newNumNodes] = newNodeIds[i]
 		end
-		
+
 		for i = endIndex, startIndex-1 do
 			newNumNodes = newNumNodes + 1
 			newNodeIndices[newNumNodes] = self.nodeIndices[i]
 		end
 	end
-	
+
 	self.nodeIndices = newNodeIndices
 	self.numNodes = newNumNodes
-	
+
 	self:CalculateStats()
 end
 
@@ -208,13 +206,13 @@ function Path:GetDistanceToPrevious(index)
 	if previousIndex == 0 then
 		previousIndex = self.numNodes
 	end
-	
+
 	index = self.nodeIndices[index]
 	previousIndex = self.nodeIndices[previousIndex]
-	
+
 	local dx = self.mapCache.worldX[index] - self.mapCache.worldX[previousIndex]
 	local dy = self.mapCache.worldY[index] - self.mapCache.worldY[previousIndex]
-	
+
 	return (dx * dx + dy * dy)^0.5
 end
 
