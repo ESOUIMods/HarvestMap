@@ -234,7 +234,7 @@ function FilterProfiles:AddNewProfile()
 	local newProfile = {}
 	Harvest.CopyMissingDefaultValues(newProfile, Settings.defaultFilterProfile)
 	newProfile.name = "Unnamed Profile"
-	table.insert(Settings.savedVars.account.filterProfiles, newProfile)
+	table.insert(Settings.savedVars.settings.filterProfiles, newProfile)
 
 	self:LoadProfile(newProfile)
 end

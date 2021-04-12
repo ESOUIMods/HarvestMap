@@ -87,30 +87,30 @@ local interactableName2PinTypeId = {
 	["schwerer sack"] = Harvest.HEAVYSACK,
 	["sac lourd"] = Harvest.HEAVYSACK,
 	["Ð¢Ñ?Ð¶eÐ»Ñ‹Ð¹ Ð¼eÑˆoÐº"] = Harvest.HEAVYSACK, -- russian
-	["Ð¢ÑÐ¶ÐµÐ»Ñ‹Ð¹ Ð¼ÐµÑˆÐ¾Ðº"] = Harvest.HEAVYSACK, -- updated russian
-	["Ñ‚ÑÐ¶ÐµÐ»Ñ‹Ð¹ Ð¼ÐµÑˆÐ¾Ðº"] = Harvest.HEAVYSACK, -- updated russian
+	["Тяжелый мешок"] = Harvest.HEAVYSACK, -- updated russian
+	["тяжелый мешок"] = Harvest.HEAVYSACK, -- updated russian
 	["sacco pesante"] = Harvest.HEAVYSACK, -- italian
 	["cassa pesante"] = Harvest.HEAVYSACK, -- italian
 
 	["thieves trove"] = Harvest.TROVE,
 	["diebesgut"] = Harvest.TROVE,
-	["trÃ©sor des voleurs"] = Harvest.TROVE,
-	["Ð’opoÐ²cÐºoÐ¹ Ñ‚aÐ¹Ð½Ð¸Ðº"] = Harvest.TROVE,  -- russian
-	["Ð’Ð¾Ñ€Ð¾Ð²ÑÐºÐ¾Ð¹ Ñ‚Ð°Ð¹Ð½Ð¸Ðº"] = Harvest.TROVE, -- updated russian
-	["Ð²Ð¾Ñ€Ð¾Ð²ÑÐºÐ¾Ð¹ Ñ‚Ð°Ð¹Ð½Ð¸Ðº"] = Harvest.TROVE, -- updated russian
+	["trésor des voleurs"] = Harvest.TROVE,
+	["Вopoвcкoй тaйник"] = Harvest.TROVE,  -- russian
+	["Воровской тайник"] = Harvest.TROVE, -- updated russian
+	["воровской тайник"] = Harvest.TROVE, -- updated russian
 	["tesoro dei ladri"] = Harvest.TROVE, --italian
 
 	["loose panel"] = Harvest.STASH,
 	["loose tile"] = Harvest.STASH,
 	["loose stone"] = Harvest.STASH,
 	["panneau mobile"] = Harvest.STASH,
-	["tuile descellÃ©e"] = Harvest.STASH,
-	["pierre dÃ©logÃ©e"] = Harvest.STASH,
+	["tuile descellée"] = Harvest.STASH,
+	["pierre délogée"] = Harvest.STASH,
 	["lose tafel"] = Harvest.STASH,
 	["lose platte"] = Harvest.STASH,
 	["loser stein"] = Harvest.STASH,
-	["ÐŸÐ¾Ð´Ð°Ñ‚Ð»Ð¸Ð²Ð°Ñ Ð¿Ð°Ð½ÐµÐ»ÑŒ"] = Harvest.STASH, -- russian
-	["ÐŸÐ¾Ð´Ð°Ñ‚Ð»Ð¸Ð²Ñ‹Ð¹ ÐºÐ°Ð¼ÐµÐ½ÑŒ"] = Harvest.STASH, -- loose tile is not translated in the ru.lang file of RuESO
+	["Податливая панель"] = Harvest.STASH, -- russian
+	["Податливый камень"] = Harvest.STASH, -- loose tile is not translated in the ru.lang file of RuESO
 	["pannello mobile"] = Harvest.STASH, --italian
 	["mattonella traballante"] = Harvest.STASH, --italian
 	["pietra sporgente"] = Harvest.STASH, --italian
@@ -122,7 +122,7 @@ local interactableName2PinTypeId = {
 
 	["giant clam"] = Harvest.CLAM,
 	["riesenmuschel"] = Harvest.CLAM,
-	["palourde gÃ©ante"] = Harvest.CLAM,
+	["palourde géante"] = Harvest.CLAM,
 	["ostrica gigante"] = Harvest.CLAM,
 }
 function Harvest.IsInteractableAContainer( interactableName )
