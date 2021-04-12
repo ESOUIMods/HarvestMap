@@ -144,7 +144,8 @@ function Interaction.BeginLockpicking()
 	-- lockpicking has its own interaction camera, which is different from the player position
 	local worldX, worldY, worldZ
 	if IsInteractionUsingInteractCamera() then
-		worldX, worldY, worldZ = Harvest.GetCamera3DPosition()
+		--Removed "worldX, worldY, worldZ = Harvest.GetCamera3DPosition()" was causing an exception. GetPlayer3DPosition works fine.
+		worldX, worldY, worldZ = Harvest.GetPlayer3DPosition()
 	else
 		-- this function returns wrong height values, if the interaction camera is active
 		worldX, worldY, worldZ = Harvest.GetPlayer3DPosition()
