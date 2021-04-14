@@ -3,25 +3,25 @@ Harvest.defaultLocalizedStrings = {
 	-- top level description
 	["esouidescription"] = "For the addon description and FAQ visit the addon's page on esoui.com",
 	["openesoui"] = "Open ESOUI",
-	["exchangedescription"] = "You can download the most recent HarvestMap data (positions of resources) by executing 'DownloadNewData.command' (MacOS)' or 'DownloadNewData.bat' (Windows) in the HarvestMap folder. More information regarding this is available in the ESOUI addon description.",
-	
+	["exchangedescription2"] = "You can download the most recent HarvestMap data (positions of resources) by installing the HarvestMap-Data add-on. For more information, see the addon description on ESOUI.",
+
 	["notifications"] = "Notifications and Warnings",
 	["notificationstooltip"] = "Displays notifications and warnings in the top right corner of the screen.",
 	["moduleerrorload"] = "The addon <<1>> is disabled.\nNo data available for this area.",
 	["moduleerrorsave"] = "The addon <<1>> is disabled.\nThe location of the node was not saved.",
-	
+
 	-- outdated data settings
 	["outdateddata"] = "Outdated Data Settings",
 	["outdateddatainfo"] = "These data related settings are shared between all accounts and characters on this computer.",
 	["timedifference"] = "Keep only recent data",
 	["timedifferencetooltip"] = "HarvestMap will only keep data from the last X days.\nThis prevents displaying old data which may already be outdated.\nSet to 0 to keep any data regardless of its age.",
 	["applywarning"] = "Once old data has been removed, it can not be restored!",
-	
+
 	-- account wide settings
 	["account"] = "Account-wide Settings",
 	["accounttooltip"] = "All the settings below will be the same for each of your characters.",
 	["accountwarning"] = "Changing this setting will reload the UI.",
-	
+
 	-- map pin settings
 	["mapheader"] = "Map Pin Settings",
 	["mappins"] = "Display pins on main map",
@@ -34,13 +34,13 @@ Harvest.defaultLocalizedStrings = {
 	["drawdistance"] = "Map pin distance",
 	["drawdistancetooltip"] = "The distance threshold for which map pins are drawn. This setting does also affect minimaps!",
 	["drawdistancewarning"] = "This setting does also affect minimaps!",
-	
+
 	-- compass settings
 	["compassheader"] = "Compass Settings",
 	["compass"] = "Display pins on compass",
 	["compassdistance"] = "Max pin distance",
 	["compassdistancetooltip"] = "The maximum distance for pins in meters that appear on the compass.",
-	
+
 	-- 3d pin settings
 	["worldpinsheader"] = "3D Pin Settings",
 	["worldpins"] = "Display pins in 3D world",
@@ -53,33 +53,32 @@ Harvest.defaultLocalizedStrings = {
 	["worldpinsdepth"] = "Use depth-buffer for 3D pins",
 	["worldpinsdepthtooltip"] = "When disabled, the 3D pins will be visible through through walls and other objects.",
 	["worldpinsdepthwarning"] = "Because of a bug in ESO, this option does not work, when a Sub-Sampling quality of medium or low is selected in the game's video options.",
-	
-	
+
+
 	-- respawn timer settings
-	["farmandrespawn"] = "Respawn Timer and Farming Helper",
+	["visitednodes"] = "Visited Nodes and Farming Helper",
 	["rangemultiplier"] = "Visited node range",
-	["rangemultipliertooltip"] = "Nodes within X meters are considered as visited by the respawn timer and the farming helper.",
+	["rangemultipliertooltip"] = "Nodes within X meters are considered as visited by the farming helper and the hide timer.",
 	["usehiddentime"] = "Hide recently visited nodes",
 	["usehiddentimetooltip"] = "Pins will be hidden if you visited their location recently.",
-	["hiddentime"] = "Duration (Respawn Timer)",
+	["hiddentime"] = "Hide Duration",
 	["hiddentimetooltip"] = "Recently visited nodes will be hidden for X minutes.",
-	["hiddenonharvestwarning"] = "Turning this option off can negatively impact the game's performance.",
 	["hiddenonharvest"] = "Hide nodes only after harvesting",
-	["hiddenonharvesttooltip"] = "Enable to hide pins only, when you harvested them. When disabled pins will also be hidden if you visit them.",
-	
+	["hiddenonharvesttooltip"] = "Enable this option to hide pins only, when you harvested them. When the option is disabled, pins will be hidden if you visit them.",
+
 	-- spawn filter
-	spawnfilter = "Nearby Resource Filters",
+	spawnfilter = "Spawned Resource Filters",
 	nodedetectionmissing = "These options can only be enabled, if the 'NodeDetection' library is enabled.",
-	spawnfilterdescription = [[When enabled, HarvestMap will hide pins for resources that have not spawned yet.
+	spawnfilterdescription = [[When enabled, HarvestMap will hide pins for resources that have not respawned yet.
 For example if another player already harvested the resource, then the pin will be hidden until the resource is available again.
-This option works only for harvestable crafting material. HarvestMap can not detect nearby containers such as chests, heavy sacks, or psijic portals.
+This option works only for harvestable crafting material. HarvestMap can not detect spawned containers such as chests, heavy sacks, or psijic portals.
 The filter does not work if another addon hides or rescales the compass.]],
 	spawnfilter_map = "Use filter on main map",
 	spawnfilter_minimap = "Use filter on minimap",
 	spawnfilter_compass = "Use filter for compass pins",
 	spawnfilter_world = "Use filter for 3D pins",
 	spawnfilter_pintype = "Enable filter for pin types:",
-	
+
 	-- pin type options
 	["pinoptions"] = "Pin Type Options",
 	["pinsize"] = "Pin size",
@@ -89,7 +88,7 @@ The filter does not work if another addon hides or rescales the compass.]],
 	["savepin"] = "Save locations",
 	["savetooltip"] = "Enable to save the locations of this resource when you discover them.",
 	["pintexture"] = "Pin icon",
-	
+
 	-- pin type names
 	["pintype1"] = "Smithing and Jewelry",
 	["pintype2"] = "Clothing",
@@ -106,15 +105,15 @@ The filter does not work if another addon hides or rescales the compass.]],
 	["pintype11"] = "Justice Containers",
 	["pintype12"] = "Hidden Stashes",
 	["pintype15"] = "Giant Clams",
-	-- pin type 16, 17 used to be jewlry and psijic portals 
+	-- pin type 16, 17 used to be jewlry and psijic portals
 	-- but the locations are the same as smithing and runes
 	["pintype18"] = "Unknown node",
 	["pintype19"] = "Crimson Nirnroot",
-	
+
 	-- extra map filter buttons
 	["deletepinfilter"] = "Delete HarvestMap pins",
 	["filterheatmap"] = "Heatmap mode",
-	
+
 	-- localization for the farming helper
 	["goldperminute"] = "Gold per minute:",
 	["farmresult"] = "HarvestFarm Result",
@@ -151,7 +150,7 @@ The filter does not work if another addon hides or rescales the compass.]],
 	["loaderror"] = "The tour could not be loaded.",
 	["removepintype"] = "Do you want to remove <<1>> from the tour?",
 	["removepintypetitle"] = "Confirm Removal",
-	
+
 	-- extra harvestmap menu
 	["pinvisibilitymenu"] = "Extended Pin Filter Menu",
 	["menu"] = "HarvestMap Menu",
@@ -176,7 +175,7 @@ Nodes per kilometer: <<3>>]],
 	filterworld = "Filter Profile for 3D Pins",
 	unnamedfilterprofile = "Unnamed Profile",
 	defaultprofilename = "Default Filter Profile",
-	
+
 	-- SI names to fit with ZOS api
 	["SI_BINDING_NAME_SKIP_TARGET"] = "Skip Target",
 	["SI_BINDING_NAME_TOGGLE_WORLDPINS"] = "Toggle 3D pins",

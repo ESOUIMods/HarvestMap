@@ -222,7 +222,7 @@ function Data:RefreshZoneCacheForNewZone()
 	for mapMetaData, mapCache in pairs(self.mapCaches) do
 		if mapMetaData.zoneId == self.currentZoneCache.zoneId then
 			self.currentZoneCache:AddCache(mapCache)
-			self:Info("add map to zone cache ", mapCache.map)
+			self:Info("add cached map to zone cache ", mapCache.map)
 		end
 	end
 
@@ -243,6 +243,15 @@ function Data:RefreshZoneCacheForNewZone()
 		if data then
 			for map in pairs(data) do
 				self:GetMapCache(Harvest.mapTools:GetMapMetaDataForZoneIndexAndMap(mapMetaData.zoneIndex, map))
+				self:Info("add saved map to zone cache ", mapMetaData.map)
+			end
+		end
+
+		data = submodule.downloadedVars[mapMetaData.zoneId]
+		if data then
+			for map in pairs(data) do
+				self:GetMapCache(Harvest.mapTools:GetMapMetaDataForZoneIndexAndMap(mapMetaData.zoneIndex, map))
+				self:Info("add downloaded map to zone cache ", mapMetaData.map)
 			end
 		end
 	end

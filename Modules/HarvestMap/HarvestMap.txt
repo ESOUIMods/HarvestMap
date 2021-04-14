@@ -1,8 +1,8 @@
 ## Title: HarvestMap
 ## Author: Shinni
-## Version: 3.15.4
+## Version: 3.15.5
 ## APIVersion: 100034
-## AddOnVersion: 315004
+## AddOnVersion: 315005
 ## OptionalDependsOn: MiniMap VotansMiniMap AUI LibMapPins-1.0 NodeDetection LibDebugLogger
 ## DependsOn: LibAddonMenu-2.0 LibMainMenu-2.0
 ## SavedVariables: Harvest_SavedVars

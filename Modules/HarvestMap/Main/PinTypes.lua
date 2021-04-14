@@ -86,7 +86,8 @@ local interactableName2PinTypeId = {
 	["heavy crate"] = Harvest.HEAVYSACK, -- special nodes in cold harbor
 	["schwerer sack"] = Harvest.HEAVYSACK,
 	["sac lourd"] = Harvest.HEAVYSACK,
-	["Тяжелый мешок"] = Harvest.HEAVYSACK, -- updated russian
+	["Тяжелый мешок"] = Harvest.HEAVYSACK, -- russian
+	["тяжелый мешок"] = Harvest.HEAVYSACK, -- russian
 	["sacco pesante"] = Harvest.HEAVYSACK, -- italian
 	["cassa pesante"] = Harvest.HEAVYSACK, -- italian
 
@@ -94,6 +95,7 @@ local interactableName2PinTypeId = {
 	["diebesgut"] = Harvest.TROVE,
 	["trésor des voleurs"] = Harvest.TROVE,
 	["Вopoвcкoй тaйник"] = Harvest.TROVE,  -- russian
+	["Воровской тайник"] = Harvest.TROVE, -- updated russian
 	["воровской тайник"] = Harvest.TROVE, -- updated russian
 	["tesoro dei ladri"] = Harvest.TROVE, --italian
 

@@ -427,7 +427,9 @@ function InRangePins.pinUpdateCallback(divisionIndex, self)
 			division = mapCache.divisions[pinTypeId][divisionIndex]
 			if division then
 				for _, nodeId in pairs(division) do
-					self:UpdatePin(mapCache, nodeId, lastUpdate, compassKeys, worldKeys)
+					if not mapCache.hiddenTime[nodeId] then
+						self:UpdatePin(mapCache, nodeId, lastUpdate, compassKeys, worldKeys)
+					end
 				end
 			end
 		end

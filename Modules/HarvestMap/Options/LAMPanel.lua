@@ -123,7 +123,7 @@ function Settings:InitializeLAM()
 	optionsTable:insert({
 		type = "description",
 		title = nil,
-		text = Harvest.GetLocalization("exchangedescription"),
+		text = Harvest.GetLocalization("exchangedescription2"),
 		width = "full",
 	})
 
@@ -402,7 +402,7 @@ function Settings:InitializeLAM()
 
 	local description = Harvest.GetLocalization("spawnfilterdescription")
 	if not LibNodeDetection then
-		description = Harvest.GetLocalization("nodedetectionmissing") .. "\n" .. description
+		description = ZO_ERROR_COLOR:Colorize(Harvest.GetLocalization("nodedetectionmissing")) .. "\n" .. description
 	end
 	submenuTable:insert({
 		type = "description",
@@ -468,11 +468,10 @@ function Settings:InitializeLAM()
 	#####
 	--]]
 
-	--[[
 	local submenuTable = setmetatable({}, { __index = table })
 	optionsTable:insert({
 		type = "submenu",
-		name = Harvest.GetLocalization("farmandrespawn"),
+		name = Harvest.GetLocalization("visitednodes"),
 		controls = submenuTable,
 	})
 
@@ -514,13 +513,11 @@ function Settings:InitializeLAM()
 		type = "checkbox",
 		name = Harvest.GetLocalization("hiddenonharvest"),
 		tooltip = Harvest.GetLocalization("hiddenonharvesttooltip"),
-		warning = Harvest.GetLocalization("hiddenonharvestwarning"),
 		getFunc = Harvest.IsHiddenOnHarvest,
 		setFunc = Harvest.SetHiddenOnHarvest,
 		default = Harvest.settings.defaultSettings.hiddenOnHarvest,
 		disabled = IsTimerDisabled,
 	})
-	--]]
 
 	--[[
 	#####

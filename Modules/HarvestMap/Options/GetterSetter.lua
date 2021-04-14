@@ -183,7 +183,7 @@ function Harvest.AreWorldPinsVisible()
 end
 
 function Harvest.GetVisitedRangeInMeters()
-	return Settings.defaultSettings.visitedRangeInMeters --savedVars.settings.visitedRangeInMeters
+	return Settings.savedVars.settings.visitedRangeInMeters
 end
 
 function Harvest.SetVisitedRangeInMeters(value)
@@ -252,7 +252,7 @@ function Harvest.SetUseHiddenTime(value)
 end
 
 function Harvest.IsHiddenTimeUsed()
-	return false--Settings.savedVars.settings.useHiddenTime
+	return Settings.savedVars.settings.useHiddenTime
 end
 
 function Harvest.SetHeatmapActive( active )
