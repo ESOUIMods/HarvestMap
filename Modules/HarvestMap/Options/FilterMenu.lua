@@ -27,33 +27,9 @@ function FilterProfiles:Initialize()
 	self:InitializeCheckBoxes()
 
 	self:InitializeFilterDropDown(HarvestFilterProfileDropDown, self.LoadProfile)
-	self:InitializeFilterDropDown(HarvestFilterMapSelectDropDown, function(self, profile)
-		for index, filterProfile in pairs(self.filterProfiles) do
-			if filterProfile == profile then
-				Settings.savedVars.settings.mapFilterProfile = index
-				CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "mapFilterProfile", index)
-				return
-			end
-		end
-	end)
-	self:InitializeFilterDropDown(HarvestFilterCompassSelectDropDown, function(self, profile)
-		for index, filterProfile in pairs(self.filterProfiles) do
-			if filterProfile == profile then
-				Settings.savedVars.settings.compassFilterProfile = index
-				CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "compassFilterProfile", index)
-				return
-			end
-		end
-	end)
-	self:InitializeFilterDropDown(HarvestFilterWorldSelectDropDown, function(self, profile)
-		for index, filterProfile in pairs(self.filterProfiles) do
-			if filterProfile == profile then
-				Settings.savedVars.settings.worldFilterProfile = index
-				CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "worldFilterProfile", index)
-				return
-			end
-		end
-	end)
+	self:InitializeFilterDropDown(HarvestFilterMapSelectDropDown, self.SetMapProfile)
+	self:InitializeFilterDropDown(HarvestFilterCompassSelectDropDown, self.SetCompassProfile)
+	self:InitializeFilterDropDown(HarvestFilterWorldSelectDropDown, self.SetWorldProfile)
 
 	self:LoadProfile(self.filterProfiles[1])
 
@@ -78,6 +54,8 @@ function FilterProfiles:InitializeCheckBoxes()
 	local checkboxParent = WINDOW_MANAGER:CreateControl(nil, HarvestFilter, CT_CONTROL)
 	checkboxParent:SetAnchor(TOPLEFT, HarvestFilterDivider, BOTTOMLEFT, 85, 0)
 
+	local maxWidth = 240
+
 	local previousBox = checkboxParent
 	for i = 1, zo_floor(#Harvest.PINTYPES/2)-1 do
 		local pinTypeId = Harvest.PINTYPES[i]
@@ -86,12 +64,14 @@ function FilterProfiles:InitializeCheckBoxes()
 			box:SetAnchor(TOPLEFT, previousBox, BOTTOMLEFT, 0, 5)
 			self:InitializeCheckboxForPinType(box, pinTypeId)
 			previousBox = box
+			maxWidth = zo_max(maxWidth, box:GetNamedChild("Label"):GetTextWidth())
 			table.insert(self.checkboxes, box)
 		end
 	end
 
 	local checkboxParent = WINDOW_MANAGER:CreateControl(nil, HarvestFilter, CT_CONTROL)
-	checkboxParent:SetAnchor(TOPLEFT, HarvestFilterDivider, BOTTOMLEFT, 325, 0)
+	checkboxParent:SetAnchor(TOPLEFT, HarvestFilterDivider, BOTTOMLEFT, 85 + 32 + maxWidth, 0)
+	local maxWidth2 = 0
 	local previousBox = checkboxParent
 	for i = zo_floor(#Harvest.PINTYPES/2), #Harvest.PINTYPES do
 		local pinTypeId = Harvest.PINTYPES[i]
@@ -100,9 +80,11 @@ function FilterProfiles:InitializeCheckBoxes()
 			box:SetAnchor(TOPLEFT, previousBox, BOTTOMLEFT, 0, 5)
 			self:InitializeCheckboxForPinType(box, pinTypeId)
 			previousBox = box
+			maxWidth2 = zo_max(maxWidth2, box:GetNamedChild("Label"):GetTextWidth())
 			table.insert(self.checkboxes, box)
 		end
 	end
+	HarvestFilter:SetWidth(zo_max(HarvestFilter:GetWidth(), 64 + maxWidth + maxWidth2))
 end
 
 local function NewSetColor(self, r, g, b, a, ...)
@@ -222,20 +204,62 @@ function FilterProfiles:GetMapProfile()
 	return self.filterProfiles[Settings.savedVars.settings.mapFilterProfile]
 end
 
+function FilterProfiles:SetMapProfile(profile)
+	for index, filterProfile in pairs(self.filterProfiles) do
+		if filterProfile == profile then
+			Settings.savedVars.settings.mapFilterProfile = index
+			CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "mapFilterProfile", index)
+			return
+		end
+	end
+end
+
 function FilterProfiles:GetCompassProfile()
 	return self.filterProfiles[Settings.savedVars.settings.compassFilterProfile]
+end
+
+function FilterProfiles:SetCompassProfile(profile)
+	for index, filterProfile in pairs(self.filterProfiles) do
+		if filterProfile == profile then
+			Settings.savedVars.settings.compassFilterProfile = index
+			CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "compassFilterProfile", index)
+			return
+		end
+	end
 end
 
 function FilterProfiles:GetWorldProfile()
 	return self.filterProfiles[Settings.savedVars.settings.worldFilterProfile]
 end
 
-function FilterProfiles:AddNewProfile()
+function FilterProfiles:SetWorldProfile(profile)
+	for index, filterProfile in pairs(self.filterProfiles) do
+		if filterProfile == profile then
+			Settings.savedVars.settings.worldFilterProfile = index
+			CallbackManager:FireCallbacks(Events.SETTING_CHANGED, "worldFilterProfile", index)
+			return
+		end
+	end
+end
+
+function FilterProfiles:ConstructNewProfile()
 	local newProfile = {}
 	Harvest.CopyMissingDefaultValues(newProfile, Settings.defaultFilterProfile)
 	newProfile.name = "Unnamed Profile"
 	table.insert(Settings.savedVars.settings.filterProfiles, newProfile)
+	return newProfile
+end
 
+function FilterProfiles:FindProfileWithName(name)
+	for index, filterProfile in pairs(self.filterProfiles) do
+		if filterProfile.name == name then
+			return filterProfile
+		end
+	end
+end
+
+function FilterProfiles:AddNewProfile()
+	local newProfile = self:ConstructNewProfile()
 	self:LoadProfile(newProfile)
 end
 

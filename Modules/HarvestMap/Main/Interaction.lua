@@ -118,6 +118,12 @@ function Interaction.UpdateInteractionType(timeInMs)
 	end
 end
 
+local function DoesRawWorldDiffer()
+	local _, x, y, z = GetUnitWorldPosition("player")
+	local _, x2, y2, z2 = GetUnitRawWorldPosition("player")
+	return (x - x2)^2 + (y - y2)^2 + (z - z2)^2 > 100*100
+end
+
 function Interaction.BeginLockpicking()
 	local pinTypeId = nil
 	-- normal chests aren't owned and their interaction is called "unlock"
@@ -143,7 +149,7 @@ function Interaction.BeginLockpicking()
 
 	-- lockpicking has its own interaction camera, which is different from the player position
 	local worldX, worldY, worldZ
-	if IsInteractionUsingInteractCamera() then
+	if IsInteractionUsingInteractCamera() and not DoesRawWorldDiffer() then
 		worldX, worldY, worldZ = Harvest.GetCamera3DPosition()
 	else
 		-- this function returns wrong height values, if the interaction camera is active

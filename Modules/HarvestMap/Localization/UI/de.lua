@@ -78,12 +78,12 @@ Harvest.localizedStrings = {
 	["savepin"] = "Speichere Fundorte",
 	["savetooltip"] = "Aktiviere diese Einstellung, um die Position dieser Ressource zu speichern, wenn du sie findest.",
 	["pintexture"] = "Icon",
-	
+
 	-- debug output setting
 	["debugoptions"] = "Debug",
 	["debug"] = "Zeige Debugnachrichten an",
 	["debugtooltip"] = "Falls aktiviert werden Debugnachrichten im Chatfenster angezeigt.",
-	
+
 	-- pin type names
 	["pintype1"] = "Schmied und Schmuck",
 	["pintypetooltip1"] = "Zeige Erze und Staub auf der Karte und dem Kompass.",
@@ -99,9 +99,9 @@ Harvest.localizedStrings = {
 	["pintypetooltip4"] = "Zeige Wasserkräuter (Alchemie Zutat) auf der Karte und dem Kompass.",
 	["pintype5"] = "Holz",
 	["pintypetooltip5"] = "Zeige Holz auf der Karte und dem Kompass.",
-	["pintype6"] = "Schatztruhen Pinne",
+	["pintype6"] = "Schatztruhen",
 	["pintypetooltip6"] = "Zeige Schatztruhen auf der Karte und dem Kompass.",
-	["pintype7"] = "Lösungen Pinne",
+	["pintype7"] = "Lösungen",
 	["pintypetooltip7"] = "Zeige Lösungen (Alchemie Zutat) auf der Karte und dem Kompass.",
 	["pintype8"] = "Fischgründe",
 	["pintypetooltip8"] = "Zeige Fischgründe auf der Karte und dem Kompass.",
@@ -109,19 +109,19 @@ Harvest.localizedStrings = {
 	["pintypetooltip9"] = "Zeige Schwere Säcke auf der Karte und dem Kompass.",
 	["pintype10"] = "Diebesgut",
 	["pintypetooltip10"] = "Zeige Diebesgut auf der Karte und dem Kompass.",
-	["pintype11"] = "Rechtssystem Pinne",
+	["pintype11"] = "Rechtssystem",
 	["pintypetooltip11"] = "Zeige Rechtssystem Pinne (Beutezugziele und Wertkassetten) auf der Karte und dem Kompass.",
 	["pintype12"] = "Geheimverstecke",
 	["pintypetooltip12"] = "Zeige Geheimverstecke auf der Karte und dem Kompass.",
 	["pintype15"] = "Riesenmuscheln",
 	["pintypetooltip15"] = "Zeige Riesenmuscheln auf der Karte und dem Kompass.",
-	["pintype18"] = "Unbekannter einsammelbarer Knoten",
+	["pintype18"] = "Unbekannte Ressource",
 	["pintypetooltip18"] = "HarvestMap kann nahe Handwerksmaterialien erkennen, aber es kann nicht den Materialtyp erkennen, wenn du nicht wenigstens einmal vorher an dieser Position gewesen bist.",
 
 	-- extra map filter buttons
 	["deletepinfilter"] = "Lösche HarvestMap Pinne",
 	["filterheatmap"] = "Heatmap Modus",
-	
+
 	-- localization for the farming helper
 	["goldperminute"] = "Gold pro Minute:",
 	["farmresult"] = "HarvestFarm Ergebnis",
@@ -161,7 +161,7 @@ Harvest.localizedStrings = {
 	["removepintypetitle"] = "Bestätige Entfernen",
 	["minimaponly"] = "Karten Pins nur auf der MiniMap",
 	["minimaponlytooltip"] = "Wenn aktiviert, wird die Karte keine Pins anzeigen. Nur die MiniMap zeigt diese an.\nFunktioniert nur mit Votan's MiniMap!",
-	
+
 	-- extra harvestmap menu
 	["pinvisibilitymenu"] = "Erweitertes Pin Filter Menü",
 	["menu"] = "HarvestMap Menu",

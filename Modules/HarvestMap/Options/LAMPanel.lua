@@ -4,6 +4,7 @@ local LAM = LibAddonMenu2
 local Settings = Harvest.settings
 local CallbackManager = Harvest.callbackManager
 local Events = Harvest.events
+local FilterProfiles = Harvest.filterProfiles
 
 local function CreateSpawnFilterForPinType(pinTypeId)
 	local pinTypeId = pinTypeId
@@ -88,6 +89,58 @@ local function CreateColorPicker(pinTypeId)
 		default = Harvest.settings.defaultSettings.pinLayouts[ pinTypeId ].tint,
 	}
 	return colorPicker
+end
+
+local function FilterSetting(pinTypeId, profileGetter, IsMapProfile)
+	local setting = {
+		type = "checkbox",
+		name = Harvest.GetLocalization("pintype" .. pinTypeId),
+		getFunc = function()
+			local filterProfile = FilterProfiles[profileGetter](FilterProfiles)
+			return filterProfile[pinTypeId]
+		end,
+		setFunc = function(isVisible)
+			local filterProfile = FilterProfiles[profileGetter](FilterProfiles)
+			filterProfile[pinTypeId] = isVisible
+			CallbackManager:FireCallbacks(Events.FILTER_PROFILE_CHANGED, filterProfile, pinTypeId, isVisible)
+		end,
+		disabled = IsMapProfile,
+	}
+	return setting
+end
+
+local function ProfileDropdown(defaultProfileName, ProfileGetter, ProfileSetter)
+	local option = {
+		type = "dropdown",
+		name = Harvest.GetLocalization("visiblepintypes"),
+		choices = {
+			Harvest.GetLocalization("same_as_map"),
+			Harvest.GetLocalization("custom")
+		},
+		choicesValues = {"map", "custom"},
+		getFunc = function()
+			if FilterProfiles:GetMapProfile() == FilterProfiles[ProfileGetter](FilterProfiles) then
+				return "map"
+			else
+				return "custom"
+			end
+		end,
+		setFunc = function(value)
+			if value == "map" then
+				FilterProfiles[ProfileSetter](FilterProfiles, Harvest.filterProfiles:GetMapProfile())
+				return
+			end
+			if FilterProfiles:GetMapProfile() == FilterProfiles[ProfileGetter](FilterProfiles) then
+				local profile = FilterProfiles:FindProfileWithName(defaultProfileName)
+				if not profile then
+					profile = FilterProfiles:ConstructNewProfile()
+					profile.name = defaultProfileName
+				end
+				FilterProfiles[ProfileSetter](FilterProfiles, profile)
+			end
+		end,
+	}
+	return option
 end
 
 function Settings:InitializeLAM()
@@ -274,6 +327,30 @@ function Settings:InitializeLAM()
 		disabled = IsMapDisabled,
 		--width = "half",
 	})
+
+	local filterTable = setmetatable({}, { __index = table })
+	submenuTable:insert({
+		type = "submenu",
+		name = Harvest.GetLocalization("visiblepintypes"),
+		controls = filterTable,
+	})
+
+	--[[
+	filterTable:insert({
+		type = "description",
+		title = nil,
+		text = Harvest.GetLocalization("mapvisiblepintypedescription"),
+		width = "full",
+	})
+	--]]
+
+	local NeverDisabled = function() return false end
+	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
+		if not Harvest.HIDDEN_PINTYPES[pinTypeId] then
+			filterTable:insert(FilterSetting(pinTypeId, "GetMapProfile", NeverDisabled))
+		end
+	end
+
 	--[[
 	#####
 	#####  COMPASS
@@ -312,6 +389,24 @@ function Settings:InitializeLAM()
 		default = Harvest.settings.defaultSettings.compassDistanceInMeters,
 		disabled = IsCompassDisabled,
 	})
+
+	local filterTable = setmetatable({}, { __index = table })
+	submenuTable:insert({
+		type = "submenu",
+		name = Harvest.GetLocalization("visiblepintypes"),
+		controls = filterTable,
+	})
+
+	filterTable:insert(ProfileDropdown("Compass Profile", "GetCompassProfile", "SetCompassProfile"))
+
+	local IsMapProfile = function()
+		return (FilterProfiles:GetMapProfile() == FilterProfiles:GetCompassProfile())
+	end
+	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
+		if not Harvest.HIDDEN_PINTYPES[pinTypeId] then
+			filterTable:insert(FilterSetting(pinTypeId, "GetCompassProfile", IsMapProfile))
+		end
+	end
 
 	--[[
 	#####
@@ -386,6 +481,24 @@ function Settings:InitializeLAM()
 		default = Harvest.settings.defaultSettings.worldPinDepth,
 		disabled = IsWorldDisabled,
 	})
+
+	local filterTable = setmetatable({}, { __index = table })
+	submenuTable:insert({
+		type = "submenu",
+		name = Harvest.GetLocalization("visiblepintypes"),
+		controls = filterTable,
+	})
+
+	filterTable:insert(ProfileDropdown("3D Profile", "GetWorldProfile", "SetWorldProfile"))
+
+	local IsMapProfile = function()
+		return (FilterProfiles:GetMapProfile() == FilterProfiles:GetWorldProfile())
+	end
+	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
+		if not Harvest.HIDDEN_PINTYPES[pinTypeId] then
+			filterTable:insert(FilterSetting(pinTypeId, "GetWorldProfile", IsMapProfile))
+		end
+	end
 
 	--[[
 	#####
@@ -533,6 +646,7 @@ function Settings:InitializeLAM()
 		controls = submenuTable,
 	})
 
+	--[[
 	submenuTable:insert({
 		type = "description",
 		title = nil,
@@ -550,7 +664,7 @@ function Settings:InitializeLAM()
 		end,
 		width = "half",
 	})
-
+	--]]
 	for _, pinTypeId in ipairs( Harvest.PINTYPES ) do
 		if not Harvest.HIDDEN_PINTYPES[pinTypeId] then
 			submenuTable:insert({
@@ -570,4 +684,17 @@ function Settings:InitializeLAM()
 	LAM:RegisterOptionControls("HarvestMapControl", optionsTable)
 	self.optionsTable = optionsTable
 
+	CallbackManager:RegisterForEvent(Events.FILTER_PROFILE_CHANGED, function(event, profile, pinTypeId, visible)
+		CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", Harvest.optionsPanel)
+	end)
+
+	local settingsForRefresh = {
+		compassFilterProfile = true,
+		worldFilterProfile = true,
+	}
+	CallbackManager:RegisterForEvent(Events.SETTING_CHANGED, function(event, setting, value)
+		if settingsForRefresh[setting] then
+			CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", Harvest.optionsPanel)
+		end
+	end)
 end

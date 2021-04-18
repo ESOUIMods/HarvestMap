@@ -300,8 +300,8 @@ QP_WorldMapPins = ZO_ObjectPool:Subclass()
 function QP_WorldMapPins:New(layout)
     local factory = function(pool) return lib:GetUnusedPin(layout) or QP_MapPin:New(layout) end
     local reset = function(pin)
-      pin:ClearData()
-      pin.m_Control:SetHidden(true)
+        pin:ClearData()
+        pin.m_Control:SetHidden(true)
     end
     local pinManager = ZO_ObjectPool.New(self, factory, reset)
     pinManager.m_Layout = layout
@@ -314,7 +314,9 @@ function QP_WorldMapPins:UpdateSize()
     local size = layout.size / GetUICustomScale()
     --Scale map pins at Votans Minimap depending on the MiniMap scaling
     if VOTANS_MINIMAP and VOTANS_MINIMAP.scale and WORLD_MAP_MANAGER:IsInMode(MAP_MODE_VOTANS_MINIMAP) then
-        size = size * VOTANS_MINIMAP.scale
+        size = size * VOTANS_MINIMAP:CalculateScale("Others")
+	elseif FyrMM and not ZO_WorldMap_IsWorldMapShowing() then
+		size = size * FyrMM.pScalePercent
     end
     layout.currentPinSize = size
 end

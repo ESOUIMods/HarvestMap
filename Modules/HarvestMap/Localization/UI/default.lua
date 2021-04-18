@@ -35,6 +35,11 @@ Harvest.defaultLocalizedStrings = {
 	["drawdistancetooltip"] = "The distance threshold for which map pins are drawn. This setting does also affect minimaps!",
 	["drawdistancewarning"] = "This setting does also affect minimaps!",
 
+	--mapvisiblepintypedescription = [[The visible pin types can also be selected in the filter panel on the right side, next to the ingame map.]],
+	visiblepintypes = "Visible pin types",
+	custom_profile = "Custom",
+	same_as_map = "Same as on the map",
+
 	-- compass settings
 	["compassheader"] = "Compass Settings",
 	["compass"] = "Display pins on compass",
