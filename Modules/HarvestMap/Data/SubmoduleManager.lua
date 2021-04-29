@@ -79,19 +79,20 @@ function SubmoduleManager:Initialize()
 		function()
 			self:InformUserAboutMissingSubmodules()
 		end)
-	--[[
+
 	EVENT_MANAGER:RegisterForEvent("HarvestMap-Submodules", EVENT_ADD_ON_LOADED,
 		function(event, addOnName)
 			self:TryToRegisterAddOnAsSubmodule(addOnName)
 		end)
-	]]
+
+	--[[
 	local AddOnManager = GetAddOnManager()
 	for addonIndex = 1, AddOnManager:GetNumAddOns() do
 		local name, _, _, _, enabled = AddOnManager:GetAddOnInfo(addonIndex)
 		if enabled then
 			self:TryToRegisterAddOnAsSubmodule(name)
 		end
-	end
+	end]]
 end
 
 function SubmoduleManager:TryToRegisterAddOnAsSubmodule(addOnName)

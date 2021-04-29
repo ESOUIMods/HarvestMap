@@ -191,6 +191,7 @@ function Data:GetMapCache(mapMetaData)
 	-- if the current map isn't in the cache, create the cache
 	local mapCache = self.mapCaches[mapMetaData]
 	if not mapCache then
+		if not SubmoduleManager:GetSubmoduleForMap(mapMetaData.map) then return end
 		mapCache = self:CreateNewCache(mapMetaData)
 		self.mapCaches[mapMetaData] = mapCache
 	end
