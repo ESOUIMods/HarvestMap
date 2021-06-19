@@ -277,7 +277,7 @@ function Helper:FarmedANode(objectName, stackCount)
 	end
 
 	if MasterMerchant then
-	--	self.numFarmedNodes = self.numFarmedNodes + (MasterMerchant:itemStats(objectName).avgPrice or 0) * stackCount
+    self.numFarmedNodes = self.numFarmedNodes + (MasterMerchant:itemStats(objectName).avgPrice or 0) * stackCount
 	else
 		self.numFarmedNodes = self.numFarmedNodes + 1
 	end
