@@ -97,7 +97,7 @@ function Generator:InitializeControls()
 	container:SetWidth(HarvestFarmGenerator:GetWidth() - lastControl:GetTextWidth() - padding)
 
 	-- slider construction is based on LibAddonMenu's code for sliders
-	local slider = WINDOW_MANAGER:CreateControlFromVirtual(nil, container, "ZO_Slider")
+	local slider = WINDOW_MANAGER:CreateControlFromVirtual("HMtourlengthslider", container, "ZO_Slider")
 	slider:SetAnchor(TOPLEFT)
 	slider:SetHeight(14)
 	slider:SetAnchor(TOPRIGHT)
@@ -116,11 +116,11 @@ function Generator:InitializeControls()
 	maxText:SetAnchor(TOPRIGHT, slider, BOTTOMRIGHT)
 	maxText:SetText(maxValue)
 
-	local slidervalueBG = WINDOW_MANAGER:CreateControlFromVirtual(nil, slider, "ZO_EditBackdrop")
+	local slidervalueBG = WINDOW_MANAGER:CreateControlFromVirtual("HMtourvalue", slider, "ZO_EditBackdrop")
 	slidervalueBG:SetDimensions(50, 16)
 	slidervalueBG:SetAnchor(TOP, slider, BOTTOM, 0, 0)
 
-	local slidervalue = WINDOW_MANAGER:CreateControlFromVirtual(nil, slidervalueBG, "ZO_DefaultEditForBackdrop")
+	local slidervalue = WINDOW_MANAGER:CreateControlFromVirtual("HMtourbackdrop", slidervalueBG, "ZO_DefaultEditForBackdrop")
 	slidervalue:ClearAnchors()
 	slidervalue:SetAnchor(TOPLEFT, slidervalueBG, TOPLEFT, 3, 1)
 	slidervalue:SetAnchor(BOTTOMRIGHT, slidervalueBG, BOTTOMRIGHT, -3, -1)
