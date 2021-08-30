@@ -122,10 +122,10 @@ function SubmoduleManager:InformUserAboutMissingSubmodules()
 	end
 
 	if next(missingSubmodules) then -- if the table is not empty
-		d(ZO_NORMAL_TEXT:Colorize("HarvestMap v" .. Harvest.displayVersion .. " initialized"))
-		d(ZO_NORMAL_TEXT:Colorize("The following modules are disabled and their data was not loaded:"))
+		CHAT_ROUTER:AddSystemMessage(ZO_NORMAL_TEXT:Colorize("HarvestMap v" .. Harvest.displayVersion .. " initialized"))
+		CHAT_ROUTER:AddSystemMessage(ZO_NORMAL_TEXT:Colorize("The following modules are disabled and their data was not loaded:"))
 		for displayName in pairs(missingSubmodules) do
-			d(ZO_NORMAL_TEXT:Colorize(displayName))
+			CHAT_ROUTER:AddSystemMessage(ZO_NORMAL_TEXT:Colorize(displayName))
 		end
 	end
 end

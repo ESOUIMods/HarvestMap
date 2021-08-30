@@ -3,10 +3,6 @@ Except otherwise noted, this add-on is © 2021 Shinni, under a Creative Commons 
 https://creativecommons.org/licenses/by-nc-nd/4.0/
 https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 
-The library "LibDebugLogger" are © sirinsidiator.
-
-The library "LibMainMenu-2.0" is © votan.
-
 The MacOS/Linux merge script is © 2018 @mojo66:
 see DownloadNewData.command
 

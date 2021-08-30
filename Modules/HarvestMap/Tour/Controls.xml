@@ -71,7 +71,7 @@
 			</Controls>
 		</TopLevelControl>
 		<TopLevelControl name="HarvestFarmFilter" hidden="true">
-			<Dimensions x="240" y="440" />
+			<Dimensions x="440" y="440" />
 			<Anchor point="LEFT" offsetY="-85" />
 			<Controls>
 				<Control name="$(parent)Pane" inherits="ZO_ScrollContainer">

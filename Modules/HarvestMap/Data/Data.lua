@@ -77,7 +77,7 @@ function Data:SaveNode(mapMetaData, worldX, worldY, worldZ, pinTypeId)
 	end
 
 	self:Info("attempt to save node ", mapMetaData.map, mapMetaData.zoneId,
-		worldX, worlY, worldZ, pinTypeId)
+		worldX, worldY, worldZ, pinTypeId)
 
 	if not self:IsNodeDataValid(mapMetaData, worldX, worldY, worldZ, pinTypeId) then return end
 	if not Harvest.IsPinTypeSavedOnGather(pinTypeId) then return end

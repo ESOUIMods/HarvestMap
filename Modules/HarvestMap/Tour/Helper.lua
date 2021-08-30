@@ -1,6 +1,4 @@
 
-local LAM = LibAddonMenu2
-
 local CallbackManager = Harvest.callbackManager
 local Events = Harvest.events
 

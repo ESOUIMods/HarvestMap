@@ -1,6 +1,4 @@
 
-local LAM = LibAddonMenu2
-
 local Farm = Harvest.farm
 Farm.filters = {}
 local Filters = Farm.filters
@@ -12,57 +10,68 @@ function Filters:Initialize()
 	self:InitializeCallbacks()
 end
 
+local function NewSetColor(self, r, g, b, a, ...)
+	local layout = Harvest.GetMapPinLayout(self.pinTypeId)
+	local newText = layout.tint:Colorize(zo_iconFormatInheritColor(layout.texture, 20, 20))
+	newText = newText .. string.format("|c%.2x%.2x%.2x%s|r", zo_round(r * 255), zo_round(g * 255), zo_round(b * 255), self.labelText)
+	self:SetText(newText)
+end
+
+function Filters:InitializeCheckboxForPinType(checkbox, pinTypeId)
+	local labelText = Harvest.GetLocalization("pintype" .. pinTypeId)
+	ZO_CheckButton_SetLabelText(checkbox, labelText)
+	-- on mouse over the color is switched to "highlight"
+	-- this removed the color of the texture, so we have to change the setColor behaviour
+	local label = checkbox.label
+	label.labelText = labelText
+	label.SetColor = NewSetColor
+	label.pinTypeId = pinTypeId
+	checkbox.pinTypeId = pinTypeId
+
+	ZO_CheckButton_SetToggleFunction(checkbox, function(button, isChecked)
+		local filterProfile = Harvest.mapPins.filterProfile
+		filterProfile[pinTypeId] = isChecked
+		CallbackManager:FireCallbacks(Events.FILTER_PROFILE_CHANGED, filterProfile, pinTypeId, isChecked)
+	end)
+	ZO_CheckButtonLabel_ColorText(label, false)
+
+	return checkbox
+end
+
 function Filters:InitializeControls()
 	HarvestFarmFilterPaneScrollChild:SetWidth(HarvestFarmFilterPane:GetWidth()*2)
-	HarvestFarmFilterPaneScrollChild.panel = HarvestFarmFilterPaneScrollChild
-	HarvestFarmFilterPaneScrollChild.panel.data = {registerForRefresh = true}
-	HarvestFarmFilterPaneScrollChild.panel.controlsToRefresh = {}
+	local padding = 30
 
-	definition = {
-		type = "header",
-		name = Harvest.GetLocalization( "resourcetypes" ),
-	}
-	local control = LAMCreateControl.header(HarvestFarmFilterPaneScrollChild, definition)
-	control:ClearAnchors()
-	control:SetAnchor(TOPLEFT, HarvestFarmFilterPaneScrollChild, TOPLEFT, 0, 0)
-	lastControl = control
+	local control = WINDOW_MANAGER:CreateControl(nil, HarvestFarmFilterPaneScrollChild, CT_LABEL)
+	control:SetFont("ZoFontWinH2")
+	control:SetText(Harvest.GetLocalization( "resourcetypes" ))
+	control:SetAnchor(TOPLEFT, HarvestFarmFilterPaneScrollChild, TOPLEFT, padding, 0)
+	control:SetWidth(HarvestFarmFilterPaneScrollChild:GetWidth() - padding)
+	control:SetModifyTextType(MODIFY_TEXT_TYPE_UPPERCASE)
 
+	local filterProfile = Harvest.mapPins.filterProfile
 	self.filterControls = {}
-	local disabledFunction = function() return Farm.generator:IsGeneratingTour() end
+	local previousBox = control
 	for _, pinTypeId in ipairs(Harvest.PINTYPES) do
-		if not Harvest.HIDDEN_PINTYPES[pinTypeId] then
-			definition = {
-				type = "checkbox",
-				name = Harvest.GetLocalization( "pintype" .. pinTypeId ),
-				getFunc = function()
-					local filterProfile = Harvest.mapPins.filterProfile
-					return filterProfile[pinTypeId]
-				end,
-				setFunc = function( value )
-					local filterProfile = Harvest.mapPins.filterProfile
-					filterProfile[pinTypeId] = value
-					CallbackManager:FireCallbacks(Events.FILTER_PROFILE_CHANGED, filterProfile, pinTypeId, value)
-				end,
-				disabled = disabledFunction,
-				width = "half",
-			}
-			local control = LAMCreateControl.checkbox(HarvestFarmFilterPaneScrollChild, definition)
-			control:ClearAnchors()
-			control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 20)
-			lastControl = control
-			self.filterControls[pinTypeId] = control
+		if not Harvest.HIDDEN_PINTYPES[pinTypeId] and not (pinTypeId == Harvest.UKNOWN) then
+			local box = WINDOW_MANAGER:CreateControlFromVirtual("HMeditorfilter" .. tostring(pinTypeId), HarvestFarmFilterPaneScrollChild, "ZO_CheckButton")
+			box:SetAnchor(TOPLEFT, previousBox, BOTTOMLEFT, 0, 5)
+			self:InitializeCheckboxForPinType(box, pinTypeId)
+			previousBox = box
+			self.filterControls[pinTypeId] = box
+			ZO_CheckButton_SetCheckState(box, filterProfile[pinTypeId])
 		end
 	end
+	--Farm.generator:IsGeneratingTour()
 end
 
 function Filters:InitializeCallbacks()
 	-- disable the filter settings if a tour is being generated
 	local callback = function()
+		local filterProfile = Harvest.mapPins.filterProfile
 		for pinTypeId, control in pairs(self.filterControls) do
-			if control then
-				control:UpdateValue()--LAM.util.RequestRefreshIfNeeded(control)
-				control:UpdateDisabled()
-			end
+			control:SetEnabled(not Farm.generator:IsGeneratingTour())
+			ZO_CheckButton_SetCheckState(control, filterProfile[pinTypeId])
 		end
 	end
 	-- if some other interface (i.e. the map's filter tab) changed the visibility setting, we have to refresh the filter controls

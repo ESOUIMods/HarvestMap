@@ -76,47 +76,101 @@ function Generator:InitializeReports()
 end
 
 function Generator:InitializeControls()
-	-- add controls to the newly created panel
-	HarvestFarmGenerator.panel = HarvestFarmGenerator
-	HarvestFarmGenerator.panel.data = {}
+	local padding = 30
 
 	-- add the general HarvestFarm description
-	local definition = {
-		type = "description",
-		title = "",
-		text = Harvest.GetLocalization( "farmdescription" ),
-	}
-	local control = LAMCreateControl.description(HarvestFarmGenerator, definition)
+	local control = WINDOW_MANAGER:CreateControl(nil, HarvestFarmGenerator, CT_LABEL)
+	control:SetFont("ZoFontGame")
+	control:SetText(Harvest.GetLocalization( "farmdescription" ))
 	control:SetAnchor(TOPLEFT, HarvestFarmGenerator, TOPLEFT, 0, 0)
+	control:SetWidth(HarvestFarmGenerator:GetWidth() - padding)
 	local lastControl = control
-	-- add the slider for the minimum route length
-	local definition = {
-		type = "slider",
-		name = Harvest.GetLocalization( "farmminlength" ),
-		tooltip =  Harvest.GetLocalization( "farmminlengthtooltip" ),
-		min = 1,
-		max = 10,
-		getFunc = function()
-			return self.logic.minLengthKM
-		end,
-		setFunc = function( value )
-			self.logic.minLengthKM = value
-		end,
-		default = 3,
-	}
-	control = LAMCreateControl.slider(HarvestFarmGenerator, definition)
-	control:ClearAnchors()
-	control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 20)
-	local lastControl = control
-	-- add description to explain what the minimum route length is for
-	definition = {
-		type = "description",
-		title = "",
-		text = Harvest.GetLocalization( "farmminlengthdescription" ),
-	}
-	local control = LAMCreateControl.description(HarvestFarmGenerator, definition)
-	control:ClearAnchors()
+
+	local control = WINDOW_MANAGER:CreateControl(nil, HarvestFarmGenerator, CT_LABEL)
+	control:SetFont("ZoFontWinH4")
+	control:SetText(Harvest.GetLocalization( "farmminlength" ))
 	control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 10)
+	local lastControl = control
+
+	local container = WINDOW_MANAGER:CreateControl(nil, HarvestFarmGenerator, CT_CONTROL)
+	container:SetAnchor(TOPLEFT, lastControl, TOPRIGHT, 4, 0)
+	container:SetWidth(HarvestFarmGenerator:GetWidth() - lastControl:GetTextWidth() - padding)
+
+	-- slider construction is based on LibAddonMenu's code for sliders
+	local slider = WINDOW_MANAGER:CreateControlFromVirtual(nil, container, "ZO_Slider")
+	slider:SetAnchor(TOPLEFT)
+	slider:SetHeight(14)
+	slider:SetAnchor(TOPRIGHT)
+	local minValue = 1
+	local maxValue = 10
+	slider:SetMinMax(minValue, maxValue)
+	slider:SetValueStep(1)
+
+	local minText = WINDOW_MANAGER:CreateControl(nil, slider, CT_LABEL)
+	minText:SetFont("ZoFontGameSmall")
+	minText:SetAnchor(TOPLEFT, slider, BOTTOMLEFT)
+	minText:SetText(minValue)
+
+	local maxText = WINDOW_MANAGER:CreateControl(nil, slider, CT_LABEL)
+	maxText:SetFont("ZoFontGameSmall")
+	maxText:SetAnchor(TOPRIGHT, slider, BOTTOMRIGHT)
+	maxText:SetText(maxValue)
+
+	local slidervalueBG = WINDOW_MANAGER:CreateControlFromVirtual(nil, slider, "ZO_EditBackdrop")
+	slidervalueBG:SetDimensions(50, 16)
+	slidervalueBG:SetAnchor(TOP, slider, BOTTOM, 0, 0)
+
+	local slidervalue = WINDOW_MANAGER:CreateControlFromVirtual(nil, slidervalueBG, "ZO_DefaultEditForBackdrop")
+	slidervalue:ClearAnchors()
+	slidervalue:SetAnchor(TOPLEFT, slidervalueBG, TOPLEFT, 3, 1)
+	slidervalue:SetAnchor(BOTTOMRIGHT, slidervalueBG, BOTTOMRIGHT, -3, -1)
+	slidervalue:SetTextType(TEXT_TYPE_NUMERIC)
+	slidervalue:SetFont("ZoFontGameSmall")
+
+	local isHandlingChange = false
+	local function HandleValueChanged(value)
+		if isHandlingChange then return end
+		isHandlingChange = true
+		value = zo_max(zo_min(maxValue, value), minValue)
+		self.logic.minLengthKM = value
+		slider:SetValue(value)
+		slidervalue:SetText(value)
+		isHandlingChange = false
+	end
+
+	slidervalue:SetHandler("OnEscape", function(control)
+		HandleValueChanged(self.logic.minLengthKM)
+		control:LoseFocus()
+	end)
+	slidervalue:SetHandler("OnEnter", function(control)
+		control:LoseFocus()
+	end)
+	slidervalue:SetHandler("OnFocusLost", function(control)
+		local value = tonumber(control:GetText())
+		HandleValueChanged(value)
+	end)
+	slidervalue:SetHandler("OnTextChanged", function(control)
+		local input = control:GetText()
+		if(#input > 1 and not input:sub(-1):match("[0-9]")) then return end
+		local value = tonumber(input)
+		if(value) then
+			HandleValueChanged(value)
+		end
+	end)
+
+	slider:SetHandler("OnValueChanged", function(self, value, eventReason)
+		if eventReason == EVENT_REASON_SOFTWARE then return end
+		HandleValueChanged(value)
+	end)
+
+	HandleValueChanged(self.logic.minLengthKM)
+
+	-- add description to explain what the minimum route length is for
+	local control = WINDOW_MANAGER:CreateControl(nil, HarvestFarmGenerator, CT_LABEL)
+	control:SetFont("ZoFontGame")
+	control:SetText(Harvest.GetLocalization( "farmminlengthdescription" ))
+	control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 10)
+	control:SetWidth(HarvestFarmGenerator:GetWidth() - padding)
 	lastControl = control
 	-- add a button to start the calculation of the farming route
 	control = WINDOW_MANAGER:CreateControlFromVirtual(nil, HarvestFarmGenerator, "ZO_DefaultButton")

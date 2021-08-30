@@ -19,8 +19,8 @@ Harvest.defaultLocalizedStrings = {
 
 	-- account wide settings
 	["account"] = "Account-wide Settings",
-	["accounttooltip"] = "All the settings below will be the same for each of your characters.",
-	["accountwarning"] = "Changing this setting will reload the UI.",
+	["accounttooltip"] = "All the settings below will be the same for all of your characters.",
+	["accountwarning"] = "Changing this setting will reload the user interface.",
 
 	-- map pin settings
 	["mapheader"] = "Map Pin Settings",
@@ -35,7 +35,6 @@ Harvest.defaultLocalizedStrings = {
 	["drawdistancetooltip"] = "The distance threshold for which map pins are drawn. This setting does also affect minimaps!",
 	["drawdistancewarning"] = "This setting does also affect minimaps!",
 
-	--mapvisiblepintypedescription = [[The visible pin types can also be selected in the filter panel on the right side, next to the ingame map.]],
 	visiblepintypes = "Visible pin types",
 	custom_profile = "Custom",
 	same_as_map = "Same as on the map",
@@ -127,9 +126,8 @@ The filter does not work if another addon hides or rescales the compass.]],
 	["farmnoresources"] = "No resources found.\nThere are no resources on this map or you don't have any resource types selected.",
 	["farmsuccess"] = "HarvestFarm calculated a farming tour with <<1>> nodes per kilometer.\n\nClick on one of the tour's pins to set the tour's starting point.",
 	["farmdescription"] = "HarvestFarm will calculate a tour with a very high resource per time ratio.\nAfter generating a tour, click on one of the selected resources to set the tour's starting point.",
-	["farmminlength"] = "Minimum route length",
-	["farmminlengthtooltip"] = "The minimum length of the tour in kilometers.",
-	["farmminlengthdescription"] = "The longer the tour, the higher the chance that the resources have respawned when you start the next cycle.\nHowever a shorter tour will have a better resource per time ratio.",
+	["farmminlength"] = "Minimum length",
+	["farmminlengthdescription"] = "The longer the tour, the higher the chance that the resources have respawned when you start the next cycle.\nHowever a shorter tour will have a better resource per time ratio.\n(Minimum length is given in kilometers.)",
 	["tourpin"] = "Next target of your tour",
 	["calculatetour"] = "Calculate Tour",
 	["showtourinterface"] = "Show Tour Interface",
@@ -157,8 +155,6 @@ The filter does not work if another addon hides or rescales the compass.]],
 	["removepintypetitle"] = "Confirm Removal",
 
 	-- extra harvestmap menu
-	["pinvisibilitymenu"] = "Extended Pin Filter Menu",
-	["menu"] = "HarvestMap Menu",
 	["farmmenu"] = "Farming Tour Editor",
 	["editordescription"] = [[In this menu, you can create and edit tours.
 If there is currently no other tour active, you can create a tour by clicking onto the map pins.
@@ -171,8 +167,7 @@ The green tour will now be inserted into the red tour.]],
 Length: <<2>> m
 Nodes per kilometer: <<3>>]],
 
-	filterprofiledescription = [[In the filter profile menu, you can select which types of pins you want to display. You can create different profiles for map, compass and 3D pins.
-(You can assign a keybind in ESO's control settings to quickly open the filter profile menu.)]],
+	-- filter profiles
 	filterprofilebutton = "Open Filter Profile Menu",
 	filtertitle = "Filter Profile Menu",
 	filtermap = "Filter Profile for Map Pins",

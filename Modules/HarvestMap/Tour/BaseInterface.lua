@@ -117,7 +117,7 @@ function Farm:InitializeScene()
 
 	--  Background Right, it will set ZO_RightPanelFootPrint and its stuff.
 	self.scene:AddFragment(WORLD_MAP_INFO_BG_FRAGMENT)
-	self.scene:AddFragment(THIN_LEFT_PANEL_BG_FRAGMENT)
+	self.scene:AddFragment(MEDIUM_LEFT_PANEL_BG_FRAGMENT)
 
 	self.filterFragment = ZO_FadeSceneFragment:New(HarvestFarmFilter)
 	self.scene:AddFragment(self.filterFragment)

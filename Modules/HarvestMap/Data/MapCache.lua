@@ -39,6 +39,15 @@ function MapCache:Initialize(mapMetaData)
 
 	self.hiddenTime = {}
 	self.hasCompassPin = {}
+	--[[ removed because unknown-type nodes break when switching maps in blackreach
+	if mapMetaData.zoneId == 1161 then -- blackreach
+		-- claim that every node is spawned
+		-- because the spawn filter in blackreach doesnt work
+		setmetatable(self.hasCompassPin, {
+			__index = function() return true end,
+			__newindex = function() end
+			})
+	end]]
 
 	self.nodesOfPinType = {}
 	self.nodesOfPinTypeSize = {}

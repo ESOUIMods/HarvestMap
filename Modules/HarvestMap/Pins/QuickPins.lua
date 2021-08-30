@@ -300,12 +300,12 @@ QP_WorldMapPins = ZO_ObjectPool:Subclass()
 function QP_WorldMapPins:New(layout)
     local factory = function(pool) return lib:GetUnusedPin(layout) or QP_MapPin:New(layout) end
     local reset = function(pin)
-        pin:ClearData()
-        pin.m_Control:SetHidden(true)
-    end
-    local pinManager = ZO_ObjectPool.New(self, factory, reset)
-    pinManager.m_Layout = layout
-    pinManager:UpdateSize()
+		pin:ClearData()
+		pin.m_Control:SetHidden(true)
+	end
+	local pinManager = ZO_ObjectPool.New(self, factory, reset)
+	pinManager.m_Layout = layout
+	pinManager:UpdateSize()
     return pinManager
 end
 

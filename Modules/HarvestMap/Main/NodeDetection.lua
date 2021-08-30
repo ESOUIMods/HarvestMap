@@ -14,6 +14,7 @@ function Detection:Initialize()
 	CallbackManager:RegisterForEvent(Events.MAP_ADDED_TO_ZONE, function(event, mapCache, zoneCache)
 		self:Info("added map '%s' to zone %d. Relink spawned resources.", mapCache.map, zoneCache.zoneIndex)
 		self.OnMapChanged()
+		-- TODO what if there is no data loaded yet for this cache?
 	end)
 	CallbackManager:RegisterForEvent(Events.NODE_DELETED, function(event, mapCache, nodeId)
 		self.OnNodeDeleted(mapCache, nodeId)

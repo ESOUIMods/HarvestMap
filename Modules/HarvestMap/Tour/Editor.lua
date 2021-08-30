@@ -52,7 +52,7 @@ function Editor:Initialize(fragment)
 	end)
 
 	CallbackManager:RegisterForEvent(Events.TOUR_CHANGED, function(event, path)
-		CALLBACK_MANAGER:FireCallbacks("LAM-RefreshPanel", HarvestFarmEditor)
+		self.statusLabel:SetText(self.textConstructor())
 	end)
 
 	CALLBACK_MANAGER:RegisterCallback("OnWorldMapChanged", function()
@@ -133,41 +133,37 @@ function Editor:Undo()
 end
 
 function Editor:InitializeControls()
-	HarvestFarmEditor.panel = HarvestFarmEditor
-	HarvestFarmEditor.panel.data = {registerForRefresh = true}
-	HarvestFarmEditor.panel.controlsToRefresh = {}
+	local padding = 30
 
-	local definition = {
-		type = "description",
-		title = "",
-		text = Harvest.GetLocalization( "editordescription" ),
-	}
-	local control = LAMCreateControl.description(HarvestFarmEditor, definition)
-	control:SetAnchor(TOPLEFT, HarvestFarmEditor, TOPLEFT, 0, 0)
+	local control = WINDOW_MANAGER:CreateControl(nil, HarvestFarmEditor, CT_LABEL)
+	control:SetFont("ZoFontGame")
+	control:SetText(Harvest.GetLocalization( "editordescription" ))
+	control:SetAnchor(TOPLEFT, HarvestFarmGenerator, TOPLEFT, 0, 0)
+	control:SetWidth(HarvestFarmGenerator:GetWidth() - padding)
 	local lastControl = control
 
-	definition = {
-		type = "description",
-		title = "",
-		text = function()
-			local num, length, ratio
-			local path = Farm.path
-			if not path then
-				num = "-/-"
-				length = num
-				ratio = num
-			else
-				num = path.numNodes
-				length = zo_round(path.length * 10) / 10
-				ratio = zo_round(path.numNodes / path.length * 1000 * 100) / 100
-			end
-			return zo_strformat( Harvest.GetLocalization( "editorstats" ), num, length, ratio)
-		end,
-	}
-	local control = LAMCreateControl.description(HarvestFarmEditor, definition)
-	control:ClearAnchors()
-	control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 10)
-	lastControl = control
+	self.textConstructor = function()
+		local num, length, ratio
+		local path = Farm.path
+		if not path then
+			num = "-/-"
+			length = num
+			ratio = num
+		else
+			num = path.numNodes
+			length = zo_round(path.length * 10) / 10
+			ratio = zo_round(path.numNodes / path.length * 1000 * 100) / 100
+		end
+		return zo_strformat( Harvest.GetLocalization( "editorstats" ), num, length, ratio)
+	end
+
+	local control = WINDOW_MANAGER:CreateControl(nil, HarvestFarmEditor, CT_LABEL)
+	control:SetFont("ZoFontGame")
+	control:SetText(self.textConstructor())
+	control:SetAnchor(TOPLEFT, lastControl, BOTTOMLEFT, 0, 0)
+	control:SetWidth(HarvestFarmGenerator:GetWidth() - padding)
+	self.statusLabel = control
+	local lastControl = control
 
 	-- revert tour button
 	control = WINDOW_MANAGER:CreateControlFromVirtual(nil, HarvestFarmEditor, "ZO_DefaultButton")
