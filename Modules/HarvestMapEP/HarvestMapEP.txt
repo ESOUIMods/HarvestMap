@@ -3,7 +3,7 @@
 ## Description: This HarvestMap-module is used to store data for zones that belong to the Ebonheart Pact.
 ## DependsOn: HarvestMap
 ## AddOnVersion: 31501
-## APIVersion: 100035 101031
+## APIVersion: 101032 101033
 ## SavedVariables: HarvestEP_SavedVars
 ## DisableSavedVariablesAutoSaving: 1
 

@@ -3,7 +3,7 @@
 ## Description: Detects nearby crafting resources for the Add-Ons HarvestMap and ResourceRadar
 ## Version: 1.7
 ## AddOnVersion: 107
-## APIVersion: 100035 101031
+## APIVersion: 101032 101033
 ## IsLibrary: true
 
 ## This is not a public library. It was tailored to ResourceRadar and HarvestMap.
