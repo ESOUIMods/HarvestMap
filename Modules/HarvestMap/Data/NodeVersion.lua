@@ -47,7 +47,8 @@
 -- 43 3.15.0 remove globalX, globalY, flags
 -- 44 3.15.2 added deletion nodes to savedvar
 -- 45 3.15.8 in a previous version i made shifted locations save the player position instead of the camera position
-local addonVersion = 45
+-- 46 3.15.10 added deletion flags for justic and chest pins
+local addonVersion = 46
 
 -- node version which is saved for each node
 -- the node version encodes the current game and addon version

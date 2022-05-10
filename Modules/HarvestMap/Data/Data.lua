@@ -28,6 +28,11 @@ function Data:Initialize()
 			self:SaveNode(mapMetaData, worldX, worldY, worldZ, pinTypeId)
 		end)
 
+	CallbackManager:RegisterForEvent(Events.NODE_DELETION_REQUEST,
+		function(event, mapMetaData, worldX, worldY, worldZ, pinTypeId)
+			self:DeleteNode(mapMetaData, worldX, worldY, worldZ, pinTypeId)
+		end)
+
 	CallbackManager:RegisterForEvent(Events.NEW_NODES_LOADED_TO_CACHE,
 		function(event, mapCache, pinTypeId, numAdded)
 			if numAdded <= 0 then return end
@@ -137,6 +142,70 @@ function Data:SaveNode(mapMetaData, worldX, worldY, worldZ, pinTypeId)
 			self:Info("data was added to cache. nodeid: %d, map: %s", nodeId, mapCache.map)
 		end
 	end
+end
+
+-- this function tries to save the given data
+-- this function is only used by the harvesting part of HarvestMap
+function Data:DeleteNode(mapMetaData, worldX, worldY, worldZ, pinTypeId)
+	local pinTypeIdAlias = Harvest.PINTYPE_ALIAS[pinTypeId]
+	if pinTypeIdAlias then
+		self:DeleteNode(mapMetaData, worldX, worldY, worldZ, pinTypeIdAlias)
+	end
+
+	self:Info("attempt to delete node ", mapMetaData.map, mapMetaData.zoneId,
+		worldX, worldY, worldZ, pinTypeId)
+
+	if not self:IsNodeDataValid(mapMetaData, worldX, worldY, worldZ, pinTypeId) then return end
+
+	local map = mapMetaData.map
+	local zoneId = mapMetaData.zoneId
+	local submodule = SubmoduleManager:GetSubmoduleForMap(map)
+	if not submodule then
+		if not Harvest.mapTools:IsMapBlacklisted(map) then
+			self:Info("could not save node; container missing")
+			CallbackManager:FireCallbacks(Events.ERROR_MODULE_NOT_LOADED, "save", SubmoduleManager:GetSubmoduleDisplayNameForMap(map))
+		end
+		return
+	end
+
+	local savedVars = submodule.savedVars
+	savedVars[zoneId] = savedVars[zoneId] or {}
+	savedVars[zoneId][map] = savedVars[zoneId][map] or {}
+	savedVars[zoneId][map][pinTypeId] = savedVars[zoneId][map][pinTypeId] or {}
+
+	local mapCache = self:GetMapCache(mapMetaData)
+	assert(mapCache)
+
+	-- remove pin from cache if this pin type is loaded for the current map
+	local doesMapCacheHandlePinType = mapCache:DoesHandlePinType(pinTypeId)
+	if doesMapCacheHandlePinType then
+		-- If we have found this node already then we don't need to save it again
+		local nodeId = mapCache:GetMergeableNode(pinTypeId, worldX, worldY, worldZ)
+		if nodeId then
+			worldX = mapCache.worldX[nodeId]
+			worldY = mapCache.worldY[nodeId]
+			worldZ = mapCache.worldZ[nodeId]
+			CallbackManager:FireCallbacks(Events.NODE_DELETED,
+					mapCache, nodeId)
+			mapCache:Delete(nodeId)
+			self:Info("previous node was removed from cache. nodeId: %d", nodeId)
+		else
+			self:Info("no deletable node was found. insert deletion at current position")
+		end
+	end
+
+
+	-- additional serialized data
+	local timestamp = GetTimeStamp()
+	local version = Harvest.nodeVersion
+	local serializedNode = Serialization:Serialize(worldX, worldY, worldZ, timestamp, version, Harvest.deleteFlag)
+
+	-- always store node
+	-- it will be merged on next startup
+	local nodeIndex = (#savedVars[zoneId][map][pinTypeId]) + 1
+	savedVars[zoneId][map][pinTypeId][nodeIndex] = serializedNode
+	self:Info("delete flag was added to savedVariables. nodeindex: %d, savedVar: %s", nodeIndex, submodule.displayName)
+
 end
 
 function Data:RemoveOldCaches()

@@ -432,26 +432,11 @@ MapPins.clickHandler = {-- debugHandler = {
 			local worldY = mapCache.worldY[nodeId]
 			local worldZ = mapCache.worldZ[nodeId]
 			local pinTypeId = mapCache.pinTypeId[nodeId]
-			local timestamp = GetTimeStamp()
+			local mapMetaData = mapCache.mapMetaData
 
-			CallbackManager:FireCallbacks(Events.NODE_DELETED,
-					mapCache, nodeId)
-			mapCache:Delete(nodeId)
+			CallbackManager:FireCallbacks(Events.NODE_DELETION_REQUEST,
+				mapMetaData, worldX, worldY, worldZ, pinTypeId)
 
-			local submodule = Harvest.submoduleManager:GetSubmoduleForMap( mapCache.map )
-			local data = submodule.savedVars
-
-			data[mapCache.mapMetaData.zoneId] = data[mapCache.mapMetaData.zoneId] or {}
-			data = data[mapCache.mapMetaData.zoneId]
-
-			data[mapCache.map] = data[mapCache.map] or {}
-			data = data[mapCache.map]
-
-			data[pinTypeId] = data[pinTypeId] or {}
-			data = data[pinTypeId]
-
-			local serializedNode = Harvest.serialization:Serialize(worldX, worldY, worldZ, timestamp, Harvest.nodeVersion, Harvest.deleteFlag)
-			table.insert(data, serializedNode)
 		end,
 		show = function() return Harvest.IsPinDeletionEnabled() and not IsInGamepadPreferredMode() end,
 	}

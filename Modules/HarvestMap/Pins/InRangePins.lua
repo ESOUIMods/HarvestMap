@@ -164,7 +164,7 @@ function InRangePins:Initialize()
 	LOOT_SCENE:AddFragment(self.fragment)
 
 	EVENT_MANAGER:RegisterForEvent("HarvestMap-InRangePins", EVENT_PLAYER_ACTIVATED, function()
-		self:Info("player position: %d, %d, %d, %d", GetUnitWorldPosition("player"))
+		self:Info("player position: %d, %d, %d, %d", GetUnitRawWorldPosition("player"))
 		local worldX, worldZ, worldY = WorldPositionToGuiRender3DPosition(0,0,0)
 		HM_WorldPins:Set3DRenderSpaceOrigin(worldX, worldZ, worldY)
 		self:Info("world origin in render space: %f, %f, %f", worldX, worldZ, worldY)

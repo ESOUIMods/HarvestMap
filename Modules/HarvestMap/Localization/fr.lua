@@ -212,3 +212,21 @@ Harvest.localizedStrings = {
 	["3dPins"] = "Marqueurs 3D",
 	["CompassPins"] = "Marqueurs de boussole",
 }
+
+local interactableName2PinTypeId = {
+	["sac lourd"] = Harvest.HEAVYSACK,
+	-- special nodes in cold harbor with the same loot as heavy sacks
+	["caisse pesante"] = Harvest.HEAVYSACK,
+	["trésor des voleurs"] = Harvest.TROVE,
+	["Panneau mobile"] = Harvest.STASH,
+	["Tuile descellée"] = Harvest.STASH,
+	["Pierre délogée"] = Harvest.STASH,
+	["portail psijique"] = Harvest.PSIJIC,
+	["palourde géante"] = Harvest.CLAM,
+}
+-- convert to lower case. zos sometimes changes capitalization so it's safer to just do all the logic in lower case
+Harvest.interactableName2PinTypeId = Harvest.interactableName2PinTypeId or {}
+local globalList = Harvest.interactableName2PinTypeId
+for name, pinTypeId in pairs(interactableName2PinTypeId) do
+	globalList[zo_strlower(name)] = pinTypeId
+end

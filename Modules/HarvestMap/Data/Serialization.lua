@@ -247,11 +247,11 @@ function Serialization:LoadDiscoveredData()
 				numRemoved = numRemoved + 1
 			else
 				self.serializedNodes[nodeIndex] = nil
-				self:Error("could not delete node (timestamp):", map, node)
+				self:Debug("could not delete node (timestamp):", map, node)
 			end
 		else
 			self.serializedNodes[nodeIndex] = nil
-			self:Error("could not delete node (no match):", map, node)
+			self:Debug("could not delete node (no match):", map, node)
 		end
 	end
 

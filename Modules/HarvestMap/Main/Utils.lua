@@ -29,7 +29,7 @@ for addonIndex = 1, AddOnManager:GetNumAddOns() do
 end
 
 function Harvest.GetPlayer3DPosition()
-	local _, worldX, worldZ, worldY = GetUnitWorldPosition("player")
+	local _, worldX, worldZ, worldY = GetUnitRawWorldPosition("player")
 	return worldX/100, worldY/100, worldZ/100
 end
 

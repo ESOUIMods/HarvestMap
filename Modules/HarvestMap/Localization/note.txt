@@ -1,3 +1,0 @@
-
-HarvestMap/Main/PinTypes.lua also contains localized information.
-Containers such as "Heavy Sacks" can only be detected via the interactable name.

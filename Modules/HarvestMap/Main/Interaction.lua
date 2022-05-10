@@ -118,22 +118,21 @@ function Interaction.UpdateInteractionType(timeInMs)
 	end
 end
 
-local function DoesRawWorldDiffer()
-	local _, x, y, z = GetUnitWorldPosition("player")
-	local _, x2, y2, z2 = GetUnitRawWorldPosition("player")
-	return (x - x2)^2 + (y - y2)^2 + (z - z2)^2 > 100*100
-end
-
 function Interaction.BeginLockpicking()
 	local pinTypeId = nil
+	local shouldDelete = false
 	-- normal chests aren't owned and their interaction is called "unlock"
 	-- other types of chests (ie for heists) aren't owned but their interaction is "search"
 	if (not Interaction.wasLastInteractableOwned) and Interaction.lastInteractableAction == GetString(SI_GAMECAMERAACTIONTYPE12) then
 		-- normal chest
 		pinTypeId = Harvest.CHESTS
 	-- safeboxes are owned and use the interaction "steal from"
-	-- added a check for GetString(SI_GAMECAMERAACTIONTYPE12) "unlock" because it seems for some localizations it's the same?
-	elseif Interaction.wasLastInteractableOwned and Interaction.lastInteractableAction == GetString(SI_GAMECAMERAACTIONTYPE20) and not (Interaction.lastInteractableAction == GetString(SI_GAMECAMERAACTIONTYPE12)) then
+	-- remove pin if tag is "Unlock", e.g. for locked doors
+	elseif Interaction.wasLastInteractableOwned and (Interaction.lastInteractableAction == GetString(SI_GAMECAMERAACTIONTYPE12)) then
+		-- heist chest or safebox
+		pinTypeId = Harvest.JUSTICE
+		shouldDelete = true
+	elseif Interaction.wasLastInteractableOwned and (Interaction.lastInteractableAction == GetString(SI_GAMECAMERAACTIONTYPE20)) then
 		-- heist chest or safebox
 		pinTypeId = Harvest.JUSTICE
 	end
@@ -149,7 +148,7 @@ function Interaction.BeginLockpicking()
 
 	-- lockpicking has its own interaction camera, which is different from the player position
 	local worldX, worldY, worldZ
-	if IsInteractionUsingInteractCamera() and not DoesRawWorldDiffer() then
+	if IsInteractionUsingInteractCamera() then
 		worldX, worldY, worldZ = Harvest.GetCamera3DPosition()
 	else
 		-- this function returns wrong height values, if the interaction camera is active
@@ -159,7 +158,12 @@ function Interaction.BeginLockpicking()
 	local mapMetaData = Harvest.mapTools:GetPlayerMapMetaData()
 	Interaction:Info("Discovered a new node. pintypeid: %d, map: %s, world: %f, %f, %f",
 			pinTypeId, mapMetaData.map, worldX, worldY, worldZ )
-	CallbackManager:FireCallbacks(Events.NODE_DISCOVERED, mapMetaData, worldX, worldY, worldZ, pinTypeId)
+	if shouldDelete then
+		CallbackManager:FireCallbacks(Events.NODE_DELETION_REQUEST, mapMetaData, worldX, worldY, worldZ, Harvest.JUSTICE)
+		CallbackManager:FireCallbacks(Events.NODE_DELETION_REQUEST, mapMetaData, worldX, worldY, worldZ, Harvest.CHESTS)
+	else
+		CallbackManager:FireCallbacks(Events.NODE_DISCOVERED, mapMetaData, worldX, worldY, worldZ, pinTypeId)
+	end
 end
 
 function Interaction.CheckFishingState()

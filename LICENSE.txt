@@ -1,10 +1,7 @@
 
-Except otherwise noted, this add-on is © 2021 Shinni, under a Creative Commons Attribution-NonComercial-NoDerivatives license:
+Except otherwise noted, this add-on is © 2022 Shinni, under a Creative Commons Attribution-NonComercial-NoDerivatives license:
 https://creativecommons.org/licenses/by-nc-nd/4.0/
 https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
-
-The MacOS/Linux merge script is © 2018 @mojo66:
-see DownloadNewData.command
 
 This Add-on is not created by, affiliated with or sponsored by ZeniMax Media Inc. or its affiliates.
 The Elder Scrolls® and related logos are registered trademarks or trademarks of ZeniMax Media Inc. in

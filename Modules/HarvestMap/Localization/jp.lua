@@ -192,3 +192,20 @@
 	["3dPins"] = "3Dピン",
 	["CompassPins"] = "コンパスピン",
 }
+
+local interactableName2PinTypeId = {
+	["重い袋"] = Harvest.HEAVYSACK,
+	["重い木枠箱"] = Harvest.HEAVYSACK,
+	["盗賊の宝"] = Harvest.TROVE,
+	["はがれたパネル"] = Harvest.STASH,
+	["はがれたタイル"] = Harvest.STASH,
+	["ルースストーン"] = Harvest.STASH,
+	["サイジックのポータル"] = Harvest.PSIJIC,
+	["ジャイアントクラム"] = Harvest.CLAM,
+}
+-- convert to lower case. zos sometimes changes capitalization so it's safer to just do all the logic in lower case
+Harvest.interactableName2PinTypeId = Harvest.interactableName2PinTypeId or {}
+local globalList = Harvest.interactableName2PinTypeId
+for name, pinTypeId in pairs(interactableName2PinTypeId) do
+	globalList[zo_strlower(name)] = pinTypeId
+end

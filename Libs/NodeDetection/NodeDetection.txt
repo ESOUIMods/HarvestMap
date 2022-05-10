@@ -1,8 +1,8 @@
 ## Title: NodeDetection
 ## Author: Shinni
 ## Description: Detects nearby crafting resources for the Add-Ons HarvestMap and ResourceRadar
-## Version: 1.7
-## AddOnVersion: 107
+## Version: 1.8
+## AddOnVersion: 108
 ## APIVersion: 101033 101034
 ## IsLibrary: true
 

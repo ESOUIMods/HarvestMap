@@ -1,6 +1,6 @@
 <GuiXml>
 	<Controls>
-		<Texture name="QP_MapPin" mouseEnabled="true" hidden="true" virtual="true">
+		<Texture name="QP_MapPin" mouseEnabled="true" hidden="true" virtual="true" tier="HIGH" >
 			<OnMouseEnter>
 				self:OnMouseEnter()
 			</OnMouseEnter>

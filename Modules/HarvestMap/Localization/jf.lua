@@ -11,12 +11,12 @@ Harvest.localizedStrings = {
 	["sendgold"] = "发送 <<1>> 金币",
 	["debuginfodescription"] = "如果您想要在esoui.com的评论页上报告一个BUG, 还请添加以下调试信息:",
 	["printdebuginfo"] = "复制调试信息",
-
+	
 	["notifications"] = "通知和警告",
 	["notificationstooltip"] = "在屏幕右上角显示通知和警告。",
 	["moduleerrorload"] = " <<1>> 插件被禁用了。\n此区域没有可用数据。",
 	["moduleerrorsave"] = " <<1>> 插件被禁用了。\n此节点的位置信息没有被保存。",
-
+	
 	-- outdated data settings
 	["outdateddata"] = "过时的数据设置",
 	["outdateddatainfo"] = "这些数据相关的设置在这台计算机上的所有帐户和角色之间共享.",
@@ -25,12 +25,12 @@ Harvest.localizedStrings = {
 	["timedifference"] = "只保存最近的数据",
 	["timedifferencetooltip"] = "HarvestMap 收获地图将只保存最近X天的数据。\n这可以防止显示可能已经过时的旧数据。\n设置为0以保存任何数据，不论其时间.",
 	["applywarning"] = "旧数据一旦删除，就无法恢复!",
-
+	
 	-- account wide settings
 	["account"] = "账户全局设置",
 	["accounttooltip"] = "下面的所有设置对每个角色都是相同的.",
 	["accountwarning"] = "更改此设置将重新加载UI.",
-
+	
 	-- map pin settings
 	["mapheader"] = "地图标记设置",
 	["mappins"] = "在主地图上启用标记",
@@ -60,7 +60,7 @@ Harvest.localizedStrings = {
 	["minimapcompatibilitymodedescription"] = "在地图上显示大量资源位置时，为了提高性能, HarvestMap 收获地图创建了自己的轻量级地图标记图标。这些轻量级的图标不兼容小地图旋转。\n如果你使用了旋转小地图, 你可以开启'小地图兼容模式'。开启此模式时, HarvestMap 收获地图将使用默认地图图标替代轻量级图标。这类默认图标可以支持旋转小地图, 但每当显示具有许多已知资源位置的地图时，它们可能会导致FPS降低并引起游戏画面冻结数秒。",
 	["minimapcompatibilitymode"] = "小地图兼容模式",
 	["minimapcompatibilitymodewarning"] = "当地图上显示较多标记时。启用此选项将对游戏的性能产生负面影响。\n\n更改设置将重新加载UI!",
-
+	
 	-- compass settings
 	["compassheader"] = "罗盘设置",
 	["compass"] = "启用罗盘",
@@ -68,7 +68,7 @@ Harvest.localizedStrings = {
 	compassspawnfilter = "只显示已生成的资源",
 	["compassdistance"] = "最大标记距离",
 	["compassdistancetooltip"] = "显示在罗盘上标记的最大距离(以米为单位).",
-
+	
 	-- 3d pin settings
 	["worldpinsheader"] = "3D标记设置",
 	["worldpins"] = "开启3D标记",
@@ -83,8 +83,8 @@ Harvest.localizedStrings = {
 	["worldpinsdepth"] = "为3D标记使用深度提升",
 	["worldpinsdepthtooltip"] = "关闭时, 3D标记将不会隐藏在其他物体后面。",
 	["worldpinsdepthwarning"] = "由于一个游戏BUG, 当在游戏的视频选项中将二次取样质量设置为中等或者低时，此选项无法生效。",
-
-
+	
+	
 	-- respawn timer settings
 	["farmandrespawn"] = "刷新计时器和采集助手",
 	["rangemultiplier"] = "访问的节点范围",
@@ -96,8 +96,8 @@ Harvest.localizedStrings = {
 	["hiddenonharvestwarning"] = "关闭此选项可能会对游戏的性能产生负面影响。",
 	["hiddenonharvest"] = "只在采集之后隐藏节点",
 	["hiddenonharvesttooltip"] = "开启后只当你采集完成时隐藏标记。关闭后当你访问时标记也将被隐藏",
-
-
+	
+	
 	-- pin type options
 	["pinoptions"] = "标记类型选项",
 	["pinsize"] = "标记尺寸",
@@ -107,18 +107,18 @@ Harvest.localizedStrings = {
 	["extendedpinoptions"] = "通常地图上的标记, 罗盘和3d世界中是同步的。如果你在地图上隐藏了某种类型的资源, 它也将移除罗盘和世界中的标记。然而, 在扩展标记过滤器菜单中，您可以设置罗盘和世界标记独立于地图标记存在。",
 	["extendedpinoptionsbutton"] = "打开扩展标记过滤器",
 	["override"] = "覆盖地图标记过滤器",
-
+	
 	["pincolor"] = "标记颜色",
 	["pincolortooltip"] = "设置地图和罗盘上标记的颜色.",
 	["savepin"] = "保存位置",
 	["savetooltip"] = "启用在发现资源时保存它们的位置。",
 	["pintexture"] = "标记图标",
-
+	
 	-- debug output setting
 	["debugoptions"] = "调试",
 	["debug"] = "显示调试信息",
 	["debugtooltip"] = "启用在聊天框中显示调试消息。",
-
+	
 	-- pin type names
 	["pintype1"] = "锻造和首饰",
 	["pintypetooltip1"] = "在地图和罗盘上显示矿锭和矿粉。",
@@ -150,17 +150,17 @@ Harvest.localizedStrings = {
 	["pintypetooltip12"] = "在地图和罗盘上显示隐藏物品，例如'松动的镶板'。",
 	["pintype15"] = "巨型水蚌",
 	["pintypetooltip15"] = "在地图和罗盘上显示巨型水蚌。",
-
+	
 	["pintype18"] = "未知收集节点",
 	["pintypetooltip18"] = "HarvestMap 收获地图能探测到附近的制造原料, 但它不能检测原料的类型，除非你事先发现了该位置.",
-
+	
 	["pintype19"] = "猩红奈恩根",
 	["pintypetooltip19"] = "在地图和罗盘上显示猩红奈恩根。",
 
 	-- extra map filter buttons
 	["deletepinfilter"] = "删除HarvestMap 收获地图标记",
 	["filterheatmap"] = "热力地图模式",
-
+	
 	-- localization for the farming helper
 	["goldperminute"] = "每分钟的金币:",
 	["farmresult"] = "HarvestFarm 结果",
@@ -198,7 +198,7 @@ Harvest.localizedStrings = {
 	["loaderror"] = "此线路无法被载入",
 	["removepintype"] = "您想从路线中删除 <<1>> 吗?",
 	["removepintypetitle"] = "确认删除",
-
+	
 	-- extra HarvestMap menu
 	["pinvisibilitymenu"] = "扩展标记过滤器菜单",
 	["menu"] = "HarvestMap 收获地图 菜单",
@@ -213,7 +213,7 @@ Harvest.localizedStrings = {
 	["editorstats"] = [[节点数量: <<1>>
 长度: <<2>> 米
 每公里节点数: <<3>>]],
-
+	
 	-- SI names to fit with ZOS api
 	["SI_BINDING_NAME_SKIP_TARGET"] = "跳过目标",
 	["SI_BINDING_NAME_TOGGLE_WORLDPINS"] = "切换3D标记",

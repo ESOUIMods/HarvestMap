@@ -5,12 +5,12 @@ Harvest.localizedStrings = {
 	["openesoui"] = "Öffne ESOUI",
 	["exchangedescription2"] = "You can download the most recent HarvestMap data (positions of resources) by installing the HarvestMap-Data add-on. For more information, see the addon description on ESOUI.",
 	["exchangedescription"] = "Du kannst die aktuellsten HarvestMap-Daten (Positionen der Ressourcen) herunterladen, indem du das 'HarvestMap-Data' installierst. Mehr Informationen dazu findest du in der Addon-Beschreibung auf ESOUI.",
-
+	
 	["notifications"] = "Benachrichtigungen und Warnungen",
 	["notificationstooltip"] = "Zeigt Benachrichtigungen und Warnungen an der oberen rechten Bildschirmecke an.",
 	["moduleerrorload"] = "Das Addon <<1>> ist deaktiviert.\nKeine Daten verfügbar für die diese Gegend.",
 	["moduleerrorsave"] = "Das Addon <<1>> ist deaktiviert.\nDie aktuelle Position konnte nicht gespeichert werden.",
-
+	
 	-- outdated data settings
 	["outdateddata"] = "Veraltete Daten Optionen",
 	["outdateddatainfo"] = "Diese Optionen werden mit allen Accounts und Figuren auf diesem Computer geteilt.",
@@ -35,17 +35,17 @@ Harvest.localizedStrings = {
 	["drawdistance"] = "Anzeigedistanz",
 	["drawdistancetooltip"] = "Die Distanzgrenze für die 'Zeige nur nahe Pinne' Option.",
 	["drawdistancewarning"] = "Diese Option beinflusst ebenfalls MiniMaps!",
-
+	
 	visiblepintypes = "Angezeigte Pinarten",
 	custom_profile = "Custom",
 	same_as_map = "Gleich wie auf der Karte",
-
+	
 	-- compass settings
 	["compassheader"] = "Kompass Einstellungen",
 	["compass"] = "Aktiviere Kompasspins",
 	["compassdistance"] = "Maximale Pinentfernung",
 	["compassdistancetooltip"] = "Die maximale Entfernung von Pinnen in Metern, sodass diese noch immer auf dem Kompass erscheinen.",
-
+	
 	-- 3d pin settings
 	["worldpinsheader"] = "3D Pin Einstellungen",
 	["worldpins"] = "Aktiviere 3D Pinne",
@@ -58,7 +58,7 @@ Harvest.localizedStrings = {
 	["worldpinsdepth"] = "Verwende den Tiefen-Puffer für 3D Pinne",
 	["worldpinsdepthtooltip"] = "Wenn deaktiviert, werden die 3D Pinne nicht hinter Objekten versteckt.",
 	["worldpinsdepthwarning"] = "Aufgrund eines Fehlers im Spiel funktioniert diese Option nicht, falls eine SubSampling Qualität von Mittel oder Niedrig in den Grafikoptionen ausgewählt ist.",
-
+	
 	-- respawn timer settings
 	["visitednodes"] = "Besuchte Knoten und Farm Hilfe",
 	["rangemultiplier"] = "Besuchte Knoten Reichweite",
@@ -82,7 +82,7 @@ Dieser Filter funktioniert nicht, sofern ein anderes Addon den Kompass versteckt
 	spawnfilter_compass = "Aktivierte Filter auf dem Kompass",
 	spawnfilter_world = "Aktiviere Filter für 3D Pinne",
 	spawnfilter_pintype = "Verwende Filter für Pinarten:",
-
+	
 	-- pin type options
 	["pinoptions"] = "Allgemeine Pin Optionen",
 	["pinsize"] = "Pingröße",
@@ -92,7 +92,7 @@ Dieser Filter funktioniert nicht, sofern ein anderes Addon den Kompass versteckt
 	["savepin"] = "Speichere Fundorte",
 	["savetooltip"] = "Aktiviere diese Einstellung, um die Position dieser Ressource zu speichern, wenn du sie findest.",
 	["pintexture"] = "Icon",
-
+	
 	-- pin type names
 	["pintype1"] = "Schmied und Schmuck",
 	["pintype2"] = "Faserige Pflanzen",
@@ -109,15 +109,15 @@ Dieser Filter funktioniert nicht, sofern ein anderes Addon den Kompass versteckt
 	["pintype11"] = "Rechtssystem",
 	["pintype12"] = "Geheimverstecke",
 	["pintype15"] = "Riesenmuscheln",
-	-- pin type 16, 17 used to be jewlry and psijic portals
+	-- pin type 16, 17 used to be jewlry and psijic portals 
 	-- but the locations are the same as smithing and runes
 	["pintype18"] = "Unbekannte Ressource",
 	["pintype19"] = "Purpurnes Nirnwurz",
-
+	
 	-- extra map filter buttons
 	["deletepinfilter"] = "Lösche HarvestMap Pinne",
 	["filterheatmap"] = "Heatmap Modus",
-
+	
 	-- localization for the farming helper
 	["goldperminute"] = "Gold pro Minute:",
 	["farmresult"] = "HarvestFarm Ergebnis",
@@ -156,7 +156,7 @@ Dieser Filter funktioniert nicht, sofern ein anderes Addon den Kompass versteckt
 	["removepintypetitle"] = "Bestätige Entfernen",
 	["minimaponly"] = "Karten Pins nur auf der MiniMap",
 	["minimaponlytooltip"] = "Wenn aktiviert, wird die Karte keine Pins anzeigen. Nur die MiniMap zeigt diese an.\nFunktioniert nur mit Votan's MiniMap!",
-
+	
 	-- extra harvestmap menu
 	["farmmenu"] = "Farm Tour Editor",
 	["editordescription"] = [[Hier kannst du Touren erstellen/ändern.
@@ -169,7 +169,7 @@ Die grüne wird nun in die rote Tour eingefügt.]],
 	["editorstats"] = [[Anzahl Knoten: <<1>>
 Länge: <<2>> m
 Knoten pro KM: <<3>>]],
-
+	
 	-- filter profiles
 	filterprofilebutton = "Öffne Filterprofilmenü",
 	filtertitle = "Filterprofilmenü",
@@ -178,7 +178,7 @@ Knoten pro KM: <<3>>]],
 	filterworld = "Filterprofil für 3D Pinne",
 	unnamedfilterprofile = "Unnamed Profile",
 	defaultprofilename = "Default Filter Profile",
-
+	
 	-- SI names to fit with ZOS api
 	["SI_BINDING_NAME_SKIP_TARGET"] =  "Überspringe Ziel",
 	["SI_BINDING_NAME_TOGGLE_MAPPINS"] = "(De-)Aktiviere Pinne auf der Karte",
@@ -189,3 +189,21 @@ Knoten pro KM: <<3>>]],
 	["HARVESTFARM_EDITOR"] = "Ändere Tour",
 	["HARVESTFARM_SAVE"] = "Sicher/Lade Tour",
 }
+
+local interactableName2PinTypeId = {
+	["schwerer sack"] = Harvest.HEAVYSACK,
+	-- special nodes in cold harbor with the same loot as heavy sacks
+	["schwere Kiste"] = Harvest.HEAVYSACK,
+	["Diebesgut"] = Harvest.TROVE,
+	["Lose Tafel"] = Harvest.STASH,
+	["Lose Platte"] = Harvest.STASH,
+	["Loser Stein"] = Harvest.STASH,
+	["Psijik-Portal"] = Harvest.PSIJIC,
+	["riesenmuschel"] = Harvest.CLAM,
+}
+-- convert to lower case. zos sometimes changes capitalization so it's safer to just do all the logic in lower case
+Harvest.interactableName2PinTypeId = Harvest.interactableName2PinTypeId or {}
+local globalList = Harvest.interactableName2PinTypeId
+for name, pinTypeId in pairs(interactableName2PinTypeId) do
+	globalList[zo_strlower(name)] = pinTypeId
+end

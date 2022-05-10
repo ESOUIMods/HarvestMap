@@ -5,24 +5,24 @@ Harvest.localizedStrings = {
 	["esouidescription"] = "Для подробной информации о дополнении и FAQ, посетите страницу на esoui.com",
 	["openesoui"] = "Открыть ESOUI",
 	["exchangedescription2"] = "Вы можете загрузить самые последние данные HarvestMap (позиции ресурсов), установив дополнение HarvestMap-Data. Для получения дополнительной информации см. описание дополнения на ESOUI.",
-
+	
 	["notifications"] = "Уведомления и предупреждения",
 	["notificationstooltip"] = "Отображает уведомления и предупреждения в правом верхнем углу экрана.",
 	["moduleerrorload"] = "Аддон <<1>> отключен.\nНет данных для этой области.",
 	["moduleerrorsave"] = "Аддон <<1>> отключен.\nМестоположение ресурса не было сохранено.",
-
+	
 	-- outdated data settings
 	["outdateddata"] = "Настройки для устаревших даных",
 	["outdateddatainfo"] = "Эти настройки, связанные с данными, используются всеми учетными записями и персонажами на этом компьютере.",
 	["timedifference"] = "Хранить только последние данные",
 	["timedifferencetooltip"] = "HarvestMap будет хранить данные только за последние X дней.\nЭто предотвращает отображение старых данных, которые могут быть уже устаревшими.\nУстановите 0, чтобы сохранить любые данные независимо от их даты обновления игры.",
 	["applywarning"] = "Как только старые удалены, они не могут быть восстановлены!",
-
+	
 	-- account wide settings
 	["account"] = "Настройки для всех персонажей",
 	["accounttooltip"] = "Все настройки ниже будут применены ко всем персонажам.",
 	["accountwarning"] = "Изменение этой настройки перезагрузит UI.",
-
+	
 	-- map pin settings
 	["mapheader"] = "Настройка отображения меток на карте",
 	["mappins"] = "Включить отображения меток на мини-карте",
@@ -35,18 +35,18 @@ Harvest.localizedStrings = {
 	["drawdistance"] = "Расстояние до меток",
 	["drawdistancetooltip"] = "Предел расстояния для которого будут отображаться метки на карте. Эта настройка также влияет на мини-карту!",
 	["drawdistancewarning"] = "Эта настройка также влияет на мини-карту!",
-
+	
 	--mapvisiblepintypedescription = [[Видимые типы меток также можно выбрать на панели фильтров справа, рядом с игровой картой.]],
 	visiblepintypes = "Видимые типы меток",
 	custom_profile = "Свой",
 	same_as_map = "То же, что и на карте",
-
+	
 	-- compass settings
 	["compassheader"] = "Настройки компаса",
     ["compass"] = "Показывать метки на компасе",
 	["compassdistance"] = "Максимальная дистанция до меток",
 	["compassdistancetooltip"] = "Максимальное расстояние для меток в метрах, которые появляются на компасе.",
-
+	
 	-- 3d pin settings
 	["worldpinsheader"] = "Настройки 3D меток",
 	["worldpins"] = "Включить 3D метки",
@@ -59,7 +59,7 @@ Harvest.localizedStrings = {
 	["worldpinsdepth"] = "Использовать буфер глубины для 3D меток",
 	["worldpinsdepthtooltip"] = "Если этот параметр отключен, 3D метки будут видны сквозь стены и другие объекты.",
 	["worldpinsdepthwarning"] = "Из-за ошибки в ESO эта опция не работает, если в настройках видео игры выбрано среднее или низкое качество Sub-Sampling (субсэмплирования).",
-
+	
 	-- respawn timer settings
 	["visitednodes"] = "Посещенные ресурсы и Помощник по сбору",
 	["rangemultiplier"] = "Расстояние до посещенных ресурсов",
@@ -70,7 +70,7 @@ Harvest.localizedStrings = {
 	["hiddentimetooltip"] = "Недавно посещенные ресурсы будут скрыты в течение X минут.",
 	["hiddenonharvest"] = "Скрыть ресурсы только после сбора",
 	["hiddenonharvesttooltip"] = "Включите эту опцию, чтобы скрывать метки, когда вы их собирали. Когда эта опция отключена, метки будут скрыты, если вы их посетите.",
-
+	
 	-- spawn filter
 	spawnfilter = "Фильтры ресурсов",
 	nodedetectionmissing = "Эти параметры могут быть включены только в том случае, если включена библиотека 'NodeDetection'.",
@@ -80,7 +80,7 @@ Harvest.localizedStrings = {
 	spawnfilter_compass = "Использовать фильтр для меток на компасе",
 	spawnfilter_world = "Использо фильтр для 3D меток",
 	spawnfilter_pintype = "Включить фильтр для типов меток:",
-
+	
 	-- pin type options
 	["pinoptions"] = "Общие настройки меток",
 	["pinsize"] = "Размер метки",
@@ -90,7 +90,7 @@ Harvest.localizedStrings = {
 	["savepin"] = "Сохраненить местоположение",
 	["savetooltip"] = "Включает сохранение местоположения этого ресурса, при его обнаружении.",
 	["pintexture"] = "Значок метки",
-
+	
 	-- pin type names
 	["pintype1"] = "Кузнечное дело и Ювелирное дело",
 	["pintype2"] = "Волокнистые растения",
@@ -111,12 +111,12 @@ Harvest.localizedStrings = {
     -- но локации такие же, как кузнечное дело и руны
 	["pintype18"] = "Неизвестные ресурсы",
 	["pintype19"] = "Корень Нирна",
-
-
+	
+	
 	-- extra map filter buttons
 	["deletepinfilter"] = "Удалить метки HarvestMap",
 	["filterheatmap"] = "Режим тепловой карты",
-
+	
 	-- localization for the farming helper
 	["goldperminute"] = "Золото в минуту:",
     ["farmresult"] = "Результат вычислений",
@@ -153,7 +153,7 @@ Harvest.localizedStrings = {
 	["loaderror"] = "Не удалось загрузить путь.",
 	["removepintype"] = "Вы хотите удалить <<1>> из пути?",
 	["removepintypetitle"] = "Подтвердите Удаление",
-
+	
 	-- extra harvestmap menu
     ["pinvisibilitymenu"] = "Расширенное Меню Фильтра Меток",
 	["menu"] = "Меню HarvestMap",
@@ -175,7 +175,7 @@ Harvest.localizedStrings = {
 	filterworld = "Фильтр Профиля для 3D Меток",
 	unnamedfilterprofile = "Неназванный Профиль",
 	defaultprofilename = "Фильтр Профиля по умолчанию",
-
+	
 	-- SI names to fit with ZOS api
 	["SI_BINDING_NAME_SKIP_TARGET"] = "Пропустить цель",
 	["SI_BINDING_NAME_TOGGLE_WORLDPINS"] = "Включить 3D метки",
@@ -187,3 +187,21 @@ Harvest.localizedStrings = {
 	["HARVESTFARM_EDITOR"] = "Редактировать путь",
 	["HARVESTFARM_SAVE"] = "Сохранить/Загрузить путь",
 }
+
+local interactableName2PinTypeId = {
+	["Тяжелый мешок"] = Harvest.HEAVYSACK,
+	-- special nodes in cold harbor with the same loot as heavy sacks
+	["Тяжелый ящик"] = Harvest.HEAVYSACK,
+	["Воровской тайник"] = Harvest.TROVE,
+	["Податливая панель"] = Harvest.STASH,
+	["Податливая плита"] = Harvest.STASH,
+	["Расшатанный камень"] = Harvest.STASH,
+	["Портал Псиджиков"] = Harvest.PSIJIC,
+	["Гигантский моллюск"] = Harvest.CLAM,
+}
+-- convert to lower case. zos sometimes changes capitalization so it's safer to just do all the logic in lower case
+Harvest.interactableName2PinTypeId = Harvest.interactableName2PinTypeId or {}
+local globalList = Harvest.interactableName2PinTypeId
+for name, pinTypeId in pairs(interactableName2PinTypeId) do
+	globalList[zo_strlower(name)] = pinTypeId
+end

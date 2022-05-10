@@ -12,17 +12,28 @@ Detection.unknownPositionCompassPins = {} -- compass pins whose world position i
 Detection.knownPositionCompassPins = {} -- compass pins whose world position we know
 
 function Detection:Initialize()
-	
+
 	self.container = ZO_CompassContainer
-	EVENT_MANAGER:RegisterForUpdate("LibNodeDetection-NodeDetection", 50, self.OnUpdateNodeListHandler)
-	EVENT_MANAGER:RegisterForUpdate("LibNodeDetection-TypeDetection", 100, function() self:OnUpdatePinTypeHandler() end)
 	EVENT_MANAGER:RegisterForEvent("LibNodeDetection-CompassPins", EVENT_PLAYER_DEACTIVATED, function()
 		self.compassPins = {}
 		self.unknownPinTypeCompassPins = {}
 		self.unknownPositionCompassPins = {}
 		self.knownPositionCompassPins = {}
 	end )
-	
+	EVENT_MANAGER:RegisterForEvent("LibNodeDetection-Measure", EVENT_PLAYER_ACTIVATED, function()
+		local zoneid, x, y, z = GetUnitRawWorldPosition("player")
+		local r1 = GetNormalizedWorldPosition(zoneid, x+1000, y, z) - GetNormalizedWorldPosition(zoneid, x, y, z)
+		local zoneid, x, y, z = GetUnitWorldPosition("player")
+		local r2 = GetRawNormalizedWorldPosition(zoneid, x+1000, y, z) - GetRawNormalizedWorldPosition(zoneid, x, y, z)
+		self.distanceScale = r2/r1
+		if not self.init then
+			EVENT_MANAGER:RegisterForUpdate("LibNodeDetection-NodeDetection", 50, self.OnUpdateNodeListHandler)
+			EVENT_MANAGER:RegisterForUpdate("LibNodeDetection-TypeDetection", 100, function() self:OnUpdatePinTypeHandler() end)
+			self.init = true
+		end
+	end)
+
+	self.distanceScale = 1
 	self.measurementControl = CreateControl("NodeDetectionMeasurementControl", GuiRoot, CT_CONTROL)
 	self.measurementControl:Create3DRenderSpace()
 end
@@ -37,7 +48,7 @@ function CraftingCompassPinAdded(compassPin)
 	Detection.compassPins[compassPin.id] = compassPin
 	Detection.unknownPinTypeCompassPins[compassPin.id] = compassPin
 	Detection.unknownPositionCompassPins[compassPin.id] = compassPin
-	
+
 	CallbackManager:FireCallbacks(Events.HARVEST_NODE_VISIBLE, compassPin)
 end
 
@@ -50,12 +61,12 @@ function CraftingCompassPinRemoved(compassPin)
 end
 
 function Detection:OnUpdatePinTypeHandler()
-	
+
 	-- don't do anything, if there are no unknown pins
 	if not next(self.unknownPinTypeCompassPins) then return end
-	
+
 	local container = self.container
-	
+
 	for i = 1, container:GetNumCenterOveredPins() do
 		if container:GetCenterOveredPinType(i) == MAP_PIN_TYPE_HARVEST_NODE then
 			local interactableName = container:GetCenterOveredPinDescription(i)
@@ -77,7 +88,7 @@ function Detection:OnUpdatePinTypeHandler()
 						end
 					end
 				end
-				
+
 				if matchingControl and matchingControl.pinTypeId ~= pinTypeId then
 					matchingControl.pinTypeId = pinTypeId
 					self.unknownPinTypeCompassPins[matchingControl.id] = nil
@@ -86,33 +97,33 @@ function Detection:OnUpdatePinTypeHandler()
 			end
 		end
 	end
-	
+
 end
 
 function Detection.OnUpdateNodeListHandler()
 	if ZO_CompassContainer:IsHidden() then return end
-	
+
 	local measurementControl = Detection.measurementControl
 	Set3DRenderSpaceToCurrentCamera(measurementControl:GetName())
 	local camX, camZ, camY = measurementControl:Get3DRenderSpaceOrigin()
 	local forwardX, forwardZ, forwardY = measurementControl:Get3DRenderSpaceForward()
 	local rightX, rightZ, rightY = measurementControl:Get3DRenderSpaceRight()
-	
+
 	camX, camZ, camY = GuiRender3DPositionToWorldPosition(camX, camZ, camY)
 	camX, camZ, camY = camX / 100, camZ / 100, camY / 100
-	
+
 	for _, control in pairs(Detection.unknownPositionCompassPins) do
-		
+
 		local relativeX = 2 * (control:GetCenter() - ZO_CompassContainer:GetLeft()) / ZO_CompassContainer:GetWidth() - 1.0
 		local cotangent = Detection.ComputeCotangent(relativeX)
-		local distance = (2-control:GetScale()) * 100
+		local distance = (2-control:GetScale()) * 100 * Detection.distanceScale
 		-- Pins on the far right/left of the compass do not yield accurate
 		-- information about the node position, in that case the cotangent is nil.
 		-- If the distance is too large, then any error is amplified.
 		-- If the alpha value is too small, then the compass just became visible
 		-- and the measurements are not very accurate.
 		if cotangent and distance < 190 and control:GetAlpha() >= 0.99 then
-			
+
 			-- compute direction in which the resource lies
 			local forwardLength = (forwardX^2 + forwardY^2)^0.5
 			local dirX = forwardX / forwardLength + rightX * cotangent
@@ -120,7 +131,7 @@ function Detection.OnUpdateNodeListHandler()
 			local dirLength = (dirX^2 + dirY^2)^0.5
 			dirX = dirX / dirLength
 			dirY = dirY / dirLength
-			
+
 			control.cotangent = cotangent
 			-- line information
 			control.dirX = dirX
@@ -131,13 +142,13 @@ function Detection.OnUpdateNodeListHandler()
 			control.normalX = dirY
 			control.normalY = -dirX
 			control.offset = camX * control.normalX + camY * control.normalY
-			
+
 			local index = control.lastPositionIndex + 1
 			control.lastPositionIndex = index
-			
+
 			local worldX = camX + dirX * distance
 			local worldY = camY + dirY * distance
-			
+
 			control.worldX[index] = worldX
 			control.worldY[index] = worldY
 			if index >= 3 then
@@ -167,7 +178,7 @@ function Detection.OnUpdateNodeListHandler()
 					CallbackManager:FireCallbacks(Events.HARVEST_NODE_LOCATION_UPDATED, control)
 				end
 			end
-			
+
 		end
 	end
 end

@@ -229,19 +229,20 @@ Punti di raccolta per chilometro: <<3>>]],
 	["CompassPins"] = "Indicatori Bussola",
 }
 
-local default = Harvest.defaultLocalizedStrings
-local current = Harvest.localizedStrings or {}
-
-function Harvest.GetLocalization(tag)
-	-- return the localization for the given tag,
-	-- if the localization is missing, use the english string instead
-	-- if the english string is missing, something went wrong.
-	-- return the tag so that at least some string is returned to prevent the addon from crashing
-	return (current[ tag ] or default[ tag ]) or tag
-end
-
-local UIStrings = {"SI_BINDING_NAME_SKIP_TARGET", "SI_BINDING_NAME_TOGGLE_WORLDPINS", "SI_BINDING_NAME_TOGGLE_MAPPINS", "SI_BINDING_NAME_HARVEST_SHOW_PANEL",
-		"SI_HARVEST_CTRLC", "HARVESTFARM_GENERATOR","HARVESTFARM_EDITOR","HARVESTFARM_SAVE"}
-for _, str in pairs(UIStrings) do
-	ZO_CreateStringId(str, Harvest.GetLocalization(str))
+local interactableName2PinTypeId = {
+	["sacco pesante"] = Harvest.HEAVYSACK,
+	-- special nodes in cold harbor with the same loot as heavy sacks
+	["cassa pesante"] = Harvest.HEAVYSACK,
+	["tesoro dei ladri"] = Harvest.TROVE,
+	["pannello mobile"] = Harvest.STASH,
+	["mattonella traballante"] = Harvest.STASH,
+	["pietra sporgente"] = Harvest.STASH,
+	["portale psijic"] = Harvest.PSIJIC,
+	["ostrica gigante"] = Harvest.CLAM,
+}
+-- convert to lower case. zos sometimes changes capitalization so it's safer to just do all the logic in lower case
+Harvest.interactableName2PinTypeId = Harvest.interactableName2PinTypeId or {}
+local globalList = Harvest.interactableName2PinTypeId
+for name, pinTypeId in pairs(interactableName2PinTypeId) do
+	globalList[zo_strlower(name)] = pinTypeId
 end

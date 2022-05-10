@@ -81,58 +81,15 @@ Harvest.HIDDEN_PINTYPES = {
 	[Harvest.JEWELRY] = true,
 }
 
-local interactableName2PinTypeId = {
-	["heavy sack"] = Harvest.HEAVYSACK,
-	["heavy crate"] = Harvest.HEAVYSACK, -- special nodes in cold harbor
-	["schwerer sack"] = Harvest.HEAVYSACK,
-	["sac lourd"] = Harvest.HEAVYSACK,
-	["Тяжелый мешок"] = Harvest.HEAVYSACK, -- russian
-	["тяжелый мешок"] = Harvest.HEAVYSACK, -- russian
-	["sacco pesante"] = Harvest.HEAVYSACK, -- italian
-	["cassa pesante"] = Harvest.HEAVYSACK, -- italian
-
-	["thieves trove"] = Harvest.TROVE,
-	["diebesgut"] = Harvest.TROVE,
-	["trésor des voleurs"] = Harvest.TROVE,
-	["Вopoвcкoй тaйник"] = Harvest.TROVE,  -- russian
-	["Воровской тайник"] = Harvest.TROVE, -- updated russian
-	["воровской тайник"] = Harvest.TROVE, -- updated russian
-	["tesoro dei ladri"] = Harvest.TROVE, --italian
-
-	["loose panel"] = Harvest.STASH,
-	["loose tile"] = Harvest.STASH,
-	["loose stone"] = Harvest.STASH,
-	["panneau mobile"] = Harvest.STASH,
-	["tuile descellée"] = Harvest.STASH,
-	["pierre délogée"] = Harvest.STASH,
-	["lose tafel"] = Harvest.STASH,
-	["lose platte"] = Harvest.STASH,
-	["loser stein"] = Harvest.STASH,
-	["Податливая панель"] = Harvest.STASH, -- russian
-	["Податливый камень"] = Harvest.STASH, -- loose tile is not translated in the ru.lang file of RuESO
-	["pannello mobile"] = Harvest.STASH, --italian
-	["mattonella traballante"] = Harvest.STASH, --italian
-	["pietra sporgente"] = Harvest.STASH, --italian
-
-	["psijic portal"] = Harvest.PSIJIC,
-	["portail psijique"] = Harvest.PSIJIC,
-	["psijik-portal"] = Harvest.PSIJIC,
-	["portale psijic"] = Harvest.PSIJIC, --italian
-
-	["giant clam"] = Harvest.CLAM,
-	["riesenmuschel"] = Harvest.CLAM,
-	["palourde géante"] = Harvest.CLAM,
-	["ostrica gigante"] = Harvest.CLAM,
-}
 function Harvest.IsInteractableAContainer( interactableName )
-	return interactableName2PinTypeId[zo_strlower( interactableName )] ~= nil
+	return Harvest.interactableName2PinTypeId[zo_strlower( interactableName )] ~= nil
 end
 
 -- this function returns the pinTypeId for the given item id and node name
 function Harvest.GetPinTypeId( itemId, interactableName )
 	-- get two pin types based on the item id and node name
 	local itemIdPinTypeId = Harvest.itemId2PinType[ itemId ]
-	local interactablePinTypeId = interactableName2PinTypeId[zo_strlower( interactableName )]
+	local interactablePinTypeId = Harvest.interactableName2PinTypeId[zo_strlower( interactableName )]
 	-- heavy sacks can contain material for different professions
 	-- so don't use the item id to determine the pin type
 	return interactablePinTypeId or itemIdPinTypeId
