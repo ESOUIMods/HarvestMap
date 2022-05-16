@@ -106,7 +106,7 @@ Le filtre ne fonctionne pas, si un autre addon masque ou redimensionne la bousso
 	["pintype8"] = "Trous de pêche",
 	["pintype9"] = "Sacs lourds",
 	["pintype10"] = "Trésors de voleurs",
-	["pintype11"] = "Cassettes",
+	["pintype11"] = "Conteneurs de justice",
 	["pintype12"] = "Planques cachées",
 	["pintype15"] = "Palourdes géantes",
 	-- icônes de type 16, 17 étaient autrefois des bijoux et des portails psijiques
