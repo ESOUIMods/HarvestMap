@@ -171,9 +171,9 @@ Nœuds par kilomètre: <<3>>]],
 	-- profils de filtre
 	filterprofilebutton = "Ouvrir le menu du profil de filtre",
 	filtertitle = "Menu de profil de filtre",
-	filtermap = "Profil de filtre pour les icônes de carte",
-	filtercompass = "Profil de filtre pour les icônes de boussole",
-	filterworld = "Profil de filtre pour les icônes 3D",
+	filtermap = "Profil pour les icônes de carte",
+	filtercompass = "Profil pour les icônes de boussole",
+	filterworld = "Profil pour les icônes 3D",
 	unnamedfilterprofile = "Profil sans nom",
 	defaultprofilename = "Profil de filtre par défaut",
 
