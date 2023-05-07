@@ -17,9 +17,8 @@ function Interaction.Initialize()
 	EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_LOOT_RECEIVED, Interaction.OnLootReceived)
 	EVENT_MANAGER:RegisterForEvent("HarvestMap", EVENT_LOOT_UPDATED, Interaction.OnLootUpdated)
 
-	-- this hack saves the name of the object that was last interacted with
-	local oldInteract = FISHING_MANAGER.StartInteraction
-	FISHING_MANAGER.StartInteraction = function(...)
+	-- this hook stores the name of the object that was last interacted with
+	ZO_PreHook(FISHING_MANAGER or INTERACTIVE_WHEEL_MANAGER, "StartInteraction", function(...)
 		local action, name, blockedNode, isOwned = GetGameCameraInteractableActionInfo()
 		Interaction.lastInteractableAction = action
 		Interaction.lastInteractableName = name
@@ -35,9 +34,7 @@ function Interaction.Initialize()
 			EVENT_MANAGER:UnregisterForUpdate("HarvestMap-FishState")
 			EVENT_MANAGER:RegisterForUpdate("HarvestMap-FishState", delayInMs, Interaction.CheckFishingState)
 		end
-
-		return oldInteract(...)
-	end
+	end)
 
 end
 
