@@ -4,6 +4,4 @@
 ## AddOnVersion: 314999
 ## Description: The AddOn was installed incorrectly.
 
-Libs/LibDAU/LibDAU.lua
-
 Main/HarvestMap.lua
