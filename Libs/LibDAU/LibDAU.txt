@@ -1,7 +1,7 @@
 ## Title: LibDAU
 ## Description: A library to notify users about  common errors
 ## Author: Shinni
-## APIVersion: 101032 101033
+## APIVersion: 101037 101038
 ## AddOnVersion: 100
 ## Version: 1.00
 ## IsLibrary: true
